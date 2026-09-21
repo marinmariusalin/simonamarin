@@ -11,11 +11,63 @@
  * @package simonamarin
  */
 
+/*
+ * =============================================================================
+ * AUDIT COD MORT (2026-09-21)
+ * TODO [DEAD-07][MEDIUM]: FUNCTIONALITATE MOARTA PE FRONTEND - de decis stergere.
+ *   Motiv: fisierul inregistreaza add_theme_support( 'custom-header' ), ceea ce
+ *          adauga in Customizer panoul "Header Image", dar NICIUN template al
+ *          temei nu afiseaza imaginea. `the_header_image_tag()` apare in tot
+ *          proiectul o singura data: in exemplul din comentariul de mai sus
+ *          (linia 7), care este text, nu cod executat. header.php nu o apeleaza.
+ *   Consecinta: utilizatorul poate incarca o imagine de header care nu apare
+ *          nicaieri pe site - un bug de UX raportat frecvent pe temele _s.
+ *   Doua variante, ambele valide:
+ *     (a) SE FOLOSESTE: adauga `the_header_image_tag()` in header.php, in
+ *         <header id="masthead">, si atunci fisierul NU se sterge.
+ *     (b) NU SE FOLOSESTE: sterge acest fisier + linia `require` din
+ *         functions.php. Odata cu el devin moarte si:
+ *           - simonamarin_header_style() (hook wp-head-callback de aici),
+ *           - transportul postMessage pentru 'header_textcolor' din
+ *             inc/customizer.php,
+ *           - handler-ul wp.customize( 'header_textcolor' ) din js/customizer.js.
+ *   Recomandare: (b), pentru ca site-ul foloseste custom-logo, nu header image.
+ * =============================================================================
+ */
+
 /**
  * Set up the WordPress core custom header feature.
  *
  * @uses simonamarin_header_style()
  */
+/*
+ * ============================================================================
+ * AUDIT SEO (2026-09-21) - inc/custom-header.php
+ * VERIFICA INTAI: header.php NU apeleaza the_header_image_tag() nicaieri, deci
+ * imaginea de header nu este afisata in acest moment. Daca ramane asa, fisierul
+ * este cod mort. TODO-urile devin relevante doar daca imaginea de header este
+ * activata.
+ * ============================================================================
+ *
+ * TODO [SEO-59][MEDIUM]: 'width' => 1000 este prea mic pentru un header
+ * full-width pe ecrane retina (2x => 2000px reali). Daca imaginea de header
+ * ajunge sa fie elementul LCP, va fi scalata in sus si va arata neclara -
+ * Google evalueaza si calitatea vizuala a LCP-ului.
+ * Fix: 1920x600 cu 'flex-height' => true, plus srcset prin
+ *      the_header_image_tag() (suporta deja atribute custom).
+ *
+ * TODO [SEO-60][MEDIUM]: the_header_image_tag() emite <img> fara alt
+ * descriptiv si fara fetchpriority. Daca imaginea e deasupra foldului, ii
+ * trebuie loading="eager" + fetchpriority="high"; daca e decorativa, ii trebuie
+ * alt="" explicit, ca sa nu fie citita inutil de screen readere.
+ * Fix: filtrul `get_header_image_tag_attributes`.
+ *
+ * TODO [SEO-61][LOW]: simonamarin_header_style() emite un bloc <style> inline in
+ * <head> la fiecare incarcare de pagina. Cu o politica CSP stricta (vezi
+ * TODO-urile de securitate din functions.php) stilurile inline necesita
+ * 'unsafe-inline' sau un nonce. Alternativa curata: wp_add_inline_style().
+ */
+
 function simonamarin_custom_header_setup() {
 	add_theme_support(
 		'custom-header',

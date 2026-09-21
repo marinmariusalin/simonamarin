@@ -18,6 +18,120 @@ AUDIT COMMENTS [CRITICAL]:
 - Tested up to: 5.4 is OUTDATED - test with WordPress 6.4+ (released 2024)
 - Last tested 2020 - need compatibility verification with current WordPress versions
 See: audit-report.html for full details
+
+AUDIT 2 (2026-09-21) - CSS INUTIL / SEO / PERFORMANTA:
+
+TODO [CSS-01][HIGH]: Acest fisier are 977 de linii si este stilul DEFAULT
+	Underscores, practic neatins. Nu contine niciun stil propriu al site-ului
+	simonamarin (fara culori de brand, fara tipografie proprie, fara layout).
+	Concluzie: fie designul real vine din alta parte (page builder / blocuri),
+	caz in care aproape tot fisierul este CSS mort livrat la fiecare pagina,
+	fie site-ul chiar arata ca tema default.
+	ACTIUNE prima sesiune: ruleaza Coverage in Chrome DevTools pe 5 pagini
+	reprezentative si masoara procentul real de CSS nefolosit. Fara masuratoare
+	nu stergem nimic - stergerea "pe ghicite" strica layout-ul.
+
+TODO [CSS-02][HIGH]: ~320 de linii (liniile 68-385) sunt normalize.css v8.0.1
+	inclus integral. Contine reguli pentru IE 8/9/10/11 si Edge legacy:
+	`-ms-text-size-adjust`, `button::-moz-focus-inner`, fix-uri pentru <legend>
+	in IE, `progress` in IE, `[type="search"]::-webkit-search-decoration`, etc.
+	Impact: cod mort pentru orice browser din 2026.
+	Fix: inlocuieste cu un reset modern (~30 de linii) sau pastreaza doar
+	regulile care se aplica browserelor suportate.
+
+TODO [CSS-03][MEDIUM]: Sectiunea "Jetpack infinite scroll" (spre finalul
+	fisierului) este CSS mort - Jetpack nu este instalat. Vezi CLEAN-05 din
+	functions.php.
+
+TODO [CSS-04][MEDIUM]: Clasele .gallery-columns-2 ... .gallery-columns-9 sunt
+	generate toate, desi galeriile reale folosesc de obicei 2-4 coloane.
+	Fix: pastreaza doar cele efectiv folosite, sau treci pe o regula unica cu
+	grid-template-columns: repeat(auto-fit, minmax(...)).
+
+TODO [CSS-05][MEDIUM]: Zero CSS custom properties (variabile). Culorile si
+	spatiile sunt hardcodate peste tot. Face imposibila o schimbare de brand
+	fara find-and-replace si blocheaza dark mode.
+
+TODO [CSS-06][MEDIUM]: Sectiunea "# Layouts" este COMPLET GOALA (doar titlu de
+	comentariu). Nu exista niciun layout definit - fara grid, fara container cu
+	latime maxima, fara pozitionarea sidebar-ului.
+	Impact SEO: pe ecrane mari textul se intinde pe toata latimea ferestrei
+	(linii de 200+ caractere), ceea ce este o problema reala de lizibilitate si
+	de "page experience".
+
+TODO [CSS-07][HIGH]: Exista UN SINGUR media query in tot fisierul (linia ~771,
+	`min-width: 37.5em`), si acela doar pentru afisarea meniului pe desktop.
+	In rest tema nu are niciun breakpoint: fara ajustari de tipografie, de
+	spatiere sau de layout pe mobil.
+	Impact: "Mobile Usability" in Search Console; mobile-first indexing
+	inseamna ca Google evalueaza in primul rand versiunea de mobil.
+
+	VERIFICAT OK: `img { height: auto; max-width: 100%; }` exista (linia ~584),
+	la fel si pentru embed/iframe/object - deci nu apare scroll orizontal din
+	cauza imaginilor. Nu e nevoie de interventie aici.
+
+TODO [CSS-09][LOW]: style-rtl.css (961 linii) este mentinut in paralel pentru
+	limbi RTL (araba, ebraica). Site-ul este in romana. Vezi PERF-06.
+
+TODO [CSS-10][LOW]: Fara `prefers-reduced-motion` si fara `:focus-visible`
+	modern. .screen-reader-text:focus exista (bun pentru skip link), dar
+	restul elementelor interactive se bazeaza pe outline-ul default.
+
+================================================================================
+AUDIT SEO (2026-09-21) - CSS cu impact direct pe Core Web Vitals si indexare
+Nota: niciunul dintre TODO-urile de mai jos nu implica modificarea textelor sau
+a titlurilor - doar reguli de stil.
+================================================================================
+
+TODO [SEO-65][HIGH]: Nu exista `aspect-ratio` pe containerele de imagine
+	(.post-thumbnail img, .wp-post-image). `max-width: 100%; height: auto`
+	previne overflow-ul, dar NU rezerva inaltimea inainte ca imaginea sa se
+	incarce. Daca WordPress nu reuseste sa emita width/height (SVG, imagini
+	fara metadate, imagini din pluginuri), pagina sare la incarcare.
+	Impact: CLS (Cumulative Layout Shift) este una din cele trei metrici Core
+	Web Vitals folosite ca semnal de ranking.
+	Fix: .post-thumbnail { aspect-ratio: 16 / 9; } pe containerele de card.
+
+TODO [SEO-66][HIGH]: Fara media query de tipografie (vezi CSS-07), `body` are
+	`font-size: 1rem` si `line-height: 1.5` pe toate ecranele, iar containerul
+	nu are latime maxima (CSS-06). Pe desktop rezulta linii foarte lungi.
+	Impact: Google masoara "page experience"; lizibilitatea slaba creste
+	bounce rate-ul, care se reflecta indirect in performanta in SERP.
+	Fix: max-width: 65ch pe .entry-content si scalare a tipografiei pe
+	breakpoint-uri.
+
+TODO [SEO-67][MEDIUM]: Font stack-ul este 100% system-ui (linia ~472), deci nu
+	exista webfonts si, implicit, niciun risc de FOIT/FOUT - VERIFICAT OK.
+	ATENTIE pentru viitor: daca se adauga un webfont (Google Fonts sau local),
+	este obligatoriu `font-display: swap` in @font-face si preload pentru
+	fisierul .woff2 folosit deasupra foldului, altfel textul devine invizibil
+	pana la incarcarea fontului si LCP-ul creste vizibil.
+
+TODO [SEO-68][MEDIUM]: Ierarhia de titluri nu este diferentiata vizual.
+	In sectiunea de tipografie, h1-h6 nu au dimensiuni proprii declarate, deci
+	raman la valorile default ale browserului. Un h2 si un h3 care arata la fel
+	anuleaza beneficiul structurii semantice: Google foloseste ierarhia de
+	headinguri pentru a extrage featured snippets si jump links.
+	Fix: scala tipografica explicita pentru h1-h6 (ex. 2.25 / 1.75 / 1.375 /
+	1.125 rem), fara a atinge textul titlurilor.
+
+TODO [SEO-69][MEDIUM]: .screen-reader-text (linia ~1200) ascunde text prin
+	clip/position absolute - tehnica legitima si recunoscuta de Google.
+	ATENTIE: aceeasi clasa NU trebuie folosita niciodata pentru a ascunde text
+	cu cuvinte-cheie destinat motoarelor de cautare - asta este cloaking si se
+	sanctioneaza manual. Regula de respectat la orice extindere a temei:
+	text ascuns doar pentru etichete de accesibilitate.
+
+TODO [SEO-70][LOW]: Nu exista stiluri de print (@media print). Paginile
+	tiparite ies cu meniu, sidebar si footer. Nu este un factor de ranking, dar
+	conteaza pentru paginile de contact si servicii, care chiar se tiparesc.
+
+TODO [SEO-71][LOW]: Fisierul are ~1200 de linii incarcate integral pe fiecare
+	pagina, desi sectiuni intregi (comentarii, galerii, Jetpack infinite scroll)
+	nu sunt folosite pe majoritatea URL-urilor.
+	Impact: CSS render-blocking inutil in calea critica -> LCP mai mare.
+	Fix: separa CSS-ul critic (above the fold) si incarca restul amanat, sau
+	elimina sectiunile pentru functionalitati nefolosite (vezi si PERF-06).
 */
 
 This theme, like WordPress, is licensed under the GPL.
@@ -402,6 +516,45 @@ html {
 # Base
 --------------------------------------------------------------*/
 
+/*
+AUDIT UX (2026-09-21) - TIPOGRAFIE, MOBILE-FIRST
+
+TODO [UX-11][CRITICAL]: Nu exista o scara tipografica. Singura declaratie de
+	marime este font-size: 1rem pe body; h1-h6 primesc DOAR clear: both, deci
+	raman la marimile default ale browserului (h1 = 2em, h2 = 1.5em...).
+	Impact pe mobil: un h1 de 32px pe un ecran de 360px ocupa 2-3 randuri si
+	impinge continutul util sub fold; in acelasi timp diferenta h3/h4/body este
+	prea mica pentru a citi structura paginii prin scanare.
+	Fix (mobile-first): defineste marimile pe mobil si creste-le la breakpoint,
+	sau foloseste clamp() - ex. h1: clamp(1.75rem, 1.2rem + 2.5vw, 2.75rem).
+
+TODO [UX-12][HIGH]: line-height: 1.5 este aplicat global, inclusiv titlurilor.
+	Pentru corpul de text pe mobil recomandarea este 1.6-1.7 (randuri mai
+	aerisite = citire mai usoara pe ecran mic), iar pentru titluri 1.15-1.25
+	(1.5 face titlurile sa para dezlipite unele de altele).
+
+TODO [UX-13][HIGH]: Nu exista limita de latime a randului (max-width pe
+	elementele de text). Vezi si CSS-06. Optimul de lizibilitate este 60-75 de
+	caractere pe rand; fara limita, pe tableta si desktop se ajunge la 150+.
+	Pe mobil problema nu se vede - exact de asta scapa nedetectata cand se
+	testeaza doar pe telefon.
+	Fix: max-width: 65ch pe .entry-content > *.
+
+TODO [UX-14][MEDIUM]: Culoarea textului este #404040 pe fundal #fff (contrast
+	~10:1, foarte bun). Dar nu exista o culoare secundara definita pentru text
+	auxiliar (.entry-meta, captions). Daca se adauga una, tine-o la minim
+	4.5:1 - eroarea tipica este gri deschis pe alb, ilizibil in lumina
+	puternica, adica fix conditiile in care se foloseste un telefon.
+
+TODO [UX-15][MEDIUM]: Font stack-ul este cel de sistem (-apple-system...).
+	Este rapid si sigur, dar site-ul nu are personalitate tipografica proprie
+	si arata identic cu interfata telefonului.
+	Decizie de luat: pastram fontul de sistem (castig de performanta, zero
+	requesturi) sau introducem un font de brand? Daca da: maxim 2 greutati,
+	self-hosted, font-display: swap + preload - altfel apare FOIT/FOUT si
+	regresie de LCP (vezi PERF-07 din header.php).
+*/
+
 /* Typography
 --------------------------------------------- */
 body,
@@ -460,6 +613,15 @@ tt,
 var {
 	font-family: monaco, consolas, "Andale Mono", "DejaVu Sans Mono", monospace;
 }
+
+/*
+TODO [DEAD-09][LOW]: `acronym` (mai jos) si `big` sunt elemente HTML4 eliminate din
+  standardul HTML5. Nici editorul WordPress, nici template-urile temei nu le pot
+  produce, deci regulile nu se aplica niciodata. De sters `acronym` din selectorul
+  de mai jos (se pastreaza `abbr`, care e valid) si de sters complet blocul `big`.
+  Atentie: verifica intai cu o cautare in continut daca vreun articol vechi importat
+  contine literal <big> sau <acronym> in HTML.
+*/
 
 abbr,
 acronym {
@@ -538,6 +700,32 @@ table {
 	width: 100%;
 }
 
+/*
+TODO [UX-16][HIGH]: Link-urile sunt albastru regal (#4169e1) si mov la vizitat
+	(#800080) - paleta default a browserului, nu o paleta de brand. Pe un site
+	de prezentare, link-urile mov "vizitate" arata neingrijit.
+
+TODO [UX-17][HIGH]: Link-urile din corpul textului NU sunt subliniate (nu
+	exista text-decoration: underline) - se disting doar prin culoare. Pentru
+	utilizatorii cu deficiente de percepere a culorii, link-urile devin
+	invizibile in text. WCAG 1.4.1 (Use of Color).
+	Fix: underline pe link-urile din .entry-content, cu
+	text-underline-offset: 0.15em pentru lizibilitate.
+
+TODO [UX-18][HIGH]: Link-urile nu au zona de atingere suficienta pe mobil.
+	Doua link-uri consecutive intr-un paragraf sau intr-o lista, la
+	line-height 1.5, ajung la ~24px inaltime - sub minimul de 44px si prea
+	aproape unul de altul (recomandat minim 8px spatiu intre tinte).
+	Cel mai afectate: lista de link-uri din meniul mobil si widget-urile.
+
+TODO [UX-19][MEDIUM]: a:focus { outline: thin dotted } iar a:active {
+	outline: 0 }. Punctat subtire este greu vizibil pe fundal alb si nu
+	foloseste :focus-visible, deci apare si la click cu mouse-ul (zgomot
+	vizual). Vezi CSS-10.
+	Fix: :focus-visible cu outline: 2px solid <culoare de brand> si
+	outline-offset: 2px.
+*/
+
 /* Links
 --------------------------------------------- */
 a {
@@ -562,6 +750,46 @@ a:hover,
 a:active {
 	outline: 0;
 }
+
+/*
+TODO [UX-20][CRITICAL]: input[...] { padding: 3px } - campurile de formular au
+	~24px inaltime. Pe mobil sunt aproape imposibil de atins precis si arata
+	nefinisate. Cu contact-form-7 instalat, aceste stiluri se aplica direct
+	formularului de contact, adica exact pasului care aduce clienti.
+	Fix: min-height 48px, padding 12px 14px, border-radius consistent,
+	latime 100% pe mobil.
+
+TODO [UX-21][CRITICAL]: Campurile nu au font-size propriu. Mostenesc 1rem din
+	regula de tipografie, deci sunt la 16px si iOS NU face zoom automat - bine.
+	Dar daca cineva reduce fontul de baza sau seteaza font-size pe inputuri sub
+	16px, Safari pe iPhone va mari automat pagina la focus, provocand un salt
+	de layout deranjant.
+	REGULA DE RESPECTAT: inputurile raman la minim 16px pe mobil.
+
+TODO [UX-22][HIGH]: Starea de focus a campurilor schimba doar culoarea
+	textului (color: #111) - nu si bordura. Utilizatorul nu vede in ce camp
+	scrie. Fix: border-color + box-shadow (sau outline) pe :focus-visible.
+
+TODO [UX-23][HIGH]: Nu exista stiluri pentru starile de eroare si de succes
+	(.wpcf7-not-valid, .wpcf7-response-output din contact-form-7 raman
+	nestilizate, cu chenarul rosu default al pluginului).
+	Impact: utilizatorul nu intelege ce camp e gresit si abandoneaza formularul.
+	Fix: stilizeaza campul invalid + mesajul de eroare SUB campul respectiv, nu
+	doar global la finalul formularului.
+
+TODO [UX-24][MEDIUM]: Butoanele au background: #e6e6e6 - gri deschis, fara
+	culoare de accent. Un buton de trimitere care arata ca butonul default al
+	sistemului nu comunica "aceasta este actiunea principala".
+	Fix: buton primar cu culoare de brand, contrast minim 4.5:1 pe text,
+	min-height 48px, latime 100% pe mobil (butoanele late se ating mai usor).
+
+TODO [UX-25][MEDIUM]: Butoanele nu au cursor: pointer si nici stare :disabled
+	stilizata (utila cand CF7 blocheaza butonul in timpul trimiterii - altfel
+	utilizatorul apasa de mai multe ori si trimite formularul dublu).
+
+TODO [UX-26][LOW]: select are doar border: 1px solid #ccc - nu se potriveste
+	vizual cu restul campurilor (lipsesc border-radius si padding).
+*/
 
 /* Forms
 --------------------------------------------- */
@@ -645,6 +873,46 @@ textarea {
 	width: 100%;
 }
 
+/*
+TODO [UX-27][CRITICAL]: Sectiunea este goala - nu exista NICIUN layout. Asta
+	este cauza-radacina a majoritatii problemelor de mai jos. Consecinte
+	vizibile pe mobil:
+	  - continutul atinge marginile ecranului (fara gutter);
+	  - #primary si #secondary (sidebar) curg pur si simplu unul sub altul;
+	  - nu exista ritm vertical intre sectiuni.
+	Fix mobile-first, in aceasta ordine:
+	  1. tokenuri de container: --content-width si --gutter: 16px;
+	  2. .site-main, .site-header > *, .site-footer > * primesc
+	     width: 100%; max-width: var(--content-width); margin-inline: auto;
+	     padding-inline: var(--gutter);
+	  3. abia la min-width: 48em introduci coloana de sidebar (grid 2 coloane).
+	Ordinea conteaza: se scrie intai stilul de mobil, fara media query, si se
+	adauga desktopul in min-width. Tema face acum asta doar pentru meniu (vezi
+	CSS-07) - un singur breakpoint in tot fisierul.
+
+TODO [UX-28][HIGH]: Nu exista o scara de spatiere. Marginile sunt hardcodate
+	ca 1.5em peste tot (p, ul, .widget, .post). Rezultat: totul are aceeasi
+	distanta, deci nimic nu pare grupat. Legea proximitatii - elementele legate
+	intre ele trebuie sa fie mai apropiate decat de restul.
+	Fix: --space-1 ... --space-6 in :root (vezi CSS-05) si spatii mai mari
+	INTRE sectiuni decat IN interiorul lor.
+
+TODO [UX-29][HIGH]: Nu exista wrapper cu scroll pentru tabele.
+	table { width: 100% } nu impiedica un tabel cu 5 coloane sa forteze scroll
+	orizontal pe 360px - se deruleaza lateral TOATA pagina, nu doar tabelul.
+	Fix: figure/.table-wrap { overflow-x: auto } (editorul WordPress genereaza
+	deja .wp-block-table intr-un <figure> - stilizeaza acel figure).
+	DE VERIFICAT INTAI: exista tabele in continutul real? Daca nu, ignora.
+
+TODO [UX-30][MEDIUM]: Sidebar-ul (#secondary) apare in DOM DUPA <main> - vezi
+	sidebar.php. Fara layout, pe mobil widget-urile ajung la finalul paginii,
+	unde ajung foarte putini utilizatori. Ca prioritizare mobile-first este
+	corect (continutul primul), dar inseamna ca orice pui in sidebar este
+	practic invizibil pe telefon.
+	Decizie: ori muti informatia importanta (contact, CTA) in continut/footer,
+	ori renunti la sidebar. Vezi si UX-41 din sidebar.php.
+*/
+
 /*--------------------------------------------------------------
 # Layouts
 --------------------------------------------------------------*/
@@ -652,6 +920,38 @@ textarea {
 /*--------------------------------------------------------------
 # Components
 --------------------------------------------------------------*/
+
+/*
+TODO [UX-31][HIGH]: .main-navigation a { display: block } fara padding.
+	In meniul mobil deschis, fiecare link are inaltimea unui rand de text
+	(~24px), fara separatoare si fara spatiu intre ele. Tintele sunt prea mici
+	si prea apropiate - taps gresite garantate.
+	Fix: padding: 14px 16px pe link, min-height 48px, si eventual o linie fina
+	de separare intre elementele de nivel 1.
+
+TODO [UX-32][MEDIUM]: Breakpoint-ul meniului este min-width: 37.5em (600px).
+	E valoarea default Underscores, aleasa arbitrar, nu in functie de cate
+	intrari are meniul real. Daca meniul are 6+ intrari cu etichete lungi in
+	romana, la 600px ele se vor sparge pe doua randuri sau vor iesi din ecran.
+	Fix: alege breakpoint-ul DUPA continut - mareste fereastra pana cand meniul
+	orizontal incape confortabil, si pune acolo breakpoint-ul.
+
+TODO [UX-33][MEDIUM]: .main-navigation ul { display: flex } pe desktop, fara
+	gap, fara flex-wrap si fara aliniere. Elementele se lipesc unul de altul
+	si, daca nu incap, comprima layoutul in loc sa treaca pe rand nou.
+
+TODO [UX-34][MEDIUM]: Link-ul paginii curente nu are niciun stil distinctiv,
+	desi WordPress adauga clasa .current-menu-item. Utilizatorul nu vede unde
+	se afla in site - orientare pierduta, mai ales in meniul mobil.
+	Fix: stil pentru .current-menu-item > a si .current_page_ancestor > a.
+
+TODO [UX-35][MEDIUM]: Navigarea intre articole (.post-navigation .nav-links)
+	este display: flex cu flex: 1 0 50% pe fiecare parte. Pe mobil, doua titluri
+	lungi de articol in doua coloane de ~170px devin blocuri inalte si inguste,
+	greu de citit.
+	Fix mobile-first: stivuire (flex-direction: column) sub breakpoint, doua
+	coloane doar peste el.
+*/
 
 /* Navigation
 --------------------------------------------- */
@@ -749,6 +1049,35 @@ textarea {
 	flex: 1 0 50%;
 }
 
+/*
+TODO [UX-36][HIGH]: Articolele din listare (.post) sunt separate doar prin
+	margin: 0 0 1.5em - fara card, fara chenar, fara linie de separare. Pe
+	mobil, unde totul e pe o coloana, articolele se citesc ca un singur bloc
+	continuu si utilizatorul nu percepe unde se termina unul si incepe altul.
+	Efectul e amplificat de faptul ca listarile afiseaza continutul INTEGRAL
+	(vezi SEO-24 din content.php) - practic un perete de text.
+	Fix: separator vizibil sau card cu padding, si spatiu mai mare intre
+	articole decat in interiorul lor (vezi UX-28).
+
+TODO [UX-37][HIGH]: .post-thumbnail nu are niciun stil - nici aspect-ratio,
+	nici object-fit. Imaginile reprezentative apar la proportiile lor native,
+	deci o listare cu imagini portret si peisaj arata dezordonat, iar
+	inaltimea randurilor sare.
+	Fix: aspect-ratio: 16 / 9 + object-fit: cover + border-radius. Rezervand
+	spatiul imaginii prin aspect-ratio eviti si CLS (Core Web Vitals).
+
+TODO [UX-38][MEDIUM]: .sticky { display: block } - articolele lipite nu au
+	niciun indicator vizual ca sunt evidentiate. Daca nu se folosesc articole
+	sticky pe acest site, regula este cod mort.
+
+TODO [UX-39][MEDIUM]: .entry-meta (data + autor) apare imediat sub titlu,
+	nestilizat, la aceeasi marime cu textul. Pe mobil ocupa spatiu deasupra
+	foldului cu informatie secundara. Vezi si UX-47 din template-tags.php.
+
+TODO [UX-40][LOW]: .page-links (paginarea in interiorul unui articol) nu are
+	stiluri de buton - devin numere mici, lipite, imposibil de atins pe mobil.
+*/
+
 /* Posts and pages
 --------------------------------------------- */
 .sticky {
@@ -784,6 +1113,13 @@ textarea {
 .bypostauthor {
 	display: block;
 }
+
+/*
+TODO [UX-42][LOW]: Widget-urile au doar margin: 0 0 1.5em. Fara titlu stilizat
+	(.widget-title) si fara separare, zona de widget-uri arata ca o insiruire
+	de liste. Vezi si UX-30 - pe mobil ajung oricum la finalul paginii, deci
+	prioritate mica exact din acest motiv.
+*/
 
 /* Widgets
 --------------------------------------------- */
@@ -885,6 +1221,15 @@ textarea {
 /*--------------------------------------------------------------
 # Plugins
 --------------------------------------------------------------*/
+
+/*
+TODO [DEAD-02][MEDIUM]: Sectiunea "Jetpack infinite scroll" de mai jos este CSS mort - DE STERS.
+  Motiv: selectorii .infinite-scroll, .infinite-scroll.neverending si
+         .infinity-end.neverending sunt generati EXCLUSIV de plugin-ul Jetpack.
+         Jetpack nu este instalat (vezi DEAD-01), deci clasele nu apar niciodata
+         in HTML si regulile nu se aplica niciodata.
+  Impact: ~18 linii inutile livrate la fiecare vizitator, in fisierul CSS principal.
+*/
 
 /* Jetpack infinite scroll
 --------------------------------------------- */
