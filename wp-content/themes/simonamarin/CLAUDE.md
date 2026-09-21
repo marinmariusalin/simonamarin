@@ -71,23 +71,43 @@ composer.json      - PHP version requirement
 2. ⬜ Cache control headers
 3. ⬜ Lazy loading imagini
 4. ⬜ Migrare node-sass → sass
-5. ✅ **REZOLVAT PARȚIAL** Block Editor support
-   Adăugate: `editor-styles` + `add_editor_style`, `wp-block-styles`,
-   `responsive-embeds`.
-   **NU** s-a adăugat `align-wide` - fără `theme.json` nu face nimic vizibil.
-   **theme.json (PUB-01) rămâne deschis și are nevoie de decizia ta** - vezi mai jos.
+5. ✅ **REZOLVAT** Block Editor support
+   `editor-styles` + `add_editor_style`, `wp-block-styles`, `responsive-embeds`,
+   `align-wide`, plus **theme.json** (PUB-01) și secțiunea `# Layouts` din
+   style.css, care era goală.
 
-### ⚠️ Blocat pe decizia utilizatorului
+### 🎨 Sistemul de design - vezi DESIGN.md
 
-**theme.json (PUB-01, CRITICAL)** este piesa centrală care oprește obiceiul de
-a pune CSS inline în fiecare articol. Nu poate fi scris fără două lucruri pe
-care nu le pot inventa:
-- **lățimile reale** ale coloanei site-ului (`contentSize` / `wideSize`),
-  măsurate în browser - auditul cere explicit să nu fie valori copiate;
-- **paleta de brand** (culorile reale ale cabinetului).
+Paleta, lățimile și scara tipografică au fost **decise**, nu improvizate.
+Raționamentul complet, cu cifre și surse, este în **[DESIGN.md](DESIGN.md)**.
 
-Odată ce le am, în aceeași sesiune intră și `align-wide` (PUB-04) și
-`add_image_size()` (SEO-04 / UX-76), care depind de aceeași grilă.
+Pe scurt:
+- Verde-albastru dezaturat + alb cald + un accent cărămiziu folosit rar.
+- Suprafețele mari sub 35% saturație, peste 82% luminozitate
+  (Valdez & Mehrabian 1994 - saturația și luminozitatea contează mai mult
+  decât nuanța).
+- Coloană de text 40rem la corp de 18px = ~71 caractere pe rând.
+- Toate cele 18 perechi de contrast trec WCAG 2.2 AA.
+- **Linkurile sunt obligatoriu subliniate**: au doar 2.3-2.4:1 față de textul
+  din jur la toate tipurile de vedere, sub pragul de 3:1 din tehnica G183.
+
+**După orice modificare de culoare:**
+```bash
+python tools/check-contrast.py
+```
+Iese cu cod diferit de zero dacă o pereche pică pragul. Marjele sunt strânse
+în câteva locuri (4.53, 4.83, 4.84) - o ajustare „ca să arate mai bine" poate
+strica accesibilitatea fără niciun semn vizibil.
+
+### ⚠️ De verificat în browser înainte de producție
+
+theme.json schimbă aspectul pe tot site-ul odată, iar **nimic din asta nu a
+fost văzut într-un browser** (baza de date a site-ului Local nu rula):
+1. Meniul mobil se deschide pe ecran sub 600px.
+2. Un articol existent - cele vechi cu stil inline vor arăta diferit (PUB-19).
+3. Editorul de articole seamănă acum cu site-ul.
+4. „Lățime mare" pe o imagine chiar funcționează.
+5. Câmpurile de formular au contur vizibil, fără zoom automat pe iOS.
 
 ### Prioritate 3 - NICE-TO-HAVE (2-3 luni)
 1. CSS custom properties

@@ -72,7 +72,9 @@ function simonamarin_asset_version( $relative_path ) {
  *   Fix: apeleaza `rank_math_the_breadcrumbs()` (exista in Rank Math) in
  *        header.php sau la inceputul lui <main>, protejat cu function_exists().
  *
- * TODO [SEO-03][CRITICAL]: `$content_width = 640` (vezi simonamarin_content_width
+ * SEO-03 [CRITICAL] - REZOLVAT 2026-09-21. $content_width este acum 1088, egal
+ *   cu layout.wideSize din theme.json. Constatarea originala:
+ *   `$content_width = 640` (vezi simonamarin_content_width
  *   mai jos) limiteaza latimea imaginilor inserate in continut la 640px.
  *   Impact: imaginea LCP e servita la rezolutie mica -> arata prost pe desktop /
  *           retina, iar Google penalizeaza calitatea vizuala si CLS.
@@ -283,7 +285,11 @@ function simonamarin_asset_version( $relative_path ) {
  * standard (paragraf, titlu, imagine, citat, lista, tabel, embed), nu deschide
  * niciodata editorul de cod, iar articolul arata identic cu celelalte.
  *
- * TODO [PUB-01][CRITICAL]: Tema NU are fisier theme.json. Este piesa lipsa
+ * PUB-01 [CRITICAL] - REZOLVAT 2026-09-21. Exista theme.json in radacina temei,
+ *   iar deciziile din el (paleta, latimi, scara tipografica) sunt motivate in
+ *   DESIGN.md, cu contrastele masurate si verificabile prin
+ *   `python tools/check-contrast.py`. Constatarea originala:
+ *   Tema NU are fisier theme.json. Este piesa lipsa
  *   centrala: theme.json este locul in care tema ii spune editorului ce latimi,
  *   ce culori, ce dimensiuni de font si ce spatieri sunt permise, iar WordPress
  *   genereaza singur CSS-ul corespunzator, si in editor si pe site. Fara el,
@@ -448,15 +454,20 @@ function simonamarin_setup() {
 	add_editor_style( 'style.css' );
 
 	/*
-	 * TODO [PUB-04][HIGH]: add_theme_support( 'align-wide' ) NU a fost adaugat,
-	 * si este o omisiune deliberata, nu una uitata.
-	 * PUB-04 spune el insusi ca align-wide are efect real doar impreuna cu
-	 * layout.contentSize / wideSize din theme.json (PUB-01) sau cu reguli
-	 * .alignwide / .alignfull in CSS (PUB-13). Adaugat singur, i-ar da autorului
-	 * doua butoane noi in editor care nu produc nimic vizibil pe site - ceea ce
-	 * este mai rau decat lipsa lor, pentru ca il trimite inapoi la latimi inline.
-	 * Se adauga in aceeasi sesiune cu theme.json.
+	 * PUB-04 [HIGH] - REZOLVAT 2026-09-21, acum ca exista theme.json.
+	 *
+	 * Conditia pe care o punea PUB-04 este indeplinita in ambele feluri:
+	 *   - theme.json defineste layout.contentSize (40rem) si wideSize (68rem);
+	 *   - style.css, sectiunea "# Layouts", implementeaza .alignwide si
+	 *     .alignfull. Partea din style.css este obligatorie aici: simonamarin
+	 *     este o tema clasica (are header.php / index.php), nu una de blocuri,
+	 *     deci WordPress NU genereaza singur containerul pentru the_content.
+	 *
+	 * Cu asta, autorul are in editor butoanele "Latime mare" si "Latime completa"
+	 * si ele chiar fac ceva pe site - ceea ce era intreg scopul: sa nu mai fie
+	 * nevoit sa forteze latimi inline in articol.
 	 */
+	add_theme_support( 'align-wide' );
 
 	/*
 	 * PUB-02 [CRITICAL] - REZOLVAT 2026-09-21, mai jos in aceasta functie.
@@ -500,7 +511,11 @@ function simonamarin_setup() {
 	 * inline. Fix: add_theme_support( 'responsive-embeds' ) - WordPress adauga
 	 * singur wrapper-ul care pastreaza proportia.
 	 *
-	 * TODO [PUB-07][HIGH]: Editorul ofera acum color picker liber si dimensiune de
+	 * PUB-07 [HIGH] - REZOLVAT 2026-09-21. theme.json are paleta fixa cu
+ *   "defaultPalette": false si "custom": false, plus "customFontSize": false.
+ *   Autorul alege dintr-un set fix, iar rezultatul in continut este o clasa,
+ *   nu un stil inline. Constatarea originala:
+ *   Editorul ofera color picker liber si dimensiune de
 	 * font libera, pentru ca tema nu declara nicio paleta si nicio scara
 	 * tipografica. Orice culoare aleasa se scrie ca stil inline in articol si
 	 * devine imposibil de schimbat global mai tarziu.
@@ -512,7 +527,9 @@ function simonamarin_setup() {
 	 * tema poate schimba culoarea dintr-un singur loc, pentru toate articolele
 	 * deodata.
 	 *
-	 * TODO [PUB-08][MEDIUM]: Acelasi rationament pentru spatiere. Fara
+	 * PUB-08 [MEDIUM] - REZOLVAT 2026-09-21. theme.json are spacingSizes (5 trepte)
+ *   si "customSpacingSize": false. Constatarea originala:
+ *   Acelasi rationament pentru spatiere. Fara
 	 * settings.spacing.spacingSizes si settings.spacing.units, controalele de
 	 * margine si padding din editor produc valori arbitrare, inline, diferite de
 	 * la un articol la altul. Fix: o scara de spatieri in theme.json si, daca nu
@@ -637,22 +654,24 @@ add_action( 'after_setup_theme', 'simonamarin_setup' );
  */
 function simonamarin_content_width() {
 	/*
-	 * TODO [PUB-06][HIGH]: Aceeasi valoare de 640px, privita din unghiul
-	 * publicarii: $content_width este plafonul pe care editorul il foloseste
-	 * pentru imaginile si embed-urile inserate in articol. Cand autorul insereaza
-	 * o imagine mare si o vede limitata la 640px, reactia normala este sa ii puna
-	 * latime manual in articol - inca o sursa de CSS inline.
-	 * Fix: dupa ce se stabileste latimea reala a coloanei (UX-27), pune aici
-	 * exact acea valoare SI aceeasi valoare in layout.contentSize din theme.json
-	 * (PUB-01). Cele doua trebuie sa ramana sincronizate; daca difera, editorul
-	 * arata o latime si site-ul alta, iar autorul va corecta iar manual.
+	 * SEO-03 [CRITICAL] / PUB-06 [HIGH] - REZOLVATE 2026-09-21.
+	 *
+	 * Valoarea nu mai este 640 (default-ul Underscores) ci 1088, si nu este
+	 * aleasa la intamplare: 1088px = 68rem = exact `layout.wideSize` din
+	 * theme.json. Cele doua TREBUIE sa ramana sincronizate.
+	 *
+	 * De ce wideSize si nu contentSize (40rem / 640px):
+	 * $content_width este plafonul pe care WordPress il foloseste cand decide ce
+	 * dimensiune de imagine sa ofere pentru continut. Coloana de TEXT are 640px,
+	 * dar imaginile si embed-urile au voie sa iasa pe latime mare (.alignwide),
+	 * pana la 1088px. Daca plafonul ar ramane 640, imaginea principala ar fi
+	 * servita mica si ar aparea neclara exact acolo unde e mare - adica fix
+	 * problema de LCP din SEO-03 - iar autorul ar reactiona punandu-i latime
+	 * manual in articol, care e problema din PUB-06.
+	 *
+	 * Daca se schimba wideSize in theme.json, se schimba si aici.
 	 */
-	// TODO [SEO-03][CRITICAL]: 640px este valoarea default din Underscores, nu
-	// latimea reala a coloanei acestui site. WordPress foloseste $content_width ca
-	// plafon pentru imaginile si embed-urile inserate in continut.
-	// Impact: imaginea principala (LCP) e servita mica -> blurata pe desktop.
-	// Fix: masoara latimea reala a .site-main din style.css si pune valoarea aici.
-	$GLOBALS['content_width'] = apply_filters( 'simonamarin_content_width', 640 );
+	$GLOBALS['content_width'] = apply_filters( 'simonamarin_content_width', 1088 );
 }
 add_action( 'after_setup_theme', 'simonamarin_content_width', 0 );
 

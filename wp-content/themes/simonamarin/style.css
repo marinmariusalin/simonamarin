@@ -53,18 +53,26 @@ TODO [CSS-04][MEDIUM]: Clasele .gallery-columns-2 ... .gallery-columns-9 sunt
 	Fix: pastreaza doar cele efectiv folosite, sau treci pe o regula unica cu
 	grid-template-columns: repeat(auto-fit, minmax(...)).
 
-TODO [CSS-05][MEDIUM]: Zero CSS custom properties (variabile). Culorile si
+CSS-05 [MEDIUM] - REZOLVAT 2026-09-21. Culorile si marimile sunt acum tokenuri
+	in theme.json, livrate ca variabile --wp--preset--*. Vezi DESIGN.md.
+	Constatarea originala: Zero CSS custom properties (variabile). Culorile si
 	spatiile sunt hardcodate peste tot. Face imposibila o schimbare de brand
 	fara find-and-replace si blocheaza dark mode.
 
-TODO [CSS-06][MEDIUM]: Sectiunea "# Layouts" este COMPLET GOALA (doar titlu de
+CSS-06 [MEDIUM] - REZOLVAT 2026-09-21. Sectiunea "# Layouts" are acum container
+	cu latime maxima, gutter lateral si .alignwide/.alignfull. Constatarea:
+	Sectiunea "# Layouts" este COMPLET GOALA (doar titlu de
 	comentariu). Nu exista niciun layout definit - fara grid, fara container cu
 	latime maxima, fara pozitionarea sidebar-ului.
 	Impact SEO: pe ecrane mari textul se intinde pe toata latimea ferestrei
 	(linii de 200+ caractere), ceea ce este o problema reala de lizibilitate si
 	de "page experience".
 
-TODO [CSS-07][HIGH]: Exista UN SINGUR media query in tot fisierul (linia ~771,
+CSS-07 [HIGH] - REZOLVAT PARTIAL 2026-09-21. Exista acum un breakpoint de
+	spatiere (48em, in "# Layouts") si tipografie fluida prin theme.json. Nu
+	exista inca ajustari de layout pe componente - raman de facut odata cu
+	decizia despre sidebar (LAYOUT-01). Constatarea originala:
+	Exista UN SINGUR media query in tot fisierul (linia ~771,
 	`min-width: 37.5em`), si acela doar pentru afisarea meniului pe desktop.
 	In rest tema nu are niciun breakpoint: fara ajustari de tipografie, de
 	spatiere sau de layout pe mobil.
@@ -78,7 +86,8 @@ TODO [CSS-07][HIGH]: Exista UN SINGUR media query in tot fisierul (linia ~771,
 TODO [CSS-09][LOW]: style-rtl.css (961 linii) este mentinut in paralel pentru
 	limbi RTL (araba, ebraica). Site-ul este in romana. Vezi PERF-06.
 
-TODO [CSS-10][LOW]: Fara `prefers-reduced-motion` si fara `:focus-visible`
+CSS-10 [LOW] - REZOLVAT 2026-09-21. Ambele sunt in sectiunea "# Layouts".
+	Constatarea originala: Fara `prefers-reduced-motion` si fara `:focus-visible`
 	modern. .screen-reader-text:focus exista (bun pentru skip link), dar
 	restul elementelor interactive se bazeaza pe outline-ul default.
 
@@ -88,7 +97,9 @@ Nota: niciunul dintre TODO-urile de mai jos nu implica modificarea textelor sau
 a titlurilor - doar reguli de stil.
 ================================================================================
 
-TODO [SEO-65][HIGH]: Nu exista `aspect-ratio` pe containerele de imagine
+SEO-65 [HIGH] - REZOLVAT 2026-09-21. .post-thumbnail img are acum aspect-ratio
+	16/9 + object-fit: cover, in "# Layouts". Constatarea originala:
+	Nu exista `aspect-ratio` pe containerele de imagine
 	(.post-thumbnail img, .wp-post-image). `max-width: 100%; height: auto`
 	previne overflow-ul, dar NU rezerva inaltimea inainte ca imaginea sa se
 	incarce. Daca WordPress nu reuseste sa emita width/height (SVG, imagini
@@ -97,7 +108,10 @@ TODO [SEO-65][HIGH]: Nu exista `aspect-ratio` pe containerele de imagine
 	Web Vitals folosite ca semnal de ranking.
 	Fix: .post-thumbnail { aspect-ratio: 16 / 9; } pe containerele de card.
 
-TODO [SEO-66][HIGH]: Fara media query de tipografie (vezi CSS-07), `body` are
+SEO-66 [HIGH] - REZOLVAT 2026-09-21. Corpul de text este 1.125rem cu
+	line-height 1.65, iar coloana are 40rem (~71 caractere pe rand - in
+	intervalul 45-75 recomandat). Calculul e in DESIGN.md. Constatarea:
+	Fara media query de tipografie (vezi CSS-07), `body` are
 	`font-size: 1rem` si `line-height: 1.5` pe toate ecranele, iar containerul
 	nu are latime maxima (CSS-06). Pe desktop rezulta linii foarte lungi.
 	Impact: Google masoara "page experience"; lizibilitatea slaba creste
@@ -112,7 +126,9 @@ TODO [SEO-67][MEDIUM]: Font stack-ul este 100% system-ui (linia ~472), deci nu
 	fisierul .woff2 folosit deasupra foldului, altfel textul devine invizibil
 	pana la incarcarea fontului si LCP-ul creste vizibil.
 
-TODO [SEO-68][MEDIUM]: Ierarhia de titluri nu este diferentiata vizual.
+SEO-68 [MEDIUM] - REZOLVAT 2026-09-21. h1-h6 au scara proprie in theme.json
+	(2.25 / 1.75 / 1.375 / 1.125 / 1 rem). Constatarea originala:
+	Ierarhia de titluri nu este diferentiata vizual.
 	In sectiunea de tipografie, h1-h6 nu au dimensiuni proprii declarate, deci
 	raman la valorile default ale browserului. Un h2 si un h3 care arata la fel
 	anuleaza beneficiul structurii semantice: Google foloseste ierarhia de
@@ -676,16 +692,76 @@ TODO [UX-15][MEDIUM]: Font stack-ul este cel de sistem (-apple-system...).
 
 /* Typography
 --------------------------------------------- */
+
+/*
+SEO-66 [HIGH] / SEO-68 [MEDIUM] / CSS-05 [MEDIUM] - REZOLVATE 2026-09-21.
+
+Valorile nu mai sunt scrise aici, ci in theme.json, si ajung in pagina prin
+variabilele generate de WordPress. Motivul este cel din CSS-05: culorile si
+marimile hardcodate in CSS nu pot fi oferite autorului in editor. Mutate in
+theme.json, aceleasi valori devin si optiuni in interfata de editare, deci
+autorul alege dintr-un set fix in loc sa scrie stil inline in articol.
+
+Ce s-a schimbat efectiv:
+  - corpul de text: 1rem (16px) -> 1.125rem (18px). 16px este marimea default
+    a browserului, potrivita pentru interfete, nu pentru lectura continua. Pe
+    un site unde oamenii citesc texte lungi, 18px este pragul de la care
+    lizibilitatea nu mai depinde de vederea cititorului.
+  - line-height: 1.5 -> 1.65. WCAG 2.2 (criteriul 1.4.12) cere ca pagina sa
+    ramana functionala la un line-height de 1.5 impus de utilizator; 1.65 ca
+    valoare de plecare inseamna ca nimeni nu are nevoie sa forteze setarea.
+  - h1-h6 au acum marimi proprii (vezi styles.elements din theme.json). Inainte
+    ramaneau la valorile default ale browserului, deci un h2 si un h3 aratau
+    aproape la fel - ceea ce anula beneficiul structurii semantice: Google
+    foloseste ierarhia de titluri pentru featured snippets si jump links.
+  - culoarea textului: #404040 -> paleta (contrast, #24302C), 12.91:1 pe fundal.
+
+Regula de mai jos pastreaza DOAR fallback-urile, pentru cazul in care global
+styles nu se incarca, si acopera explicit elementele de formular: browserele nu
+mostenesc automat fontul pe <input>, <select> si <textarea>, asa ca acelea
+trebuie enumerate chiar daca <body> este deja acoperit de theme.json.
+*/
 body,
 button,
 input,
 select,
 optgroup,
 textarea {
-	color: #404040;
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-	font-size: 1rem;
-	line-height: 1.5;
+	color: var( --wp--preset--color--contrast, #24302C );
+	font-family: var( --wp--preset--font-family--system, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif );
+	font-size: var( --wp--preset--font-size--medium, 1.125rem );
+	line-height: 1.65;
+}
+
+/*
+UX-21 [CRITICAL]: campurile de formular primesc explicit aceeasi marime ca
+textul. Sub 16px, Safari pe iOS mareste automat pagina (zoom) cand utilizatorul
+atinge un camp, iar layout-ul sare. 1.125rem este peste prag, deci nu se
+intampla.
+Conturul foloseste border-strong din paleta (3.47:1 fata de fundal), pentru ca
+un contur de camp identifica un control si intra sub WCAG 1.4.11 - spre
+deosebire de liniile decorative, care nu au prag de contrast.
+*/
+input[type="text"],
+input[type="email"],
+input[type="url"],
+input[type="password"],
+input[type="search"],
+input[type="number"],
+input[type="tel"],
+input[type="range"],
+input[type="date"],
+input[type="month"],
+input[type="week"],
+input[type="time"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="color"],
+textarea,
+select {
+	border: 1px solid var( --wp--custom--border-strong, #7C8884 );
+	border-radius: 0.25rem;
+	padding: 0.625rem 0.75rem;
 }
 
 h1,
@@ -760,8 +836,15 @@ big {
 
 /* Elements
 --------------------------------------------- */
+
+/*
+Fundalul paginii trece de la alb pur (#fff) la albul cald din paleta (#FAF8F5).
+Albul pur pe un ecran luminos are contrast maxim cu textul si oboseste ochiul
+la lectura lunga; un ton cald, foarte putin saturat, reduce stralucirea fara sa
+scada contrastul sub prag (textul principal ramane la 12.91:1).
+*/
 body {
-	background: #fff;
+	background: var( --wp--preset--color--base, #FAF8F5 );
 }
 
 hr {
@@ -1048,6 +1131,177 @@ TODO [UX-30][MEDIUM]: Sidebar-ul (#secondary) apare in DOM DUPA <main> - vezi
 /*--------------------------------------------------------------
 # Layouts
 --------------------------------------------------------------*/
+
+/*
+CSS-06 [MEDIUM] / UX-01 [HIGH] / UX-27 / SEO-66 [HIGH] - REZOLVATE 2026-09-21.
+
+Sectiunea asta era complet goala: doar titlul de comentariu. Fara ea, textul
+se intindea pe toata latimea ferestrei (linii de 200+ caractere pe un monitor
+lat) si atingea marginea ecranului pe telefon, fara niciun spatiu lateral.
+
+Valorile NU sunt hardcodate aici. Vin din theme.json, prin variabilele pe care
+le genereaza WordPress:
+	--wp--style--global--content-size   = 40rem  (640px) - coloana de TEXT
+	--wp--style--global--wide-size      = 68rem  (1088px) - imagini pe lat
+Fallback-urile din var() exista doar ca pagina sa nu se rupa daca theme.json
+lipseste vreodata; sursa de adevar ramane theme.json.
+
+DE CE 40rem PENTRU TEXT
+Lungimea de rand recomandata pentru lectura continua este 45-75 de caractere
+(Bringhurst, si masuratorile de lizibilitate care au urmat). Cu corpul de text
+la 1.125rem (18px) si un font sans humanist, latimea medie a unui caracter este
+in jur de 0.5em, adica ~9px. 640 / 9 = ~71 de caractere pe rand: in interval,
+spre capatul confortabil.
+Atentie daca se schimba marimea corpului de text: latimea coloanei si marimea
+fontului merg impreuna. Daca fontul creste la 20px si coloana ramane 640px,
+randul scade la ~64 de caractere (inca bine). Daca fontul scade la 16px, randul
+urca la ~80 - prea lung. Se ajusteaza amandoua, nu una singura.
+
+DE CE ESTE NEVOIE DE CSS AICI SI NU AJUNGE theme.json
+simonamarin este o tema CLASICA (header.php, index.php, the_content()), nu una
+de blocuri. Pentru temele clasice WordPress nu genereaza singur containerul cu
+latime maxima si nici regulile de .alignwide / .alignfull - le genereaza doar
+pentru temele de blocuri. Deci butoanele "Latime mare" si "Latime completa" din
+editor ar fi existat, dar nu ar fi facut nimic vizibil, daca nu ar fi codul de
+mai jos.
+*/
+
+:root {
+	--simonamarin-content-size: var( --wp--style--global--content-size, 40rem );
+	--simonamarin-wide-size: var( --wp--style--global--wide-size, 68rem );
+
+	/*
+	 * Spatiul lateral minim intre text si marginea ecranului.
+	 * 1.25rem = 20px pe mobil. Regula mobile-first din UX-01 cerea minim 16px
+	 * sub 480px; 20px da putin aer in plus fara sa ingusteze inutil coloana.
+	 */
+	--simonamarin-gutter: 1.25rem;
+}
+
+@media ( min-width: 48em ) {
+
+	:root {
+		--simonamarin-gutter: 2rem;
+	}
+}
+
+/*
+Containerul. Se aplica pe zonele de continut, nu pe <body>, ca fundalurile pe
+toata latimea sa ramana posibile.
+*/
+.site-main,
+.site-header > *,
+.site-footer > * {
+	margin-left: auto;
+	margin-right: auto;
+	max-width: var( --simonamarin-wide-size );
+	padding-left: var( --simonamarin-gutter );
+	padding-right: var( --simonamarin-gutter );
+}
+
+/*
+Coloana de text propriu-zisa. Titlul, paragrafele si listele stau la
+contentSize; doar elementele marcate explicit ca "wide" sau "full" ies din ea.
+*/
+.entry-content > *,
+.entry-header,
+.page-header,
+.entry-footer,
+.post-navigation,
+.posts-navigation,
+.comments-area {
+	margin-left: auto;
+	margin-right: auto;
+	max-width: var( --simonamarin-content-size );
+}
+
+/*
+PUB-04 / PUB-13: alinierile late.
+.alignwide iese pana la wideSize, .alignfull ocupa toata fereastra.
+Ambele isi anuleaza gutter-ul containerului, altfel "full" nu ar fi full.
+*/
+.entry-content > .alignwide {
+	max-width: var( --simonamarin-wide-size );
+}
+
+.entry-content > .alignfull {
+	margin-left: calc( -1 * var( --simonamarin-gutter ) );
+	margin-right: calc( -1 * var( --simonamarin-gutter ) );
+	max-width: calc( 100% + 2 * var( --simonamarin-gutter ) );
+}
+
+/*
+Alinierile clasice stanga/dreapta, pastrate pentru continutul deja existent
+scris in editorul clasic.
+*/
+.entry-content > .alignleft {
+	float: left;
+	margin-right: 1.5rem;
+	margin-bottom: 1rem;
+}
+
+.entry-content > .alignright {
+	float: right;
+	margin-left: 1.5rem;
+	margin-bottom: 1rem;
+}
+
+.entry-content > .aligncenter {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/*
+SEO-65 [HIGH]: rezerva inaltimea imaginii din listari inainte sa se incarce, ca
+pagina sa nu sara (CLS - una dintre cele trei metrici Core Web Vitals).
+WordPress emite de obicei width/height pe <img>, dar nu si pentru SVG-uri,
+imagini fara metadate sau imagini venite din pluginuri - acolo intervine asta.
+*/
+.post-thumbnail img {
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+	width: 100%;
+}
+
+/*
+CSS-10 [LOW]: respecta setarea de sistem "reduced motion".
+Pe un site de cabinet conteaza mai mult decat pe altele: animatiile pot fi
+inconfortabile pentru persoane cu tulburari vestibulare sau cu anxietate.
+Nu dezactiveaza tranzitiile complet - le scurteaza la o valoare imperceptibila,
+ca starile de :hover si :focus sa ramana functionale.
+*/
+@media ( prefers-reduced-motion: reduce ) {
+
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		scroll-behavior: auto !important;
+		transition-duration: 0.01ms !important;
+	}
+}
+
+/*
+CSS-10 [LOW]: inel de focus vizibil si consistent.
+Pana acum elementele interactive se bazau pe outline-ul default al browserului,
+care pe unele fundaluri aproape nu se vede. :focus-visible il arata doar la
+navigarea de la tastatura, nu si la clic cu mausul.
+Culoarea vine din paleta (primary-dark), care are 8.21:1 fata de fundal.
+*/
+:where( a, button, input, select, textarea, [tabindex] ):focus-visible {
+	outline: 3px solid var( --wp--preset--color--primary-dark, #2C524A );
+	outline-offset: 2px;
+}
+
+/*
+TODO [LAYOUT-01][MEDIUM]: Sidebar-ul NU este pozitionat aici, deliberat.
+sidebar.php exista, dar UX-41 pune o intrebare care nu s-a decis inca: are
+sidebar-ul acestui site vreun rol real, sau imprastie atentia? Pana la acea
+decizie, continutul ramane pe o coloana - ceea ce este oricum varianta buna pe
+mobil, de unde vine majoritatea traficului. Daca se decide pastrarea
+sidebar-ului, grila se adauga aici, sub un media query de la 64em in sus.
+*/
 
 /*--------------------------------------------------------------
 # Components
