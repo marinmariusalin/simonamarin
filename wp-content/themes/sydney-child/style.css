@@ -212,3 +212,45 @@ proprie a elementelor.
 .sm-contact-group {
 	margin-left: 0.25rem;
 }
+
+/*
+==============================================================================
+ACCESIBILITATE - reguli pe care Sydney 2.71 nu le are (D3, TODO.md)
+==============================================================================
+*/
+
+/*
+`prefers-reduced-motion` nu apare deloc in CSS-ul Sydney 2.71 - orice animatie
+sau tranzitie a temei ruleaza indiferent de setarea de sistem "miscare
+redusa". Pe publicul acestui site (persoane cu tulburari vestibulare sau in
+anxietate) o animatie care nu poate fi oprita nu e un detaliu estetic.
+Regula de mai jos scurteaza practic la zero orice animatie/tranzitie/scroll
+cand vizitatorul a cerut asta din sistemul de operare, fara sa umble prin
+fiecare selector din Sydney.
+*/
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+/*
+`aspect-ratio` lipseste de pe miniaturile din listari (articole, arhive), deci
+inainte ca imaginea sa se incarce browserul nu are cum sa-i rezerve spatiul si
+pagina sare la fiecare imagine - CLS, una dintre cele trei metrici Core Web
+Vitals. Tinta este `.wp-post-image` - clasa pe care WordPress o adauga automat
+la orice imagine scoasa de `the_post_thumbnail()`, indiferent de tema sau de
+dimensiunea ceruta - nu o clasa proprie temei Sydney, care s-ar rupe daca
+markup-ul ei se schimba la un update. 16/9 e proportia standard de miniatura
+observata in listari; pentru o imagine cu alta proportie reala, `object-fit:
+cover` umple cutia rezervata fara sa o deformeze.
+*/
+.wp-post-image {
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+}

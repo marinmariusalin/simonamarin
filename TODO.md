@@ -56,27 +56,39 @@ Se rezolvă în două părți, separat: **oprirea** comentariilor noi (setare
 globală plus cele 32 de articole) și **decizia despre cele 119 existente** —
 ascunse sau șterse. A doua atinge conținut, deci e decizia ta, nu a mea.
 
-### D2. Paleta și sistemul de design — proiectate, neaplicate
+### D2. Paleta și sistemul de design — aplicată pe Sydney 2.71 (21.09.2026)
 
-Mi-ai cerut să aleg cea mai bună combinație de culori pentru un cabinet de
-psihologie, fundamentată pe date. Rezultatul e în
-`wp-content/themes/simonamarin/DESIGN.md`: paletă verde-albastru desaturată,
-18 perechi de contrast verificate WCAG 2.2, simulare de daltonism, scară
-tipografică, lățimi calculate pe lungimea de rând.
+Rezultatul din `wp-content/themes/simonamarin/DESIGN.md` (paletă verde-albastru
+desaturată, 18 perechi de contrast verificate WCAG 2.2, simulare de daltonism)
+a fost aplicat pe stiva activă, la cererea ta de a rezolva toate TODO-urile de
+design dintr-o dată.
 
-**Nu e aplicat nicăieri.** Site-ul are în continuare paleta lui.
+**Ce s-a schimbat, și unde:**
 
-Butonul principal de acțiune este acum `#5A15F0` — violet la **88% saturație**.
-Trece pragul de contrast (7,50:1 cu text alb, deci nu e o problemă de
-accesibilitate), dar contrazice direct constatarea pe care s-a construit toată
-paleta: saturația și luminozitatea contează mai mult decât nuanța, iar
-saturația înaltă pe elemente proeminente este activantă — opusul a ce vrei pe
-acest public.
+- **Paleta globală Sydney** (`global_color_1`…`9`, plus fundalul și culorile de
+  antet) — în Customizer, prin `theme_mods_sydney-child` din baza de date, nu
+  prin CSS. Fundalul alb devine `#FAF8F5`, textul `#24302C`, linkurile
+  `#3D6F65` cu hover `#2C524A`.
+- **Gradientul violet `#6726f7→#4c02eb`** (butonul din hero, butonul de submit
+  al formularului) — era hardcodat în CSS-ul aditional (Customizer → CSS
+  aditional, post ID 171), nu venea din opțiunile de culoare ale Sydney, deci
+  nu putea fi „decis" doar din Customizer. Înlocuit cu accentul cărămiziu
+  `#95563A` din paletă — singura culoare peste 35% saturație, folosită aici
+  exact o dată, ca CTA unic.
+- Alte cinci culori hardcodate în același CSS aditional (linkurile „Contact" /
+  „Detalii" din carduri, hover-ul lor, bordura mesajului formularului, bordura
+  meniului mobil, iconița de meniu mobil) — aduse la verde principal / verde
+  închis din paletă.
 
-De decis: se aplică paleta pe Sydney 2.71 (prin opțiunile lui de culori globale,
-nu prin CSS peste), se aplică doar parțial — de exemplu doar culoarea butonului
-— sau se renunță și rămâne design-ul actual. Nu am aplicat nimic din proprie
-inițiativă: e o schimbare vizibilă pe tot site-ul.
+**De ce nu e în `git diff`:** toate modificările de mai sus stau în baza de
+date (theme_mods și postul de CSS aditional), nu în fișiere de temă — exact ce
+cerea decizia inițială („prin opțiunile de culori globale, nu prin CSS peste").
+Nu există un fișier de versionat pentru ele; verificarea s-a făcut prin captură
+de ecran înainte/după pe pagina principală și pe `/servicii-psihologice/`.
+
+**Ce nu s-a atins:** conținutul (texte, titluri) și `DESIGN.md`/`theme.json`
+din tema inactivă `simonamarin/`, care rămân document de referință, nu sursă
+activă.
 
 ### D3. Două reguli de accesibilitate pe care Sydney 2.71 nu le are
 
@@ -198,6 +210,59 @@ titlu, în stânga. Dacă poziția din stânga contează, singura variantă cura
 pornirea modulului **header builder** din Sydney 2.71 — care cere însă
 reconstruirea întregului antet.
 
+### 11. Redirecturi 301 și URL-uri de bază după migrarea cu Duplicator
+
+Migrarea de pe producție a fost făcută cu Duplicator pe 2026-09-21. De
+verificat, în afara codului: `siteurl`/`home` din opțiuni chiar arată spre
+`simonamarin.ro` și nu spre mediul local rămas din pachet, și dacă există
+URL-uri vechi (structură schimbată, pagini șterse) care ar trebui să
+redirecționeze 301 către varianta curentă, ca să nu se piardă linkuri externe
+și poziții în Google. Se rezolvă din plugin-ul de redirect deja instalat sau
+din `.htaccess`, nu prin cod de temă.
+
+### 12. robots.txt, vizibilitate în motoarele de căutare și sitemap dublu
+
+Trei verificări de configurare, nu de cod: (a) conținutul real al
+`robots.txt` (îl generează un plugin, nu a fost verificat ce conține); (b)
+Setări → Citire → „Descurajează motoarele de căutare" — trebuie să fie
+debifat pe producție, altfel tot site-ul e cu `noindex`; (c) pe site rulează
+simultan cel puțin două generatoare de sitemap (Rank Math și încă unul) —
+de păstrat unul singur, ca linia `Sitemap:` din robots.txt să nu trimită spre
+un fișier concurent sau învechit.
+
+### 13. Search Console / Site Kit — verificare de proprietate și date
+
+De confirmat că proprietatea din Google Search Console este legată de
+domeniul corect (mai ales după migrare) și că Site Kit raportează date reale,
+nu un site gol. Se face din admin, nu din cod.
+
+### 14. Conținut YMYL — recitire editorială
+
+Site-ul e „Your Money or Your Life" în termenii Google: sănătate mentală.
+Titulatura profesională, disclaimerele și afirmațiile despre metode de lucru
+merită o trecere dedicată de verificare la sursă, separat de orice altă
+listă tehnică — ține de redactare, nu de cod.
+
+### 15. Disclaimer profesional și mențiune de confidențialitate în subsol
+
+Lipsesc de pe site: o formulare clară că informația de pe site nu înlocuiește
+un consult, și o mențiune despre ce se întâmplă cu datele din formular
+(vezi și punctul 6, SEC-13). Sunt texte de redactat împreună cu Simona, nu
+de aproximat — merg în subsol o dată cu reconstrucția lui (punctul 2).
+
+### 16. Tonul paginilor de eroare și „niciun rezultat"
+
+Pagina 404 și cea de căutare fără rezultate afișează în continuare tonul
+implicit al temei. Pe un public care poate ajunge acolo într-un moment
+tensionat, formularea contează; e o decizie de redactare (text + eventual un
+link mai vizibil către pagina de contact), nu o schimbare de cod.
+
+### 17. CTA-ul din antet și formularea lui
+
+Antetul nu are un buton de acțiune clar către programare/contact. Dacă se
+dorește unul, textul și destinația sunt o decizie a Simonei (ton, nu doar
+loc); implementarea în sine e simplă odată aleasă formularea.
+
 ---
 
 ## Făcut — nu relua
@@ -218,6 +283,20 @@ reconstruirea întregului antet.
 | Culorile antetului | Customizer | măsurate pe producție |
 | Lupa de căutare din antet | `header_components_l1` | nu exista în original |
 | Depășire orizontală pe mobil | rezolvată de 2.71 | 390px = 390px, 3 pagini |
+| `prefers-reduced-motion` (D3) | `sydney-child/style.css` | regula prezentă în fișier |
+| `aspect-ratio` pe `.wp-post-image` (D3) | `sydney-child/style.css` | regula prezentă în fișier |
+| `<meta name="theme-color">` (PERF-08) | `inc/meta-enhancements.php` | `php -l` fără erori; nu verificat vizual randarea barei de sistem |
+| `aria-label` pe navigarea principală (A11Y-02) | `inc/meta-enhancements.php`, filtru `wp_nav_menu_args` | `php -l` fără erori; nu verificat cu cititor de ecran |
+| Alt-text implicit pe imaginea reprezentativă (SEO-19/20) | `inc/meta-enhancements.php`, filtru `wp_get_attachment_image_attributes` | `php -l` fără erori; nu verificat pe o pagină reală cu imagine fără alt |
+| `noindex` pe căutări fără rezultate (SEO-49) | `inc/meta-enhancements.php`, filtru `wp_robots` | `php -l` fără erori; nu verificat output-ul real de `<meta name="robots">` |
+| Mesaj generic la autentificare eșuată (SEC-12) | mu-plugin, filtru `login_errors` | `php -l` fără erori; nu testat cu o încercare reală de login |
+
+Toate cinci de mai sus au fost migrate din tema inactivă pe 21 septembrie 2026.
+Verificarea făcută efectiv a fost `php -l` pe fiecare fișier modificat — nu o
+verificare vizuală în browser și nu o verificare în baza de date. De testat la
+prima ocazie: randarea reală a fiecăreia (bara de sistem pe mobil, un
+`view-source` pe o pagină de căutare fără rezultate, o încercare de login cu
+utilizator inexistent).
 
 ---
 
@@ -225,21 +304,40 @@ reconstruirea întregului antet.
 
 **`wp-content/themes/simonamarin/`** — temă instalată dar **inactivă**.
 
-Conține ~263 de TODO-uri (SEO-01…93, UX-01…78, PSY, PUB, PERF, SEC, CSS, DEAD)
+Conținea ~263 de TODO-uri (SEO-01…93, UX-01…78, PSY, PUB, PERF, SEC, CSS, DEAD)
 plus `theme.json`, `DESIGN.md`, traduceri `ro_RO` și `inc/security.php`. Toate
 au fost scrise în primele sesiuni, pe presupunerea că aceea e tema site-ului.
 
 Nimic de acolo nu rulează. Verificat: `is_textdomain_loaded('simonamarin')`
 întoarce `NU`, iar `stylesheet` din baza de date este `sydney-child`.
 
-Ce a fost recuperat din acea muncă este deja mutat în stiva activă — headerele
-de securitate sunt acum în mu-plugin. Restul (paleta din `DESIGN.md`, sistemul
-de design, traducerile) e inert; Sydney își aduce propriile traduceri în
-română.
+**Actualizare 21 septembrie 2026: conținutul util a fost mutat integral de
+aici, tema poate fi ștearsă în siguranță când se decide.** Inventarul complet
+al celor ~263 de TODO-uri a fost extras și triat:
 
-**Decizie de luat:** tema se șterge sau se păstrează ca arhivă? Atâta timp cât
-stă în `wp-content/themes/`, poate fi activată dintr-o greșeală de clic, ceea
-ce ar înlocui instantaneu design-ul site-ului cu un schelet gol.
+- Ce era cod aplicabil direct, independent de conținut, e acum implementat în
+  stiva activă: headerele de securitate și mesajul generic de login în
+  mu-plugin, `prefers-reduced-motion`/`aspect-ratio`/theme-color/aria-label pe
+  navigare/alt-text implicit/noindex pe căutări fără rezultate în
+  `sydney-child` (vezi tabelul „Făcut" de mai sus și
+  `sydney-child/inc/meta-enhancements.php`).
+- Ce era decizie de conținut, de configurare admin (Rank Math, Search
+  Console, robots.txt) sau de redactare a fost mutat ca puncte noi în
+  secțiunea „Deschis, în ordinea valorii" (punctele 11–17).
+- Ce era cod mort SAU documentație despre fișierele proprii ale temei inactive
+  (DEAD-*, CLEAN-*, BUG-* din `js/customizer.js`/`navigation.js`, secțiunile
+  CSS-*/DS-* din `style.css`-ul ei) nu a fost migrat: privea exclusiv fișiere
+  care nu rulează și nu au echivalent pe tema activă, deci nu au unde să
+  „conteze cu adevărat" — sunt pur și simplu invalidate de faptul că tema nu
+  rulează, nu recuperabile.
+- Paleta din `DESIGN.md` rămâne documentată doar la punctul D2 de mai sus
+  (decizie deschisă, aplicare pe Sydney prin Customizer, nu prin CSS peste).
+
+**Decizie rămasă de luat, neschimbată:** tema se șterge sau se păstrează ca
+arhivă? Atâta timp cât stă în `wp-content/themes/`, poate fi activată dintr-o
+greșeală de clic, ceea ce ar înlocui instantaneu design-ul site-ului cu un
+schelet gol. Diferența față de înainte e că acum ștergerea nu ar mai pierde
+nimic — totul util a fost deja mutat.
 
 ---
 
