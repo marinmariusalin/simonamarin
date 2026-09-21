@@ -1,8 +1,13 @@
-# Sablon de traducere pentru tema simonamarin.
-# Contine sirurile interfetei temei, cu traduceri goale.
-# Copyright (C) 2026
-# This file is distributed under the GNU General Public License v2 or later.
-#, fuzzy
+# Traducere in romana a sirurilor temei simonamarin.
+# Rezolva UX-69 [CRITICAL] din functions.php.
+#
+# ATENTIE: acest fisier traduce EXCLUSIV sirurile interfetei temei
+# (butoane, etichete, mesaje de eroare, navigare). Nu contine si nu
+# trebuie sa contina niciun text de articol sau de pagina - acelea
+# stau in baza de date si nu se ating.
+#
+# Dupa orice editare aici, .mo trebuie regenerat: WordPress citeste
+# fisierul binar .mo, nu .po. Vezi languages/README-traduceri.md.
 msgid ""
 msgstr ""
 "Project-Id-Version: simonamarin\n"
@@ -10,153 +15,154 @@ msgstr ""
 "POT-Creation-Date: 2026-09-21 00:00+0000\n"
 "PO-Revision-Date: 2026-09-21 00:00+0000\n"
 "Last-Translator: \n"
-"Language-Team: \n"
-"Language: \n"
+"Language-Team: Romanian\n"
+"Language: ro_RO\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2);\n"
 "X-Domain: simonamarin\n"
 
 #. translators: used between list items, there is a space after the comma
 #: inc/template-tags.php
 msgctxt "list item separator"
 msgid ", "
-msgstr ""
+msgstr ", "
 
 #: functions.php
 msgid "Add widgets here."
-msgstr ""
+msgstr "Adaugă widgeturi aici."
 
 #: comments.php
 msgid "Comments are closed."
-msgstr ""
+msgstr "Comentariile sunt închise."
 
 #. translators: %s: Name of current post. Only visible to screen readers
 #: template-parts/content.php
 msgid "Continue reading<span class=\"screen-reader-text\"> \"%s\"</span>"
-msgstr ""
+msgstr "Continuă lectura<span class=\"screen-reader-text\"> „%s”</span>"
 
 #. translators: %s: Name of current post. Only visible to screen readers
 #: inc/template-tags.php, template-parts/content-page.php
 msgid "Edit <span class=\"screen-reader-text\">%s</span>"
-msgstr ""
+msgstr "Editează <span class=\"screen-reader-text\">%s</span>"
 
 #: 404.php
 msgid "It looks like nothing was found at this location. Maybe try one of the links below or a search?"
-msgstr ""
+msgstr "Se pare că la această adresă nu există nimic. Poți încerca unul dintre linkurile de mai jos sau o căutare."
 
 #: template-parts/content-none.php
 msgid "It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help."
-msgstr ""
+msgstr "Se pare că nu găsim ceea ce cauți. O căutare ar putea ajuta."
 
 #. translators: %s: post title
 #: inc/template-tags.php
 msgid "Leave a Comment<span class=\"screen-reader-text\"> on %s</span>"
-msgstr ""
+msgstr "Lasă un comentariu<span class=\"screen-reader-text\"> la %s</span>"
 
 #: 404.php
 msgid "Most Used Categories"
-msgstr ""
+msgstr "Cele mai folosite categorii"
 
 #: single.php
 msgid "Next:"
-msgstr ""
+msgstr "Următorul:"
 
 #: template-parts/content-none.php
 msgid "Nothing Found"
-msgstr ""
+msgstr "Niciun rezultat"
 
 #. translators: 1: title.
 #: comments.php
 msgid "One thought on &ldquo;%1$s&rdquo;"
-msgstr ""
+msgstr "Un comentariu la „%1$s”"
 
 #: 404.php
 msgid "Oops! That page can&rsquo;t be found."
-msgstr ""
+msgstr "Pagina aceasta nu a fost găsită."
 
 #. translators: %: page number
 #: template-parts/content-page.php, template-parts/content.php
 msgid "Pages:"
-msgstr ""
+msgstr "Pagini:"
 
 #. translators: 1: list of categories.
 #: inc/template-tags.php
 msgid "Posted in %1$s"
-msgstr ""
+msgstr "Publicat în %1$s"
 
 #. translators: %s: post date.
 #: inc/template-tags.php
 msgctxt "post date"
 msgid "Posted on %s"
-msgstr ""
+msgstr "Publicat pe %s"
 
 #: single.php
 msgid "Previous:"
-msgstr ""
+msgstr "Anteriorul:"
 
 #: functions.php, header.php
 msgid "Primary"
-msgstr ""
+msgstr "Principal"
 
 #: header.php
 msgid "Primary Menu"
-msgstr ""
+msgstr "Meniu principal"
 
 #. translators: %s: CMS name, i.e. WordPress.
 #: footer.php
 msgid "Proudly powered by %s"
-msgstr ""
+msgstr "Propulsat de %s"
 
 #. translators: 1: link to WP admin new post page.
 #: template-parts/content-none.php
 msgid "Ready to publish your first post? <a href=\"%1$s\">Get started here</a>."
-msgstr ""
+msgstr "Ești gata să publici primul articol? <a href=\"%1$s\">Începe aici</a>."
 
 #. translators: %s: search query.
 #: search.php
 msgid "Search Results for: %s"
-msgstr ""
+msgstr "Rezultatele căutării pentru: %s"
 
 #: functions.php, sidebar.php
 msgid "Sidebar"
-msgstr ""
+msgstr "Bară laterală"
 
 #: header.php
 msgid "Skip to content"
-msgstr ""
+msgstr "Sari la conținut"
 
 #: template-parts/content-none.php
 msgid "Sorry, but nothing matched your search terms. Please try again with some different keywords."
-msgstr ""
+msgstr "Nu am găsit nimic pentru această căutare. Încearcă, te rog, alte cuvinte."
 
 #. translators: 1: list of tags.
 #: inc/template-tags.php
 msgid "Tagged %1$s"
-msgstr ""
+msgstr "Etichetat %1$s"
 
 #. translators: 1: Theme name, 2: Theme author.
 #: footer.php
 msgid "Theme: %1$s by %2$s."
-msgstr ""
+msgstr "Temă: %1$s de %2$s."
 
 #. translators: %1$s: smilie
 #: 404.php
 msgid "Try looking in the monthly archives. %1$s"
-msgstr ""
+msgstr "Poți încerca și în arhivele lunare. %1$s"
 
 #. translators: %s: post author.
 #: inc/template-tags.php
 msgctxt "post author"
 msgid "by %s"
-msgstr ""
+msgstr "de %s"
 
 #. translators: 1: comment count number, 2: title.
 #: comments.php
 msgctxt "comments title"
 msgid "%1$s thought on &ldquo;%2$s&rdquo;"
 msgid_plural "%1$s thoughts on &ldquo;%2$s&rdquo;"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1$s comentariu la „%2$s”"
+msgstr[1] "%1$s comentarii la „%2$s”"
+msgstr[2] "%1$s de comentarii la „%2$s”"
 

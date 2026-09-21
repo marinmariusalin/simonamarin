@@ -338,9 +338,19 @@ function simonamarin_setup() {
 		* to change 'simonamarin' to the name of your theme in all the template files.
 		*/
 	/*
-	 * TODO [UX-69][CRITICAL]: Tema este pregatita pentru traducere, dar folderul
-	 * languages/ contine DOAR simonamarin.pot (sablonul gol) - nu exista niciun
-	 * ro_RO.po / ro_RO.mo. Consecinta directa, vizibila pe site:
+	 * UX-69 [CRITICAL] - REZOLVAT 2026-09-21.
+	 *
+	 * Exista acum languages/ro_RO.po (editabil) si languages/ro_RO.mo (compilat,
+	 * si singurul citit de WordPress la runtime). Locale-ul sitului este deja
+	 * ro_RO, deci traducerea se incarca fara nicio setare suplimentara.
+	 * languages/simonamarin.pot a fost regenerat din codul actual - cel vechi era
+	 * din 2020 si referea inclusiv un inc/woocommerce.php care nu exista (DEAD-03).
+	 *
+	 * DE STIUT INAINTE DE ORICE EDITARE: modificarea lui ro_RO.po nu schimba
+	 * nimic pe site pana cand .mo nu este recompilat (`composer make-mo`).
+	 * Instructiunile complete sunt in languages/readme.txt.
+	 *
+	 * Constatarea originala, pastrata pentru context - asta se vedea pe site:
 	 *   - butonul de meniu mobil scrie "Primary Menu";
 	 *   - meta articolelor scrie "Posted on ... by ...";
 	 *   - arhivele scriu "Category: ...";
