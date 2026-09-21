@@ -171,6 +171,15 @@ pagină; ce s-a făcut până acum:
     suferea de același bug de suprapunere reparat pe `/contact/` (aici
     nescopat) — scos complet, acum că `/contact/` are WhatsApp ca CTA
     principal.
+  - **Grila cardurilor de servicii** (`.servicii-cards`, folosită doar pe
+    Home — verificat) combina `col-md-3` (25% Bootstrap) cu margini fixe în
+    px, ceea ce nu împărțea curat pe rânduri: un card ajungea singur, izolat
+    mult mai jos, cu spațiu gol lângă el. Înlocuită cu CSS Grid
+    (`repeat(auto-fit, minmax(260px, 1fr))`), scopat doar la această grilă.
+    Subtitlul de deasupra cardurilor („Psihologie clinică & ...”) a devenit
+    accidental o celulă din grilă la prima încercare — corectat cu
+    `grid-column: 1 / -1`, să ocupe tot rândul. Rezultat: 3 carduri pe rând,
+    3+3+1, fără sărituri.
 
 ### D3. Două reguli de accesibilitate pe care Sydney 2.71 nu le are
 
