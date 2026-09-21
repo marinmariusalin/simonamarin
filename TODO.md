@@ -86,6 +86,23 @@ cerea decizia inițială („prin opțiunile de culori globale, nu prin CSS pest
 Nu există un fișier de versionat pentru ele; verificarea s-a făcut prin captură
 de ecran înainte/după pe pagina principală și pe `/servicii-psihologice/`.
 
+**Modernizare vizuală (21.09.2026, a doua trecere):** ai adus o referință
+(fundal colorat pe secțiuni, titlu mare cu accent subliniat, poze rotunjite,
+umbre domoale) și ai cerut același efect cu pozele și textele existente, fără
+să restructurez hero-ul în poză plină cu text suprapus — layout-ul actual
+(poză în cadru, text lângă) rămâne.
+
+Adăugat tot în CSS-ul aditional (post 171, bloc nou la final, ca să nu ating
+regulile vechi prin potrivire de text pe un fișier cu spațiere neuniformă):
+cardul din hero primește fundalul verde-deschis din paletă (`#DCE7E3`) și o
+umbră domoală în loc de umbra grea, mov-închisă, de dinainte; titlul principal
+crește la 46px și primește un accent subliniat de 90px în culoarea accentului
+(`#95563A`); poza Simonei și cardurile de servicii/tarife primesc colțuri
+rotunjite; cardurile au acum o umbră ușoară și se ridică vizibil la hover;
+butoanele (Contact, submit formular) devin pilulă (`border-radius: 999px`).
+Verificat pe pagina principală, pe `/servicii-psihologice/` și pe mobil (emulare
+reală de dispozitiv prin DevTools Protocol, 390×844).
+
 **Ce nu s-a atins:** conținutul (texte, titluri) și `DESIGN.md`/`theme.json`
 din tema inactivă `simonamarin/`, care rămân document de referință, nu sursă
 activă.
