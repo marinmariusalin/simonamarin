@@ -162,6 +162,15 @@ pagină; ce s-a făcut până acum:
     nouă, fără text nou (eticheta „WhatsApp” există deja în antet).
   - Rest neschimbat: structura hero, poza, ordinea secțiunilor — conform
     deciziilor 1.1, 1.5, 1.9.
+  - **Trei probleme reale, sub cardurile de servicii, semnalate direct cu
+    capturi:** (1) secțiunea „Despre mine” de pe Home avea o imagine de
+    fundal peste care cardul verde se suprapunea urât — imaginea a fost
+    scoasă; (2) exista un **al doilea bloc „Despre mine”, aproape identic**,
+    duplicat la finalul paginii, fără buton — cruft, șters, rămâne un singur
+    card; (3) un **formular de contact complet, duplicat**, direct pe Home,
+    suferea de același bug de suprapunere reparat pe `/contact/` (aici
+    nescopat) — scos complet, acum că `/contact/` are WhatsApp ca CTA
+    principal.
 
 ### D3. Două reguli de accesibilitate pe care Sydney 2.71 nu le are
 
