@@ -16,12 +16,12 @@ get_header(); ?>
 
 			<?php while ( have_posts() ) : the_post(); ?>
 				<?php //Get the custom field values
-					$photo 	  = get_post_meta( get_the_ID(), 'wpcf-photo', true );
+					$photo    = get_post_meta( get_the_ID(), 'wpcf-photo', true );
 					$position = get_post_meta( get_the_ID(), 'wpcf-position', true );
 					$facebook = get_post_meta( get_the_ID(), 'wpcf-facebook', true );
 					$twitter  = get_post_meta( get_the_ID(), 'wpcf-twitter', true );
 					$google   = get_post_meta( get_the_ID(), 'wpcf-google-plus', true );
-					$link     = get_post_meta( get_the_ID(), 'wpcf-custom-link', true );
+					$emplink     = get_post_meta( get_the_ID(), 'wpcf-custom-link', true );
 				?>
 			<div class="team-item col-md-4">
 			    <div class="team-inner">
@@ -33,24 +33,29 @@ get_header(); ?>
 			    </div>
 			    <div class="team-content">
 			        <div class="name">
-			        	<?php if ($link == '') : ?>
+			        	<?php if ($emplink === '') : ?>
 			        		<?php the_title(); ?>
 			        	<?php else : ?>
-			        		<a href="<?php echo esc_url($link); ?>"><?php the_title(); ?></a>
+			        		<a href="<?php echo esc_url($emplink); ?>"><?php the_title(); ?></a>
 			        	<?php endif; ?>
 			        </div>
 			        <div class="pos"><?php echo esc_html($position); ?></div>
-								<ul class="team-social">
-									<?php if ($facebook != '') : ?>
-										<li><a class="facebook" href="<?php echo esc_url($facebook); ?>" target="_blank"><i class="fa fa-facebook"></i></a></li>
-									<?php endif; ?>
-									<?php if ($twitter != '') : ?>
-										<li><a class="twitter" href="<?php echo esc_url($twitter); ?>" target="_blank"><i class="fa fa-twitter"></i></a></li>
-									<?php endif; ?>
-									<?php if ($google != '') : ?>
-										<li><a class="google" href="<?php echo esc_url($google); ?>" target="_blank"><i class="fa fa-google-plus"></i></a></li>
-									<?php endif; ?>
-								</ul>			        
+
+						<?php 
+						// Get fontawesome prefix
+						$fa_prefix = sydney_get_fontawesome_prefix( 'fab ' ); ?>
+							
+						<ul class="team-social">
+							<?php if ($facebook !== '') : ?>
+								<li><a class="facebook" href="<?php echo esc_url($facebook); ?>" target="_blank"><i class="<?php echo esc_attr( $fa_prefix ); ?>fa-facebook"></i></a></li>
+							<?php endif; ?>
+							<?php if ($twitter !== '') : ?>
+								<li><a class="twitter" href="<?php echo esc_url($twitter); ?>" target="_blank"><i class="<?php echo esc_attr( $fa_prefix ); ?>fa-twitter"></i></a></li>
+							<?php endif; ?>
+							<?php if ($google !== '') : ?>
+								<li><a class="google" href="<?php echo esc_url($google); ?>" target="_blank"><i class="<?php echo esc_attr( $fa_prefix ); ?>fa-google-plus"></i></a></li>
+							<?php endif; ?>
+						</ul>			        
 			    </div>
 			</div><!-- /.team-item -->
 			<?php endwhile; ?>

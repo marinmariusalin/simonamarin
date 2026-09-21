@@ -13,15 +13,15 @@
 	<header class="entry-header">
 		<?php the_title( sprintf( '<h2 class="title-post entry-title"><a href="%s" rel="bookmark">', esc_url( get_permalink() ) ), '</a></h2>' ); ?>
 
-		<?php if ( 'post' == get_post_type() && get_theme_mod('hide_meta_index') != 1 ) : ?>
+		<?php if ( 'post' === get_post_type() && get_theme_mod('hide_meta_index') !== 1 ) : ?>
 		<div class="meta-post">
 			<?php sydney_posted_on(); ?>
 		</div><!-- .entry-meta -->
 		<?php endif; ?>
 	</header><!-- .entry-header -->
 
-	<div class="entry-post">
-		<?php if ( (get_theme_mod('full_content_home') == 1 && is_home() ) || (get_theme_mod('full_content_archives') == 1 && is_archive() ) ) : ?>
+	<div class="entry-post" <?php sydney_do_schema( 'entry_content' ); ?>>
+		<?php if ( (get_theme_mod('full_content_home') === 1 && is_home() ) || (get_theme_mod('full_content_archives') === 1 && is_archive() ) ) : ?>
 			<?php the_content(); ?>
 		<?php else : ?>
 			<?php the_excerpt(); ?>

@@ -1,6 +1,6 @@
 <?php
 /*
-Template Name: Front Page
+Template Name: Sydney Canvas
 */
 
 get_header(); ?>
@@ -13,7 +13,7 @@ get_header(); ?>
 					<?php the_content(); ?>
 				<?php endwhile; ?>
 			</div><!-- .entry-content -->
-			<!--<span>page 2 page_front-page</span>-->
+
 		</main><!-- #main -->
 	</div><!-- #primary -->
 

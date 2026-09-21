@@ -1,16 +1,11 @@
 <?php
-
 /*
-
 Template Name: Full width
-
 */
-	get_header();
-?>
 
+get_header(); ?>
 
-
-	<div id="primary" class="content-area">
+	<div id="primary" class="content-area col-md-12 no-sidebar">
 		<main id="main" class="site-main" role="main">
 
 			<?php while ( have_posts() ) : the_post(); ?>
@@ -19,7 +14,7 @@ Template Name: Full width
 
 				<?php
 
-					if ( comments_open() || '0' != get_comments_number() ) :
+					if ( comments_open() || '0' !== get_comments_number() ) :
 
 						comments_template();
 
@@ -27,13 +22,8 @@ Template Name: Full width
 				?>
 
 			<?php endwhile; // end of the loop. ?>
-        	<?php if (is_front_page() ) : ?>
-        
-        		<!--<div class="row carousel-container-home">
-        			<?php getPageCards() ?>
-        		</div>-->
-			<!--<span>page 3 2Fpage_fullwidth</span>-->
-        	<?php endif; ?>
+
+
 		</main><!-- #main -->
 	</div><!-- #primary -->
 

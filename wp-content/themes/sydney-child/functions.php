@@ -121,62 +121,77 @@ require_once get_stylesheet_directory() . '/inc/icons.php';
 
 /*
  * ============================================================================
- * CE URMEAZA SA FIE MUTAT AICI DIN TEMA PARINTE
+ * MIGRAREA LA SYDNEY 2.71 - STARE SI DECIZII RAMASE
  * ============================================================================
  *
- * Acest commit face DOAR mutarea structurala: site-ul ruleaza pe tema copil si
- * arata identic. Personalizarile de mai jos sunt inca in ../sydney/ si vor fi
- * sterse de primul update al temei. Fiecare are nevoie de verificare proprie in
- * browser, de aceea nu au fost mutate toate deodata.
+ * Tema parinte a fost actualizata de la o versiune din 2020 la 2.71. Nu a fost
+ * un update obisnuit: din 150 de fisiere instalate doar 42 erau identice cu
+ * originalul, iar arhitectura temei s-a schimbat (style.css a trecut de la 1726
+ * la 18 linii, stilurile se genereaza acum din inc/styles.php).
+ * Analiza completa: sydney-update-analiza.md din radacina proiectului.
  *
- * TODO [CHILD-01][CRITICAL]: sydney/functions.php, functia
- *   set_efficient_browser_caching() trimite pe FIECARE pagina de frontend
- *   `Cache-Control: public, max-age=2592000`, adica 30 de zile.
- *   Nu este un header pentru fisiere statice, cum sugereaza numele - se aplica
- *   documentului HTML. Consecinte reale: un vizitator care a citit o pagina
- *   primeste aceeasi versiune 30 de zile, orice corectura de text ramane
- *   invizibila pentru el, iar `public` permite si cache-urilor intermediare sa
- *   pastreze pagina. Pe un site unde se schimba preturi, orare sau informatii
- *   de contact, asta e o problema de continut, nu de performanta.
- *   Corect pentru HTML: `no-cache` (revalidare la fiecare cerere) sau un
- *   max-age de ordinul minutelor. Cache-ul lung se aplica CSS/JS/imagini, si
- *   acolo se seteaza din server sau din LiteSpeed, nu din tema.
+ * REZOLVAT PANA ACUM
+ *   - Culorile antetului, readuse la design-ul original prin optiunile proprii
+ *     ale temei, nu prin CSS peste: antet alb (#ffffff), text de meniu #20292F,
+ *     titlu #443F3F. Valorile sunt masurate pe site-ul de productie, nu alese.
+ *     Sydney 2.71 tine fiecare culoare in doua setari - una `global_*` care o
+ *     leaga de paleta globala si una cu valoarea proprie. Cat timp `global_*`
+ *     are o valoare, ea castiga, deci ambele trebuie scrise.
+ *   - Sabloanele header.php si footer.php scrise pentru Sydney 1.x au fost
+ *     SCOASE din tema copil. Erau construite pe alte clase CSS decat cele din
+ *     2.71 si ar fi produs un amestec intre doua generatii de tema. Raman in
+ *     istoric, in commit-ul 3d661cc, daca e nevoie de continutul lor.
+ *   - Iconitele SVG (inc/icons.php) au supravietuit migrarii neatinse, fiind
+ *     independente de versiunea temei.
  *
- * TODO [CHILD-02][HIGH]: aceeasi functie face `echo "<!-- FUNCTIONS.PHP IS
- *   WORKING 1 -->"` pe hook-ul `send_headers`. Este un marker de depanare
- *   ajuns in productie - se vede ca primii octeti ai fiecarei pagini, inaintea
- *   lui <!DOCTYPE html>. In afara de faptul ca nu are ce cauta acolo, a scrie
- *   in output pe `send_headers` este si o practica riscanta: orice cod care ar
- *   incerca sa trimita un header dupa acel moment esueaza.
+ * TODO [MIG-01][HIGH]: Banda de iconite de contact din antet (Facebook,
+ *   WhatsApp, Instagram, telefon, email) nu mai este afisata. In Sydney 1.x
+ *   statea scrisa direct in header.php, langa titlu.
  *
- * TODO [CHILD-03][HIGH]: sydney/header.php, liniile 55-62, incarca
- *   fontawesome.min.css, solid.min.css si brands.min.css de la
- *   `https://simonamarin.ro/wp-content//themes/sydney/css/...`.
- *   Trei probleme intr-o singura linie: domeniul de productie este scris de
- *   mana (pe Local fisierele nu se incarca deloc, de unde patratele goale in
- *   locul iconitelor din header), calea contine un dublu slash, iar fisierele
- *   ocolesc complet sistemul de enqueue, deci nu pot fi nici depuse in cache,
- *   nici combinate, nici dezactivate de un plugin.
- *   Corect: `wp_enqueue_style` cu `get_theme_file_uri()`, din acest fisier.
- *   ATENTIE la diferenta: blocul JSON-LD din acelasi header.php foloseste tot
- *   `https://simonamarin.ro` si ACOLO este corect - datele structurate trebuie
- *   sa indice identitatea canonica a cabinetului, nu adresa de pe care se
- *   intampla sa fie servita pagina.
+ *   NU am reintrodus-o printr-un nou sablon copil, desi ar fi fost rapid:
+ *   ar insemna sa reintru exact in situatia din care tocmai am iesit, cu un
+ *   sablon copiat care se rupe la urmatorul update al temei.
  *
- * TODO [CHILD-04][MEDIUM]: restul blocului de optimizari adaugat la finalul lui
- *   sydney/functions.php (defer pe scripturi, CSS non-blocking, font-display,
- *   scoaterea lui jquery-migrate) trebuie mutat aici ca sa supravietuiasca unui
- *   update. De verificat in paralel ce face deja LiteSpeed Cache, ca sa nu
- *   existe doua straturi care se bat pe aceeasi optimizare.
+ *   Sydney 2.71 are raspunsul propriu: modulul "header builder", cu o
+ *   componenta `social` si una `contact-info` exact pentru asta. Modulul este
+ *   momentan OPRIT (optiunea `sydney-modules` este false). Pornirea lui schimba
+ *   complet modul in care se construieste antetul, deci este o decizie
+ *   separata, de luat cu verificare vizuala dupa, nu un efect secundar al
+ *   acestui pas.
  *
- * TODO [CHILD-05][MEDIUM]: sydney/style.css nu mai are antet de tema - blocul
- *   cu "Theme Name: Sydney" a fost suprascris. WordPress tolereaza asta (tema
- *   este gasita dupa numele directorului), dar o afiseaza fara nume in
- *   Appearance > Themes si nu ii cunoaste versiunea.
- *   NU am rescris antetul: nu exista nicaieri in fisierele temei versiunea
- *   reala a lui Sydney (nici readme.txt, nici changelog.txt nu o contin), iar
- *   un numar de versiune inventat ar face WordPress sa ofere sau sa ascunda
- *   gresit update-urile. Solutia curata, acum ca personalizarile se muta aici:
- *   se reinstaleaza Sydney curat de pe wordpress.org, ceea ce readuce si
- *   antetul, si versiunea corecta.
+ * TODO [MIG-02][HIGH]: Date structurate - situatia e alta decat parea.
+ *   Vechiul header.php continea un bloc JSON-LD scris de mana, de tip
+ *   MedicalBusiness, cu telefon, interval de pret, program si specialitate.
+ *   Prima concluzie a fost ca disparitia lui este o pierdere SEO.
+ *
+ *   Verificarea paginii dupa migrare arata altceva: Rank Math emite deja date
+ *   structurate - Organization + Person, WebSite, WebPage, cu nume, email,
+ *   profiluri sociale, logo si adresa. Deci site-ul NU a ramas fara schema.
+ *
+ *   Ce lipseste efectiv fata de blocul vechi: `telephone`, `priceRange`,
+ *   programul de lucru, tipul MedicalBusiness si specialitatea medicala.
+ *
+ *   Fix-ul corect NU este readaugarea blocului hardcodat. Ar rezulta doua
+ *   entitati concurente pentru aceeasi afacere, iar dublurile de date
+ *   structurate sunt mai daunatoare decat lipsa lor. Completarea se face in
+ *   Rank Math, la Titles & Meta > Local SEO: tip de afacere, telefon, interval
+ *   de pret, program. Asa ramane o singura sursa, iar datele se mentin din
+ *   panou, nu din cod.
+ *
+ * TODO [MIG-03][MEDIUM]: Subsolul personalizat (contact, retele sociale, lista
+ *   de servicii) este afisat acum in varianta implicita Sydney. Aceeasi decizie
+ *   ca la MIG-01: se reconstruieste prin footer builder sau prin widgeturi, nu
+ *   printr-un sablon copiat.
+ *
+ * TODO [MIG-04][MEDIUM]: Semnatura "Psiholog Simona Marin" de sub titlul
+ *   articolelor, care statea in content-single.php, nu mai apare.
+ *   Se poate reface curat prin hook-ul `sydney_before_single_entry` sau
+ *   `sydney_inside_top_post`, fara sablon copiat.
+ *
+ * TODO [MIG-05][MEDIUM]: De reverificat tipografia pe toate paginile. Setarile
+ *   de font existau deja in format nou (`sydney_body_font`,
+ *   `sydney_headings_font`, ambele Poppins), dar in capturile de dupa migrare
+ *   unele titluri apar cu alt font decat pe productie - foarte probabil din
+ *   CSS-ul aditional al site-ului (optiunea custom_css_post_id), care tintea
+ *   clase din Sydney 1.x.
  */

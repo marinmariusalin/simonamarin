@@ -12,26 +12,12 @@
 
 get_header(); ?>
 
-	<div id="primary" class="content-area">
-		<main id="main" class="post-wrap" role="main">
+<?php do_action('sydney_before_content'); ?>
 
-			<?php while ( have_posts() ) : the_post(); ?>
+<?php do_action( 'sydney_page_content' ); ?>
 
-				<?php get_template_part( 'content', 'page' ); ?>
+<?php do_action('sydney_after_content'); ?>	
 
-				<?php
-					// If comments are open or we have at least one comment, load up the comment template
-					if ( comments_open() || get_comments_number() ) :
-						comments_template();
-					endif;
-				?>
+<?php do_action( 'sydney_get_sidebar' ); ?>
 
-			<?php endwhile; // end of the loop. ?>
-    		<div class="row carousel-container-home">
-    			<?php getArticles() ?>
-    		</div>	
-		<!--<span>page 1 page.php</span>-->
-			
-		</main><!-- #main -->
-	</div><!-- #primary -->
-<?php get_footer(); ?>
+<?php get_footer(); 
