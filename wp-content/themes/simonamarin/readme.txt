@@ -1,3 +1,20 @@
+TODO [DEAD-11][LOW]: Continutul acestui fisier este inca sablonul Underscores
+si descrie o alta tema - de rescris sau de sters.
+Motiv: readme.txt este citit de WordPress.org la distributia unei teme publice.
+Tema aceasta nu se distribuie public, deci fisierul nu are consumator. In plus,
+informatiile din el sunt FALSE si induc in eroare pe oricine preia proiectul:
+  - "Contributors: automattic" - autorul real este alt proiect;
+  - "Description" - descriere nescrisa, placeholder;
+  - "Tested up to: 5.4" / "Requires PHP: 5.6" - valori din 2020, contrazise de
+    realitate (site-ul ruleaza WordPress 6.x);
+  - sectiunea FAQ sustine ca tema include suport pentru WooCommerce si pentru
+    Infinite Scroll din Jetpack. Suportul WooCommerce NU exista deloc in cod, iar
+    cel pentru Jetpack este cod mort (vezi DEAD-01).
+Decizie: ori se sterge fisierul, ori se rescrie cu datele reale ale proiectului
+(la fel ca antetul din style.css - vezi CLEAN-06).
+
+----- continut original mai jos -----
+
 === simonamarin ===
 
 Contributors: automattic

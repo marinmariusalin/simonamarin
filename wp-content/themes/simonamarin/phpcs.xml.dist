@@ -104,6 +104,22 @@
 	#############################################################################
 	-->
 
+	<!--
+		TODO [DEAD-13][LOW]: Acest fisier si celelalte configurari de lint
+		(.eslintrc, .stylelintrc.json) nu sunt rulabile in starea actuala a
+		proiectului - de sters sau de reactivat, nu de lasat asa.
+		Motiv: phpcs se invoca prin `composer lint:wpcs`, care cere
+		./vendor/squizlabs/php_codesniffer/. Directorul vendor/ NU exista in tema
+		(nici node_modules/ pentru stylelint/eslint), deci niciuna dintre
+		configurari nu a fost vreodata executata aici.
+		In plus, .stylelintrc.json are "ignoreFiles": ["sass/_normalize.scss"] -
+		un fisier dintr-un director sass/ care nu exista in tema.
+		Decizie: ori `composer install` + `npm install` si se ruleaza lint-urile in
+		CI, ori se sterg cele 3 fisiere de configurare (nu afecteaza in niciun fel
+		site-ul - sunt fisiere de dezvoltare, vezi si CLEAN-03).
+		NOTA: `value="5.6-"` de mai jos mai trebuie ridicat la 7.4- odata cu
+		composer.json (vezi TODO-ul de acolo despre versiunea PHP).
+	-->
 	<config name="testVersion" value="5.6-"/>
 	<rule ref="PHPCompatibilityWP"/>
 

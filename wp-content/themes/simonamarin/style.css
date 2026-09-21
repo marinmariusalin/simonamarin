@@ -512,6 +512,120 @@ html {
 	box-sizing: border-box;
 }
 
+/*
+================================================================================
+AUDIT DESIGN / CULOARE (2026-09-21)
+Context: site de cabinet de psihoterapie. Deciziile de mai jos nu sunt
+estetice, sunt functionale - paleta si forma comunica siguranta sau
+neincredere inainte ca vizitatorul sa citeasca primul cuvant.
+================================================================================
+
+TODO [DS-01][CRITICAL]: Site-ul nu are NICIO culoare de brand. Tot ce se vede
+	este paleta default a browserului: text #404040, fundal #fff, link albastru
+	regal #4169e1, link vizitat mov #800080, butoane gri #e6e6e6.
+	Pentru un cabinet de psihoterapie, unde decizia de a scrie primul mesaj se
+	ia in mare parte pe incredere si pe "se simte in regula", un site care
+	arata ca un document nestilizat lucreaza impotriva terapeutului.
+	Primul pas nu este sa alegem culori, ci sa le dam ROLURI (DS-02).
+
+TODO [DS-02][CRITICAL]: Defineste un set minim de tokenuri semantice in :root
+	(vezi si CSS-05). Denumeste-le dupa ROL, nu dupa culoare - "--color-accent",
+	nu "--verde":
+	  --surface          fundalul paginii
+	  --surface-alt      fundal pentru sectiuni alternante / carduri
+	  --text             textul principal
+	  --text-muted       meta, captions (minim 4.5:1 pe --surface)
+	  --accent           link-uri si butonul principal
+	  --accent-hover     starea apasata / hover
+	  --border           linii fine de separare
+	  --focus            inelul de focus (poate fi diferit de --accent)
+	Regula: maxim 2 culori cu incarcatura + neutre. Mai multe culori inseamna
+	mai multe decizii vizuale pentru cineva care e deja obosit cognitiv.
+
+TODO [DS-03][HIGH]: Alegerea propriu-zisa a paletei - criterii pentru acest
+	domeniu, in ordinea importantei:
+	  1. SATURATIE JOASA. Culorile intens saturate creeaza activare vizuala.
+	     Pentru un public care include persoane cu anxietate, obiectivul este
+	     opusul: reducerea stimularii. Tinta orientativa: saturatie 15-35%.
+	  2. FUNDAL OFF-WHITE, nu alb pur. #FFFFFF pe un ecran luminos produce
+	     stralucire si oboseala vizuala la citit lung. O nuanta calda de tipul
+	     #FAF9F7 / #F7F5F2 reduce efectul si se percepe ca "mai bland".
+	  3. TEXT APROAPE-NEGRU, nu #000. Contrastul 21:1 (negru pur pe alb pur)
+	     este obositor. Tinta 12-16:1 - ex. #2B2B2B pe #FAF9F7.
+	  4. ACCENT CALM. Functioneaza in practica: albastru-verzui domolit (teal
+	     dezaturat), verde salvie, sau un accent cald de tip teracota/nisip
+	     daca se vrea caldura in loc de calm clinic.
+	  5. DE EVITAT: rosu saturat (alarma, urgenta), galben strident, gradienti
+	     puternici, si paleta "corporate blue" pura - se citeste ca banca sau
+	     clinica, nu ca un cabinet.
+	ACESTEA SUNT CRITERII, NU O DECIZIE. Paleta finala se stabileste impreuna
+	cu terapeuta - daca exista deja un logo sau materiale tiparite, ele dicteaza.
+
+TODO [DS-04][HIGH]: Orice pereche aleasa trebuie verificata pentru contrast
+	INAINTE de a fi scrisa in cod:
+	  - text normal: minim 4.5:1 (WCAG AA); tinteste 7:1 pentru corpul de text;
+	  - text mare (>=24px sau >=19px bold): minim 3:1;
+	  - componente si borduri (input, buton, focus): minim 3:1.
+	Atentie la capcana tipica a paletelor "calme": accentul dezaturat pe fundal
+	deschis pica frecvent sub 4.5:1. Daca se intampla, pastreaza nuanta si
+	coboara luminozitatea - nu abandona paleta.
+
+TODO [DS-05][MEDIUM]: Fara suport pentru dark mode (vezi si CSS-05).
+	Relevant aici mai mult decat pe alte site-uri: o parte din vizitele pe
+	site-urile de sanatate mintala se intampla noaptea, iar un ecran alb
+	orbitor pe intuneric este atat inconfortabil, cat si mai greu de citit.
+	Fix: @media (prefers-color-scheme: dark) care redefineste tokenurile din
+	DS-02. Cu tokenuri, dark mode inseamna ~10 linii; fara ele, e imposibil.
+
+TODO [DS-06][MEDIUM]: Fara @media (prefers-reduced-motion: reduce) (CSS-10).
+	Miscarea involuntara - parallax, elemente care apar la scroll, carusele -
+	poate produce disconfort vestibular si, separat, creste activarea la
+	persoanele anxioase. Daca se adauga animatii (vezi UX-08), aceasta regula
+	trebuie adaugata in ACELASI commit, nu ulterior.
+
+TODO [DS-07][HIGH]: Tipografie de brand, din perspectiva de perceptie (vezi si
+	UX-15 pentru decizia tehnica):
+	  - un serif umanist pe titluri se percepe ca mai cald si mai personal
+	    decat un sans geometric; un sans geometric rece ("tech") este exact
+	    tonul gresit pentru un cabinet;
+	  - corpul de text: minim 17-18px pe mobil (default-ul de 16px e minimul
+	    absolut, nu optimul pentru citit lung);
+	  - fara text integral cu majuscule si fara litere ratacite (letter-spacing
+	    mare) - ambele incetinesc citirea;
+	  - aliniere la stanga, niciodata justify: spatiile neregulate din textul
+	    justificat ingreuneaza citirea, cu efect mai mare la dislexie.
+
+TODO [DS-08][MEDIUM]: Forma elementelor. Colturile rotunjite (8-12px pe
+	carduri, 6-8px pe butoane si campuri) se percep constant ca mai
+	"prietenoase" decat colturile ascutite; umbrele trebuie sa fie moi si
+	difuze, nu dure. Tema foloseste acum border-radius: 3px - o valoare
+	neutra, care nu comunica nimic. Vezi UX-37 pentru imagini.
+
+TODO [DS-09][MEDIUM]: Densitate si spatiu alb. Un layout aerisit reduce
+	sarcina cognitiva si transmite calm; unul dens transmite urgenta. Aceasta
+	este inca o consecinta a lipsei scarii de spatiere (UX-28) si a lipsei
+	layoutului (UX-27). Pe mobil: sectiuni separate prin spatiu generos
+	(48-64px), nu prin linii.
+
+TODO [DS-10][LOW]: Fara emoji in interfata (butoane, titluri, meniu). Se
+	randeaza diferit pe fiecare sistem, nu au contrast garantat si coboara
+	tonul intr-un context unde seriozitatea profesionala conteaza.
+
+TODO [DS-11][MEDIUM]: Culoarea inelului de focus (--focus din DS-02) trebuie
+	aleasa DUPA paleta si verificata pe toate fundalurile pe care apare. Pe o
+	paleta dezaturata, focusul default al browserului devine practic invizibil.
+	Vezi UX-19 si UX-22.
+
+TODO [DS-12][HIGH]: Imagistica (nu e CSS, dar tine de aceeasi decizie de
+	design): fotografia reala a terapeutei, profesionista, cu privire spre
+	camera, este cel mai puternic element de incredere de pe un site de
+	cabinet - net peste orice fotografie de stoc.
+	DE EVITAT: stock cu persoane triste tinandu-se cu mainile de cap, canapele
+	goale, siluete in ceata, creiere ilustrate, puzzle-uri. Sunt clisee care
+	semnaleaza ca site-ul nu a fost facut cu atentie.
+	Vezi UX-76 pentru dimensiunile de imagine si UX-37 pentru proportii.
+*/
+
 /*--------------------------------------------------------------
 # Base
 --------------------------------------------------------------*/
@@ -694,6 +808,19 @@ img {
 figure {
 	margin: 1em 0;
 }
+
+/*
+TODO [PUB-20][MEDIUM]: Tabelele au doar margine si width: 100%, fara chenar,
+	fara padding in celule si fara antet diferentiat. Un tabel inserat intr-un
+	articol nou arata ca text asezat in coloane. In plus, pe ecran ingust nu
+	exista nicio strategie de depasire (vezi UX-31): un tabel cu 5 coloane
+	lateste pagina pe telefon.
+	Fix: stilizeaza `.wp-block-table table` (chenar, padding, th cu fundal) si
+	pune overflow-x: auto pe `.wp-block-table` / figure - editorul genereaza deja
+	tabelul intr-un <figure>, deci exista unde.
+	Pana atunci, singura solutie la indemana autorului este sa formateze tabelul
+	manual in articol, ceea ce este exact ce incearca PUB-* sa elimine.
+*/
 
 table {
 	margin: 0 0 1.5em;
@@ -1078,6 +1205,48 @@ TODO [UX-40][LOW]: .page-links (paginarea in interiorul unui articol) nu are
 	stiluri de buton - devin numere mici, lipite, imposibil de atins pe mobil.
 */
 
+/*
+TODO [PUB-10][HIGH]: Aceasta foaie de stil trateaza doar elemente HTML generice
+	(p, ul, blockquote, table, img) si markup-ul editorului CLASIC (.wp-caption,
+	.gallery). Nu exista nicio regula pentru markup-ul pe care il genereaza
+	efectiv editorul de blocuri: .wp-block-image, .wp-block-quote,
+	.wp-block-pullquote, .wp-block-table, .wp-block-embed, .wp-block-button,
+	.wp-block-columns, .wp-block-group, .wp-block-separator, .wp-block-code,
+	.wp-block-media-text, .wp-block-cover, .wp-block-list.
+	Impact direct: orice bloc pe care autorul il insereaza intr-un articol nou
+	cade pe stilurile default ale browserului, arata nefinisat, iar corectura se
+	face in articol. Aici este partea de CSS a problemei "trebuie sa pun stil in
+	fiecare articol".
+	Fix: o sectiune dedicata pentru continut, scrisa pe .entry-content si
+	incarcata si in editor (vezi PUB-02 si PUB-17), care acopera cel putin
+	blocurile de mai sus. Se scrie o singura data si se aplica retroactiv
+	tuturor articolelor care nu au stil inline.
+
+TODO [PUB-11][HIGH]: Titlurile din interiorul articolului nu au ritm vertical
+	propriu. h1-h6 folosesc marginile default ale browserului, egale sus si jos,
+	deci un subtitlu nu se "lipeste" vizual de sectiunea pe care o introduce.
+	Intr-un articol lung asta face structura greu de urmarit si il impinge pe
+	autor sa adauge spatieri manual, bloc cu bloc.
+	Fix: in sectiunea de continut, margin-top mai mare decat margin-bottom pe
+	.entry-content h2/h3/h4 (raport uzual 2:1), plus `:first-child { margin-top: 0 }`.
+
+TODO [PUB-12][MEDIUM]: .entry-content nu are latime maxima de citire (vezi si
+	UX-14 / UX-27). Pe un monitor lat randurile devin foarte lungi, iar autorul
+	care observa asta incearca sa restranga latimea din articol, cu un grup sau
+	cu stil inline.
+	Fix: max-width pe .entry-content > * (in jur de 65ch), cu exceptie explicita
+	pentru .alignwide / .alignfull (PUB-13). Aceeasi valoare trebuie sa apara in
+	layout.contentSize din theme.json (PUB-01), altfel editorul arata altceva
+	decat site-ul.
+
+TODO [PUB-16][MEDIUM]: Clasele pe care le genereaza optiunile din editor nu au
+	corespondent in tema: .has-text-align-center / -left / -right,
+	.has-<nume>-color, .has-<nume>-background-color, .has-<nume>-font-size,
+	.has-drop-cap. Cat timp nu sunt definite (prin theme.json, PUB-07, sau prin
+	reguli proprii), butoanele respective din editor fie nu exista, fie nu au
+	efect vizibil - iar autorul recurge din nou la stil inline.
+*/
+
 /* Posts and pages
 --------------------------------------------- */
 .sticky {
@@ -1146,6 +1315,17 @@ TODO [UX-42][LOW]: Widget-urile au doar margin: 0 0 1.5em. Fara titlu stilizat
 .custom-logo-link {
 	display: inline-block;
 }
+
+/*
+TODO [PUB-15][MEDIUM]: Legendele sunt stilizate doar pentru markup-ul clasic
+	(.wp-caption, .wp-caption-text). Editorul de blocuri genereaza insa
+	`figure.wp-block-image > figcaption`, care nu este acoperit de niciun
+	selector de aici, deci o legenda adaugata intr-un articol nou apare ca text
+	obisnuit, lipit de imagine, la aceeasi marime ca restul textului.
+	Fix: extinde selectorii la figcaption (marime mai mica, culoare mai discreta,
+	spatiu fata de imagine). Acelasi fisier trebuie incarcat si in editor
+	(PUB-17), ca autorul sa vada legenda asa cum va arata pe site.
+*/
 
 /* Captions
 --------------------------------------------- */
@@ -1290,6 +1470,24 @@ TODO [DEAD-02][MEDIUM]: Sectiunea "Jetpack infinite scroll" de mai jos este CSS 
 #primary[tabindex="-1"]:focus {
 	outline: 0;
 }
+
+/*
+TODO [PUB-13][HIGH]: Sectiunea de aliniere acopera doar .alignleft, .alignright
+	si .aligncenter (markup de editor clasic). Lipsesc complet .alignwide si
+	.alignfull, folosite de editorul de blocuri pentru "Latime mare" si "Latime
+	completa" - optiunile pe care le cauta orice autor cand vrea o imagine lata.
+	Fara ele, chiar si dupa add_theme_support( 'align-wide' ) (PUB-04), clasele
+	ajung in continut dar nu schimba nimic.
+	Fix: reguli .alignwide / .alignfull in interiorul .entry-content, corelate cu
+	layout.contentSize si layout.wideSize din theme.json (PUB-01).
+
+TODO [PUB-14][MEDIUM]: .alignleft si .alignright folosesc float fara `clear` si
+	fara anulare pe ecran ingust. Pe telefon, o imagine aliniata la stanga lasa
+	langa ea o coloana de text de cativa centimetri, iar elementul urmator poate
+	urca peste ea. Autorul rezolva de obicei punand latimi inline in articol.
+	Fix: pe latimi mici, float: none + width: 100% + margin orizontal 0 pentru
+	ambele clase, plus clearfix pe .entry-content.
+*/
 
 /* Alignments
 --------------------------------------------- */

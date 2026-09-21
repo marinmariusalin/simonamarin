@@ -1,3 +1,22 @@
+/*
+=============================================================================
+AUDIT COD MORT (2026-09-21)
+TODO [DEAD-05][MEDIUM]: INTREGUL FISIER (961 linii, ~30 KB) ESTE MORT - DE STERS.
+  Motiv: fisierul este servit doar prin
+         wp_style_add_data( 'simonamarin-style', 'rtl', 'replace' ) din
+         functions.php, iar WordPress il livreaza EXCLUSIV cand is_rtl() este
+         adevarat, adica pentru limbi scrise de la dreapta la stanga
+         (araba, ebraica, farsi, urdu). Site-ul este in romana (ro_RO, LTR),
+         deci fisierul nu este cerut niciodata de niciun vizitator.
+  Motiv 2: este o copie generata automat a lui style.css (prin `npm run
+         compile:rtl` / rtlcss). Fiind duplicat, orice modificare in style.css
+         il face imediat desincronizat - intretinere in plus fara beneficiu.
+  De sters impreuna cu: scriptul "compile:rtl" si blocul "rtlcssConfig" din
+         package.json (vezi DEAD-06) si linia wp_style_add_data() din
+         functions.php.
+  A NU se sterge daca se planifica o versiune a site-ului intr-o limba RTL.
+=============================================================================
+*/
 /*!
 Theme Name: simonamarin
 Theme URI: https://underscores.me/

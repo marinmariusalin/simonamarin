@@ -64,19 +64,12 @@ get_header();
 
 			get_template_part( 'template-parts/content', 'page' );
 
-			// If comments are open or we have at least one comment, load up the comment template.
 			/*
-			 * TODO [UX-71][MEDIUM]: Comentariile sunt incarcate si pe PAGINI, nu
-			 * doar pe articole. Pe un site de prezentare, o sectiune de comentarii
-			 * sub pagina "Servicii" sau "Despre" este zgomot: adauga inaltime pe
-			 * mobil, invita spam (vezi SEC-09 din comments.php) si nu aduce nimic.
-			 * Fix: dezactiveaza comentariile pe pagini din Settings > Discussion
-			 * (setare de administrare, nu de cod) sau conditioneaza aici pe tipul
-			 * de continut.
+			 * REZOLVAT [UX-71] (2026-09-21): comentariile nu se mai incarca pe
+			 * pagini. Apelul la comments_template() a fost eliminat; blocarea la
+			 * nivel de site se face prin simonamarin_disable_comments() din
+			 * functions.php. Vezi si single.php.
 			 */
-			if ( comments_open() || get_comments_number() ) :
-				comments_template();
-			endif;
 
 		endwhile; // End of the loop.
 		?>

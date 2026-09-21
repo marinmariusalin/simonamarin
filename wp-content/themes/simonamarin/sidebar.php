@@ -54,6 +54,18 @@ if ( ! is_active_sidebar( 'sidebar-1' ) ) {
 }
 ?>
 
+<?php
+/*
+ * TODO [PSY-20][MEDIUM]: DACA sidebar-ul se pastreaza (vezi UX-41 pentru
+ * motivele pentru care pe mobil e o zona slaba), continutul cu cel mai bun
+ * randament pentru un cabinet nu sunt articolele recente sau tag cloud-ul,
+ * ci: fotografia si o prezentare de doua randuri a terapeutei, "cum decurge
+ * prima sedinta" si o cale directa de contact.
+ * Widget-urile default de blog (arhive pe luni, tag cloud, comentarii
+ * recente) nu au nicio utilitate aici si, in cazul comentariilor recente,
+ * expun public fragmente personale - vezi PSY-11.
+ */
+?>
 <aside id="secondary" class="widget-area">
 	<?php dynamic_sidebar( 'sidebar-1' ); ?>
 </aside><!-- #secondary -->

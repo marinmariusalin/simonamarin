@@ -1,3 +1,21 @@
+# =============================================================================
+# AUDIT COD MORT (2026-09-21)
+# TODO [DEAD-03][MEDIUM]: ACEST FISIER ESTE INUTILIZABIL - DE STERS SAU DE REGENERAT.
+#   Motiv 1: antetul de mai jos declara "X-Domain: _s" si
+#            "Project-Id-Version: _s 1.0.0", adica domeniul de text al temei
+#            originale Underscores. Tema de fata foloseste domeniul
+#            'simonamarin' in toate apelurile __() / esc_html__(). Un catalog
+#            cu alt domeniu nu se potriveste NICIODATA cu sirurile din cod.
+#   Motiv 2: fisierul a fost generat la 2020-04-17 si nu mai reflecta sirurile
+#            actuale din tema.
+#   Motiv 3: directorul languages/ nu contine niciun .po sau .mo. Apelul
+#            load_theme_textdomain() din functions.php nu are deci ce incarca -
+#            un .pot singur nu traduce nimic, este doar un sablon.
+#   Fix: ori se sterge fisierul (tema ramane in engleza, comportament identic
+#        cu cel de acum), ori se regenereaza corect cu
+#        `wp i18n make-pot . languages/simonamarin.pot` si se creeaza ro_RO.po/.mo.
+#        Vezi si scriptul "make-pot" din composer.json, care inca scrie in _s.pot.
+# =============================================================================
 # Copyright (C) 2020 Automattic
 # This file is distributed under the GNU General Public License v2 or later.
 msgid ""
