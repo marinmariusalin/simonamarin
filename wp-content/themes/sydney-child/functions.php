@@ -131,77 +131,46 @@ require_once get_stylesheet_directory() . '/inc/contact-links.php';
 
 /*
  * ============================================================================
- * MIGRAREA LA SYDNEY 2.71 - STARE SI DECIZII RAMASE
+ * MIGRAREA LA SYDNEY 2.71 - CE A RAMAS
  * ============================================================================
  *
- * Tema parinte a fost actualizata de la o versiune din 2020 la 2.71. Nu a fost
- * un update obisnuit: din 150 de fisiere instalate doar 42 erau identice cu
- * originalul, iar arhitectura temei s-a schimbat (style.css a trecut de la 1726
- * la 18 linii, stilurile se genereaza acum din inc/styles.php).
- * Analiza completa: sydney-update-analiza.md din radacina proiectului.
+ * Lista completa si prioritizata este in TODO.md din radacina proiectului.
+ * Aici raman doar punctele care privesc direct fisierele acestei teme.
  *
- * REZOLVAT PANA ACUM
- *   - Culorile antetului, readuse la design-ul original prin optiunile proprii
- *     ale temei, nu prin CSS peste: antet alb (#ffffff), text de meniu #20292F,
- *     titlu #443F3F. Valorile sunt masurate pe site-ul de productie, nu alese.
- *     Sydney 2.71 tine fiecare culoare in doua setari - una `global_*` care o
- *     leaga de paleta globala si una cu valoarea proprie. Cat timp `global_*`
- *     are o valoare, ea castiga, deci ambele trebuie scrise.
- *   - Sabloanele header.php si footer.php scrise pentru Sydney 1.x au fost
- *     SCOASE din tema copil. Erau construite pe alte clase CSS decat cele din
- *     2.71 si ar fi produs un amestec intre doua generatii de tema. Raman in
- *     istoric, in commit-ul 3d661cc, daca e nevoie de continutul lor.
- *   - Iconitele SVG (inc/icons.php) au supravietuit migrarii neatinse, fiind
- *     independente de versiunea temei.
+ * REZOLVAT, ca sa nu fie reluat:
+ *   - Culorile antetului, readuse la valorile masurate pe productie prin
+ *     optiunile proprii ale temei. In 2.71 fiecare culoare are doua setari,
+ *     una `global_*` care o leaga de paleta globala si una cu valoarea
+ *     proprie; cat timp `global_*` are valoare, ea castiga, deci ambele
+ *     trebuie scrise.
+ *   - Iconitele de contact din antet (era MIG-01), refacute prin filtrul de
+ *     nucleu `wp_nav_menu_items` - vezi inc/contact-links.php.
+ *   - Componenta de cautare scoasa din antet; nu exista in design-ul original.
+ *   - FontAwesome inlocuit cu SVG inline - vezi inc/icons.php.
  *
- * TODO [MIG-01][HIGH]: Banda de iconite de contact din antet (Facebook,
- *   WhatsApp, Instagram, telefon, email) nu mai este afisata. In Sydney 1.x
- *   statea scrisa direct in header.php, langa titlu.
- *
- *   NU am reintrodus-o printr-un nou sablon copil, desi ar fi fost rapid:
- *   ar insemna sa reintru exact in situatia din care tocmai am iesit, cu un
- *   sablon copiat care se rupe la urmatorul update al temei.
- *
- *   Sydney 2.71 are raspunsul propriu: modulul "header builder", cu o
- *   componenta `social` si una `contact-info` exact pentru asta. Modulul este
- *   momentan OPRIT (optiunea `sydney-modules` este false). Pornirea lui schimba
- *   complet modul in care se construieste antetul, deci este o decizie
- *   separata, de luat cu verificare vizuala dupa, nu un efect secundar al
- *   acestui pas.
- *
- * TODO [MIG-02][HIGH]: Date structurate - situatia e alta decat parea.
- *   Vechiul header.php continea un bloc JSON-LD scris de mana, de tip
- *   MedicalBusiness, cu telefon, interval de pret, program si specialitate.
- *   Prima concluzie a fost ca disparitia lui este o pierdere SEO.
- *
- *   Verificarea paginii dupa migrare arata altceva: Rank Math emite deja date
- *   structurate - Organization + Person, WebSite, WebPage, cu nume, email,
- *   profiluri sociale, logo si adresa. Deci site-ul NU a ramas fara schema.
- *
- *   Ce lipseste efectiv fata de blocul vechi: `telephone`, `priceRange`,
- *   programul de lucru, tipul MedicalBusiness si specialitatea medicala.
- *
- *   Fix-ul corect NU este readaugarea blocului hardcodat. Ar rezulta doua
- *   entitati concurente pentru aceeasi afacere, iar dublurile de date
- *   structurate sunt mai daunatoare decat lipsa lor. Completarea se face in
- *   Rank Math, la Titles & Meta > Local SEO: tip de afacere, telefon, interval
- *   de pret, program. Asa ramane o singura sursa, iar datele se mentin din
- *   panou, nu din cod.
- *
- * TODO [MIG-03][MEDIUM]: Subsolul personalizat (contact, retele sociale, lista
- *   de servicii) este afisat acum in varianta implicita Sydney. Aceeasi decizie
- *   ca la MIG-01: se reconstruieste prin footer builder sau prin widgeturi, nu
- *   printr-un sablon copiat.
+ * TODO [MIG-03][HIGH]: Subsolul personalizat (contact, retele sociale, lista
+ *   de servicii) se afiseaza acum in varianta implicita Sydney. Se
+ *   reconstruieste prin widgeturi sau prin hook-urile `sydney_before_footer` /
+ *   `sydney_footer`, NU printr-un footer.php copiat in aceasta tema.
+ *   Motivul e acelasi pentru care MIG-01 a fost facut prin filtru: un sablon
+ *   copiat este scris pentru markup-ul unei anumite versiuni si se rupe tacut
+ *   la urmatoarea. Datele de contact exista deja structurate in
+ *   inc/contact-links.php, in simonamarin_contact_links().
  *
  * TODO [MIG-04][MEDIUM]: Semnatura "Psiholog Simona Marin" de sub titlul
- *   articolelor, care statea in content-single.php, nu mai apare.
- *   Se poate reface curat prin hook-ul `sydney_before_single_entry` sau
- *   `sydney_inside_top_post`, fara sablon copiat.
+ *   articolelor statea in content-single.php. Se reface prin hook-ul
+ *   `sydney_before_single_entry` sau `sydney_inside_top_post`.
  *
- * TODO [MIG-05][MEDIUM]: De reverificat tipografia pe toate paginile. Setarile
- *   de font existau deja in format nou (`sydney_body_font`,
- *   `sydney_headings_font`, ambele Poppins), dar in capturile de dupa migrare
- *   unele titluri apar cu alt font decat pe productie - foarte probabil din
- *   CSS-ul aditional al site-ului (optiunea custom_css_post_id), care tintea
- *   clase din Sydney 1.x.
+ * TODO [MIG-05][MEDIUM]: De reverificat tipografia pe toate paginile. Fonturile
+ *   sunt setate (Poppins), dar pe unele titluri apare alt font decat pe
+ *   productie. Cauza probabila nu este in aceasta tema, ci in CSS-ul aditional
+ *   al site-ului (optiunea custom_css_post_id, ID 171), care tinteste clase din
+ *   Sydney 1.x ce nu mai exista.
+ *
+ * TODO [MIG-06][LOW]: Pozitia iconitelor de contact este acum la capatul
+ *   meniului, in dreapta; in design-ul vechi stateau langa titlu, in stanga.
+ *   Este consecinta directa a faptului ca devin elemente de meniu, si a fost
+ *   asumata. Daca pozitia din stanga este ceruta, singura varianta curata este
+ *   pornirea modulului header builder, care cere insa reconstruirea intregului
+ *   antet - inclusiv a culorilor abia readuse la design-ul original.
  */

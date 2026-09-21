@@ -1,3 +1,20 @@
+> # ⚠️ FIȘIER DEPĂȘIT — NU TE LUA DUPĂ EL
+>
+> Acest document a fost scris presupunând că `simonamarin` este tema site-ului.
+> **Nu este.** Tema activă este `sydney-child`, cu părintele `sydney` 2.71.
+> Verificat în baza de date: `get_option('stylesheet')` întoarce `sydney-child`.
+>
+> Toată munca descrisă mai jos — TODO-urile, `theme.json`, sistemul de design
+> din `DESIGN.md`, traducerile `ro_RO` — se află într-o temă care nu rulează,
+> deci nu are niciun efect pe site.
+>
+> **Mergi la [`CLAUDE.md`](../../../CLAUDE.md) și [`TODO.md`](../../../TODO.md)
+> din rădăcina proiectului.**
+>
+> Textul de mai jos e păstrat doar ca istoric.
+
+---
+
 # Tema WordPress simonamarin - CLAUDE.md
 
 ## 📍 Project Setup
