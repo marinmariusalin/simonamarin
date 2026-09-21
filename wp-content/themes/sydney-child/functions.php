@@ -129,6 +129,15 @@ require_once get_stylesheet_directory() . '/inc/icons.php';
  */
 require_once get_stylesheet_directory() . '/inc/contact-links.php';
 
+/**
+ * Lista de articole de pe pagina /articole/ (MIG-07).
+ *
+ * Era produsa de o functie din tema Sydney 1.x, apelata din page.php al acelei
+ * teme; ambele au disparut la actualizarea la 2.71, iar pagina a ramas doar cu
+ * bannerul din continutul ei, fara nicio eroare vizibila.
+ */
+require_once get_stylesheet_directory() . '/inc/articles-list.php';
+
 /*
  * ============================================================================
  * MIGRAREA LA SYDNEY 2.71 - CE A RAMAS
