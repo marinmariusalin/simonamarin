@@ -182,6 +182,13 @@ add_filter( 'wp_headers', 'simonamarin_remove_pingback_header' );
 remove_action( 'wp_head', 'rsd_link' );
 remove_action( 'wp_head', 'wlwmanifest_link' );
 
+/*
+ * Scoate si shortlink-ul (`<link rel="shortlink" href="...?p=123">`). Expune
+ * ID-ul numeric al fiecarui articol si nu este folosit de nimic pe acest site;
+ * permalink-ul normal ramane, evident, neatins. Face parte din PERF-03.
+ */
+remove_action( 'wp_head', 'wp_shortlink_wp_head' );
+
 /**
  * SEC-04 [MEDIUM] - REZOLVAT 2026-09-21. Blocheaza enumerarea autorilor.
  *

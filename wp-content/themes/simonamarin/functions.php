@@ -12,6 +12,35 @@ if ( ! defined( '_S_VERSION' ) ) {
 	define( '_S_VERSION', '1.0.0' );
 }
 
+/**
+ * PERF-01 [CRITICAL] - REZOLVAT 2026-09-21. Versiune de asset bazata pe filemtime.
+ *
+ * Problema: _S_VERSION era hardcodat '1.0.0' si nu crestea niciodata. Fiecare
+ * fisier era servit cu `?ver=1.0.0`, deci browserul vizitatorului recurent si
+ * cache-ul LiteSpeed continuau sa serveasca varianta veche dupa orice editare
+ * de CSS sau JS. Practic, cache busting inexistent.
+ *
+ * Solutia: versiunea devine data ultimei modificari a fisierului. Se schimba
+ * automat la fiecare editare si NU se schimba cand nu s-a modificat nimic -
+ * exact comportamentul dorit, spre deosebire de time(), care ar dezactiva
+ * complet cache-ul.
+ *
+ * Pe fallback se intoarce _S_VERSION: daca fisierul lipseste (cale gresita),
+ * enqueue-ul tot trebuie sa produca un URL valid, nu `?ver=`.
+ *
+ * @param string $relative_path Cale relativa la radacina temei, ex. 'style.css'.
+ * @return string Versiunea de folosit in wp_enqueue_style/script.
+ */
+function simonamarin_asset_version( $relative_path ) {
+	$absolute_path = get_theme_file_path( $relative_path );
+
+	if ( file_exists( $absolute_path ) ) {
+		return (string) filemtime( $absolute_path );
+	}
+
+	return _S_VERSION;
+}
+
 // AUDIT COMMENTS - SEE audit-report.html for full details
 // REZOLVAT 2026-09-21: PHP requirement ridicat la >=7.4 in composer.json si
 //   "Requires PHP: 7.4" in antetul style.css (cele doua trebuie sa ramana egale).
@@ -76,23 +105,26 @@ if ( ! defined( '_S_VERSION' ) ) {
  *
  * --- PERFORMANCE [CRITICAL] ---
  *
- * TODO [PERF-01][CRITICAL]: Versiunea assets este hardcodata `_S_VERSION = 1.0.0`
- *   si nu s-a schimbat niciodata.
- *   Impact: dupa orice editare de CSS/JS vizitatorii raman cu fisierul vechi in
- *           cache (LiteSpeed + browser) -> site "stricat" pentru useri recurenti.
- *   Fix: foloseste filemtime( get_theme_file_path( '/style.css' ) ) ca versiune
- *        (doar cand WP_DEBUG e activ, sau permanent - e ieftin).
+ * PERF-01 [CRITICAL] - REZOLVAT 2026-09-21. Versiunile de asset vin acum din
+ *   filemtime, prin simonamarin_asset_version(). Se schimba la fiecare editare
+ *   de fisier si raman stabile cand nu s-a modificat nimic.
  *
- * TODO [PERF-02][HIGH]: navigation.js se incarca pe TOATE paginile, chiar si
- *   cand meniul 'menu-1' nu are elemente.
- *   Fix: incarca conditionat cu has_nav_menu( 'menu-1' ) si adauga strategy
- *        'defer' (WP 6.3+: al 5-lea argument array( 'strategy' => 'defer' )).
+ * PERF-02 [HIGH] - REZOLVAT 2026-09-21. navigation.js se incarca doar cand
+ *   locatia 'menu-1' are un meniu atribuit, si cu strategy 'defer'.
+ *   De reverificat pe mobil dupa orice modificare: scriptul deschide meniul.
  *
- * TODO [PERF-03][HIGH]: Nu se dezactiveaza balastul din <head>:
- *   emoji script + wp-emoji-styles, oEmbed (wp-embed.min.js), RSD link,
- *   wlwmanifest link, shortlink, REST API link, generator meta.
- *   Impact: ~15KB JS inutil + 4 request-uri + expunere versiune WP.
- *   Fix: remove_action() pe wp_head / print_emoji_detection_script etc.
+ * PERF-03 [HIGH] - REZOLVAT PARTIAL 2026-09-21. Scoase: detectia de emoji
+ *   (script inline + wp-emoji-release.min.js + cererile catre s.w.org),
+ *   wp-embed.min.js, rsd_link, wlwmanifest_link, shortlink si meta generator
+ *   (ultimele trei prin inc/security.php - SEC-02/SEC-03).
+ *
+ *   NU s-au scos, deliberat, doua lucruri din lista initiala:
+ *   - wp-block-library: vezi PUB-18 mai jos. Pe un site cu articole scrise in
+ *     editorul de blocuri, scoaterea lui strica vizual coloanele, galeriile si
+ *     tabelele din continut. Optimizarea se face selectiv sau deloc.
+ *   - link-ul de discovery REST API (`<link rel="https://api.w.org/">`).
+ *     Stergerea lui nu inchide REST API-ul, deci nu aduce securitate, dar rupe
+ *     descoperirea oEmbed si unele integrari. Castig zero, risc real.
  *
  * TODO [PERF-04][HIGH]: Nu exista resource hints (preconnect / preload).
  *   Fix: preload pentru style.css si pentru imaginea LCP; preconnect catre
@@ -610,25 +642,49 @@ add_action( 'widgets_init', 'simonamarin_widgets_init' );
  * avatarele din Settings > Discussion.
  */
 function simonamarin_scripts() {
-	// TODO [PERF-01][CRITICAL]: _S_VERSION este hardcodat '1.0.0' si nu creste
-	// niciodata -> cache busting inexistent. Dupa orice editare in style.css,
-	// vizitatorii recurenti (si LiteSpeed Cache) servesc fisierul vechi.
-	// Fix: array() + filemtime( get_theme_file_path( 'style.css' ) ) ca versiune.
+	// PERF-01 [CRITICAL] - REZOLVAT: versiunea vine din filemtime, nu din
+	// constanta hardcodata. Vezi simonamarin_asset_version() la inceputul
+	// fisierului pentru motivatie.
 	//
 	// TODO [PERF-04][HIGH]: style.css este singurul CSS al temei si e render
 	// blocking. Fara <link rel="preload"> si fara critical CSS inline, FCP/LCP
 	// sufera. LiteSpeed Cache are optiune de CCSS - verifica daca e activata.
-	wp_enqueue_style( 'simonamarin-style', get_stylesheet_uri(), array(), _S_VERSION );
+	wp_enqueue_style( 'simonamarin-style', get_stylesheet_uri(), array(), simonamarin_asset_version( 'style.css' ) );
 	// TODO [DEAD-05][MEDIUM]: Linia de mai jos incarca style-rtl.css, un fisier de
 	// 961 linii care nu este servit niciodata (site LTR, romana). Se sterge odata
 	// cu style-rtl.css. Vezi antetul acelui fisier pentru detalii.
 	wp_style_add_data( 'simonamarin-style', 'rtl', 'replace' );
 
-	// TODO [PERF-02][HIGH]: Scriptul se incarca pe fiecare pagina, indiferent daca
-	// exista meniu. Fix: conditioneaza cu has_nav_menu( 'menu-1' ) si adauga
-	// array( 'strategy' => 'defer', 'in_footer' => true ) ca al 5-lea argument
-	// (WP 6.3+) in loc de simplul `true`.
-	wp_enqueue_script( 'simonamarin-navigation', get_template_directory_uri() . '/js/navigation.js', array(), _S_VERSION, true );
+	/*
+	 * PERF-02 [HIGH] - REZOLVAT 2026-09-21.
+	 *
+	 * Inainte: navigation.js se incarca pe fiecare pagina, inclusiv pe cele
+	 * unde nu exista niciun meniu de navigat. Acum se incarca doar daca locatia
+	 * 'menu-1' chiar are un meniu atribuit in Appearance > Menus.
+	 *
+	 * ATENTIE daca se schimba ceva aici: scriptul gestioneaza butonul
+	 * .menu-toggle, adica meniul pe mobil. Daca este incarcat conditionat
+	 * gresit, meniul mobil ramane inchis si nu se poate deschide - o pagina
+	 * fara navigatie, pe dispozitivul de pe care vine majoritatea traficului.
+	 * De verificat dupa orice modificare: deschide site-ul pe un ecran
+	 * < 600px si apasa efectiv butonul de meniu.
+	 *
+	 * 'strategy' => 'defer' (WP 6.3+) lasa parsarea HTML sa continue in timp ce
+	 * scriptul se descarca. Scriptul isi ataseaza singur listenerele dupa
+	 * incarcarea documentului, deci defer nu schimba comportamentul.
+	 */
+	if ( has_nav_menu( 'menu-1' ) ) {
+		wp_enqueue_script(
+			'simonamarin-navigation',
+			get_template_directory_uri() . '/js/navigation.js',
+			array(),
+			simonamarin_asset_version( 'js/navigation.js' ),
+			array(
+				'strategy'  => 'defer',
+				'in_footer' => true,
+			)
+		);
+	}
 
 	/*
 	 * MODIFICAT (2026-09-21): scriptul 'comment-reply' nu se mai incarca -
@@ -659,15 +715,79 @@ function simonamarin_scripts() {
 	 * verifica dupa aceea un articol real, nu homepage-ul.
 	 */
 
-	// TODO [PERF-03][HIGH]: Aici ar trebui adaugat dequeue-ul pentru balastul core:
-	//   wp_dequeue_style( 'wp-block-library' ) daca nu se folosesc blocuri,
-	//   remove_action( 'wp_head', 'print_emoji_detection_script', 7 ),
-	//   remove_action( 'wp_print_styles', 'print_emoji_styles' ),
-	//   wp_deregister_script( 'wp-embed' ).
-	// Atentie: verifica intai ce blocheaza deja LiteSpeed Cache / Performance Lab,
-	// ca sa nu duplicam optimizarile.
+	/*
+	 * PERF-03 [HIGH] - REZOLVAT PARTIAL 2026-09-21, vezi mai jos ce s-a scos si
+	 * ce NU s-a scos, pentru ca diferenta este intentionata.
+	 *
+	 * SCOS: wp-embed (js/wp-embed.min.js). Acest script exista doar ca alte
+	 * site-uri sa poata incorpora articolele acestui site intr-un iframe
+	 * oEmbed. Nu afecteaza incorporarea de YouTube sau alt continut extern IN
+	 * paginile noastre - aceea se face pe server. Este cerut pe fiecare pagina
+	 * si nu are niciun consumator aici.
+	 *
+	 * SCOS: scriptul si stilurile de detectie a emoji. WordPress incarca un
+	 * script inline plus wp-emoji-release.min.js ca sa converteasca emoji in
+	 * imagini de pe s.w.org, pentru browsere care nu le redau nativ. In 2026
+	 * toate browserele relevante le redau nativ, iar cererea catre s.w.org este
+	 * si o cerere catre un domeniu tert de pe fiecare pagina - ceea ce, pentru
+	 * un site de cabinet, este si o scurgere inutila de trafic catre exterior.
+	 *
+	 * NU S-A SCOS: wp-block-library. Auditul initial il sugera, dar PUB-18 de
+	 * mai sus il contrazice explicit si PUB-18 are dreptate: daca articolele
+	 * sunt scrise in editorul de blocuri, scoaterea acelui CSS strica vizual
+	 * coloanele, galeriile, butoanele si tabelele din continut. Optimizarea
+	 * corecta se face selectiv, pe paginile fara blocuri, si se verifica pe un
+	 * articol real - nu se face "din oficiu" aici.
+	 *
+	 * DE VERIFICAT MANUAL: LiteSpeed Cache are propriile optiuni pentru emoji
+	 * si embed. Daca sunt deja bifate acolo, liniile de mai jos sunt redundante
+	 * (inofensive, dar redundante) si e mai curat sa existe intr-un singur loc.
+	 */
+	wp_deregister_script( 'wp-embed' );
 }
 add_action( 'wp_enqueue_scripts', 'simonamarin_scripts' );
+
+/**
+ * PERF-03 [HIGH] - REZOLVAT PARTIAL. Scoate detectia de emoji din <head>.
+ *
+ * Hook-urile de emoji sunt inregistrate de core pe 'init' si pe alte actiuni
+ * decat 'wp_enqueue_scripts', deci nu pot fi scoase din simonamarin_scripts().
+ * De aceea exista aceasta functie separata.
+ *
+ * Ce dispare concret din HTML-ul fiecarei pagini: un bloc de script inline de
+ * ~1 KB, plus cererea catre wp-emoji-release.min.js si, la prima aparitie a
+ * unui emoji, cereri de imagine catre s.w.org (domeniu tert).
+ *
+ * Emoji-urile scrise in continut raman vizibile - browserele le redau nativ de
+ * ani buni. Se scoate doar polyfill-ul pentru browsere care nu mai sunt in uz.
+ * Niciun text de articol sau de pagina nu este modificat.
+ */
+function simonamarin_disable_emoji_detection() {
+	// Scriptul de detectie, pe frontend, in admin si in paginile de embed.
+	remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
+	remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
+	remove_action( 'embed_head', 'print_emoji_detection_script' );
+
+	/*
+	 * Stilurile de emoji. Numele hook-ului conteaza: in WordPress-ul instalat
+	 * aici (7.0.5, verificat in wp-includes/default-filters.php) stilurile sunt
+	 * puse in coada de `wp_enqueue_emoji_styles`, iar vechiul
+	 * `print_emoji_styles` este pastrat doar pentru compatibilitate si este
+	 * dezlegat chiar de wp_enqueue_emoji_styles(). Un remove_action pe numele
+	 * vechi, singur, NU ar face nimic - de aceea sunt scoase ambele.
+	 */
+	remove_action( 'wp_enqueue_scripts', 'wp_enqueue_emoji_styles' );
+	remove_action( 'admin_enqueue_scripts', 'wp_enqueue_emoji_styles' );
+	remove_action( 'enqueue_embed_scripts', 'wp_enqueue_emoji_styles' );
+	remove_action( 'wp_print_styles', 'print_emoji_styles' );
+	remove_action( 'admin_print_styles', 'print_emoji_styles' );
+
+	// Si conversia emoji in imagini din feed-uri si din e-mailurile trimise.
+	remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
+	remove_filter( 'comment_text_rss', 'wp_staticize_emoji' );
+	remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
+}
+add_action( 'init', 'simonamarin_disable_emoji_detection' );
 
 /**
  * Implement the Custom Header feature.
