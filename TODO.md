@@ -30,6 +30,86 @@ Nimic din lista de mai jos nu contează dacă asta se întâmplă.
 
 ---
 
+## ⚠️ Decizii luate împreună, care NU au ajuns pe site
+
+Acestea au fost discutate și aprobate, apoi implementate în tema
+`simonamarin/` — care nu rulează. Nu sunt idei noi: sunt decizii deja luate,
+care așteaptă să fie aplicate acolo unde contează.
+
+### D1. Comentariile — decizia „site fără comentarii" nu e în vigoare
+
+Ai decis explicit că site-ul nu are comentarii, deloc. Pe site acum:
+
+| | |
+|---|---|
+| Setare globală `default_comment_status` | **`open`** |
+| Articole și pagini cu comentarii deschise | **32** |
+| Comentarii în baza de date | **119** |
+| Formularul de comentarii pe pagina articolului | **se afișează** |
+
+Oricine poate lăsa un comentariu public sub un articol. Pe un site de cabinet
+de psihoterapie asta are implicații de confidențialitate proprii domeniului:
+un vizitator care comentează sub un articol despre o problemă personală își
+asociază public numele cu acea problemă, permanent și indexabil.
+
+Se rezolvă în două părți, separat: **oprirea** comentariilor noi (setare
+globală plus cele 32 de articole) și **decizia despre cele 119 existente** —
+ascunse sau șterse. A doua atinge conținut, deci e decizia ta, nu a mea.
+
+### D2. Paleta și sistemul de design — proiectate, neaplicate
+
+Mi-ai cerut să aleg cea mai bună combinație de culori pentru un cabinet de
+psihologie, fundamentată pe date. Rezultatul e în
+`wp-content/themes/simonamarin/DESIGN.md`: paletă verde-albastru desaturată,
+18 perechi de contrast verificate WCAG 2.2, simulare de daltonism, scară
+tipografică, lățimi calculate pe lungimea de rând.
+
+**Nu e aplicat nicăieri.** Site-ul are în continuare paleta lui.
+
+Butonul principal de acțiune este acum `#5A15F0` — violet la **88% saturație**.
+Trece pragul de contrast (7,50:1 cu text alb, deci nu e o problemă de
+accesibilitate), dar contrazice direct constatarea pe care s-a construit toată
+paleta: saturația și luminozitatea contează mai mult decât nuanța, iar
+saturația înaltă pe elemente proeminente este activantă — opusul a ce vrei pe
+acest public.
+
+De decis: se aplică paleta pe Sydney 2.71 (prin opțiunile lui de culori globale,
+nu prin CSS peste), se aplică doar parțial — de exemplu doar culoarea butonului
+— sau se renunță și rămâne design-ul actual. Nu am aplicat nimic din proprie
+inițiativă: e o schimbare vizibilă pe tot site-ul.
+
+### D3. Două reguli de accesibilitate pe care Sydney 2.71 nu le are
+
+Verificat în CSS-ul temei:
+
+- **`prefers-reduced-motion`** — 0 apariții. Nu respectă setarea de sistem
+  „mișcare redusă". Pe acest public contează mai mult decât pe altul:
+  animațiile pot fi inconfortabile pentru persoane cu tulburări vestibulare
+  sau cu anxietate.
+- **`aspect-ratio`** pe miniaturi — 0 apariții. Fără el, pagina sare la
+  încărcarea imaginilor din listări (CLS, una dintre cele trei metrici Core
+  Web Vitals).
+
+`focus-visible` există (2 apariții), deci acela e acoperit.
+
+Ambele se adaugă în `sydney-child/style.css`, sunt scurte și nu depind de
+versiunea temei.
+
+---
+
+### Ce a rămas fără obiect, ca să nu fie reluat
+
+- **Traducerile `ro_RO`** scrise pentru tema inactivă sunt inerte, dar
+  problema nu mai există: Sydney își aduce propriile traduceri și interfața
+  este în română (verificat: „Sari la conținut" apare, „Skip to content" nu).
+- **Suportul pentru editorul de blocuri** (`editor-styles`, `wp-block-styles`,
+  `responsive-embeds`, `align-wide`) — Sydney 2.71 are propriul `theme.json`,
+  iar pe site este activ `classic-editor`.
+- **Corectura de escaping din `header.php`** — fișierul acela aparținea temei
+  inactive; Sydney are propriul antet.
+
+---
+
 ## Deschis, în ordinea valorii
 
 ### 1. Google Tag Manager — 520 KB, 53% din pagină
