@@ -13,8 +13,10 @@ if ( ! defined( '_S_VERSION' ) ) {
 }
 
 // AUDIT COMMENTS - SEE audit-report.html for full details
-// TODO [CRITICAL]: Update PHP requirement from 5.6 to 7.4+ in composer.json
-// TODO [CRITICAL]: Add Security Headers (CSP, X-Frame-Options, etc.)
+// REZOLVAT 2026-09-21: PHP requirement ridicat la >=7.4 in composer.json si
+//   "Requires PHP: 7.4" in antetul style.css (cele doua trebuie sa ramana egale).
+// REZOLVAT 2026-09-21: Security headers - vezi inc/security.php.
+//   CSP ramane deschis ca SEC-11, se implementeaza intai in mod Report-Only.
 // TODO [CRITICAL]: Implement Performance Optimizations (lazy loading, caching)
 // TODO: Add Block Editor support - add_theme_support( 'wp-block-styles' )
 // TODO: Make content-width responsive instead of hardcoded 640px
@@ -106,26 +108,35 @@ if ( ! defined( '_S_VERSION' ) ) {
  *
  * --- SECURITY [CRITICAL] ---
  *
- * TODO [SEC-01][CRITICAL]: Fara security headers.
- *   Lipsesc: Content-Security-Policy, X-Frame-Options / frame-ancestors,
- *   X-Content-Type-Options: nosniff, Referrer-Policy, Permissions-Policy,
- *   Strict-Transport-Security (HSTS - really-simple-ssl poate acoperi HSTS).
- *   Fix: hook pe `send_headers` in tema SAU la nivel de server (.htaccess).
- *        Atentie: CSP trebuie testat, poate rupe Site Kit / Cookie Law Info.
+ * SEC-01 ... SEC-04 - REZOLVATE 2026-09-21, in inc/security.php.
+ * Motivatia fiecarei decizii este documentata acolo, langa cod. Pe scurt:
  *
- * TODO [SEC-02][HIGH]: Versiunea WordPress este expusa prin meta generator si
- *   prin ?ver= pe fiecare asset core.
- *   Impact: faciliteaza fingerprinting-ul pentru exploit-uri automate.
- *   Fix: remove_action( 'wp_head', 'wp_generator' ) + filtru pe script_loader_src.
+ *   SEC-01 [CRITICAL] Security headers - REZOLVAT PARTIAL. Se emit acum
+ *     X-Content-Type-Options, Referrer-Policy, X-Frame-Options si
+ *     Permissions-Policy pe frontend, prin filtrul `wp_headers`.
+ *     HSTS este scris, dar dezactivat implicit: se porneste cu o constanta in
+ *     wp-config.php, abia dupa ce HTTPS-ul de productie e stabil.
+ *     Content-Security-Policy NU se emite inca si ramane deschis ca SEC-11:
+ *     avertismentul din auditul initial era corect, o politica enforced
+ *     netestata poate rupe pagini. Se face in doi pasi, Report-Only intai.
  *
- * TODO [SEC-03][HIGH]: Pingback/XML-RPC ramane activ - vezi
- *   inc/template-functions.php, simonamarin_pingback_header().
- *   Impact: vector de spam si de amplificare DDoS.
+ *   SEC-02 [HIGH] Versiunea WordPress - REZOLVAT pentru <meta generator> si
+ *     pentru feed-uri. Partea cu `?ver=` pe assets NU a fost atinsa in mod
+ *     deliberat: acele query stringuri sunt mecanismul de cache busting al
+ *     WordPress, iar stergerea lor face ca vizitatorii sa ramana cu CSS/JS
+ *     vechi dupa fiecare update. Este un compromis prost pentru un castig de
+ *     securitate aproape nul.
  *
- * TODO [SEC-04][MEDIUM]: Nu exista limitare la enumerarea autorilor
- *   (/?author=1 redirectioneaza catre /author/<username>/), ceea ce dezvaluie
- *   username-ul real de admin. Loginizer e instalat, dar nu acopera asta.
- *   Fix: redirect/404 pe query var `author` pentru vizitatori nelogati.
+ *   SEC-03 [HIGH] Pingback/XML-RPC - REZOLVAT. Metodele pingback.* sunt scoase
+ *     din XML-RPC si headerul X-Pingback nu mai este emis.
+ *     Nota despre simonamarin_pingback_header() din inc/template-functions.php:
+ *     functia este deja inofensiva, pentru ca este conditionata de pings_open(),
+ *     iar simonamarin_disable_comments() forteaza acel filtru pe false. Nu emite
+ *     nimic si a fost lasata neatinsa.
+ *
+ *   SEC-04 [MEDIUM] Enumerarea autorilor - REZOLVAT pentru forma `?author=N`.
+ *     Arhivele `/author/slug/` raman accesibile intentionat, ca sa nu se schimbe
+ *     structura de URL-uri; daca ar trebui sau nu indexate este SEO-30.
  *
  * TODO [SEC-05][INFO]: Verificat - tema nu proceseaza input de la utilizator
  *   ($_GET/$_POST/$_REQUEST absente) si nu face query-uri SQL directe.
@@ -697,6 +708,16 @@ if ( defined( 'JETPACK__VERSION' ) ) {
  * facuta peste fisierele incarcate efectiv de tema.
  */
 require get_template_directory() . '/inc/seo.php';
+
+/**
+ * Hardening: headere de securitate, ascunderea versiunii, pingback, enumerare.
+ *
+ * Spre deosebire de inc/seo.php, acest fisier contine cod ACTIV - efectele lui
+ * se vad in headerele de raspuns ale oricarei pagini de frontend. Verificare
+ * rapida dupa modificari:
+ *   curl -sSI https://<domeniu>/ | grep -i "x-content-type\|referrer\|x-frame\|permissions\|pingback"
+ */
+require get_template_directory() . '/inc/security.php';
 
 /*
  * TODO [SEO-11][HIGH]: Structura de fisiere de extensie a temei este doar

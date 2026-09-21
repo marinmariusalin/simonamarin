@@ -5,19 +5,24 @@ Author: Underscores.me
 Author URI: http://underscores.me/
 Description: Description
 Version: 1.0.0
-Tested up to: 5.4
-Requires PHP: 5.6
+Tested up to: 7.0
+Requires PHP: 7.4
 License: GNU General Public License v2 or later
 License URI: LICENSE
 Text Domain: simonamarin
 Tags: custom-background, custom-logo, custom-menu, featured-images, threaded-comments, translation-ready
 
 /*
-AUDIT COMMENTS [CRITICAL]:
-- Requires PHP: 5.6 is OUTDATED - update to 7.4 or higher (5.6 EOL: Feb 2017)
-- Tested up to: 5.4 is OUTDATED - test with WordPress 6.4+ (released 2024)
-- Last tested 2020 - need compatibility verification with current WordPress versions
-See: audit-report.html for full details
+REZOLVAT 2026-09-21 (era AUDIT COMMENTS [CRITICAL]):
+- "Requires PHP" ridicat de la 5.6 la 7.4. PHP 5.6 este EOL din februarie 2017.
+  Valoarea este identica cu constrangerea "php" din composer.json - cele doua
+  TREBUIE tinute sincronizate, altfel WordPress afiseaza un avertisment de
+  compatibilitate gresit in ecranul de teme.
+- "Tested up to" ridicat de la 5.4 la 7.0, versiunea efectiv instalata in acest
+  site (verificata in wp-includes/version.php). Nu este o valoare ghicita, dar
+  nici rezultatul unei suite de teste: inseamna "tema ruleaza pe aceasta
+  versiune". La fiecare update major de WordPress, valoarea se ridica DUPA ce
+  paginile reale au fost verificate in browser, nu inainte.
 
 AUDIT 2 (2026-09-21) - CSS INUTIL / SEO / PERFORMANTA:
 

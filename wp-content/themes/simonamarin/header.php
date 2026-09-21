@@ -176,17 +176,26 @@
 				?>
 				<p class="site-description">
 					<?php
-					// SECURITY [CRITICAL]: Fix escaping - currently ignored by phpcs
-					// Should use: echo wp_kses_post( $simonamarin_description );
-					//
-					// TODO [SEC-06][CRITICAL]: Confirmat in acest audit. Valoarea vine
-					// din optiunea 'blogdescription', editabila de orice utilizator cu
-					// capability 'manage_options'. Escapare zero = XSS stocat daca un
-					// cont de admin/editor este compromis sau daca un plugin scrie in
-					// optiune. phpcs:ignore mascheaza problema, nu o rezolva.
-					// Fix: echo wp_kses_post( $simonamarin_description ); si sterge
-					//      comentariul phpcs:ignore.
-					echo $simonamarin_description; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+					/*
+					 * SEC-06 [CRITICAL] - REZOLVAT 2026-09-21.
+					 *
+					 * Inainte: `echo $simonamarin_description;` cu un phpcs:ignore care
+					 * masca avertismentul in loc sa rezolve problema. Valoarea vine din
+					 * optiunea 'blogdescription', scriptibila de orice cont cu
+					 * capability 'manage_options' sau de orice plugin - deci un XSS
+					 * stocat daca acel cont este compromis.
+					 *
+					 * Acum: wp_kses_post() filtreaza output-ul prin lista de etichete
+					 * permise in continutul unui articol. Descrierea site-ului poate
+					 * contine in continuare <em>, <strong> sau un link (get_bloginfo cu
+					 * 'display' trece deja valoarea prin filtrul 'bloginfo'), dar <script>
+					 * si atributele de tip on* sunt eliminate.
+					 *
+					 * NU se inlocuieste cu esc_html(): ar afisa literal orice tag din
+					 * descriere. Aceasta este o schimbare de escapare, nu de continut -
+					 * textul descrierii ramane exact cel din setari.
+					 */
+					echo wp_kses_post( $simonamarin_description );
 					?>
 				</p>
 			<?php endif; ?>
