@@ -54,3 +54,22 @@ composer.lock
 
 # Keep theme files
 !wp-content/themes/simonamarin/
+
+# Runtime WordPress generat pe site, nu cod al proiectului.
+# Apareau la fiecare `git status` si ascundeau modificarile reale.
+wp-content/uploads/
+wp-content/languages/
+wp-content/fonts/
+wp-content/gravatars/
+wp-content/litespeed/
+wp-content/wphb-cache/
+wp-content/w3tc-config/
+wp-content/settings/
+wp-content/duplicator-backups/
+wp-content/maintenance/
+wp-content/maintenance.php
+wp-content/object-cache.php
+wp-content/object-cache1.php
+wp-content/post-smtp-migration.log
+wp-content/themes/index.php
+/index.php
