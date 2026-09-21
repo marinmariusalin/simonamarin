@@ -107,6 +107,31 @@ reală de dispozitiv prin DevTools Protocol, 390×844).
 din tema inactivă `simonamarin/`, care rămân document de referință, nu sursă
 activă.
 
+**Trei bug-uri reale, găsite și reparate în timpul chestionarului de design
+(21.09.2026, a treia trecere):**
+
+1. **Cache-ul CSS al Sydney nu se invalida.** Editarea directă în baza de date
+   a `theme_mods` (D2) nu trece prin `set_theme_mod()`, deci nu declanșează
+   invalidarea transientului `_transient_sydney_base_css_...` în care Sydney
+   ține CSS-ul generat. Rezultatul: paleta era corectă în baza de date, dar
+   site-ul continua să servească CSS vechi, cu culorile roșii originale —
+   parțial, ceea ce explică impresia de „zone din site-uri diferite”. Rezolvat
+   prin ștergerea transientului; se poate reproduce oricând e nevoie de
+   regenerare, din **Setări → Permalinkuri → Salvează** (declanșează același
+   hook) sau direct din baza de date.
+2. **Antetul își schimba culoarea la scroll.** `main_header_background_sticky`
+   (fundalul specific stării „sticky”, la scroll) e o setare Sydney separată
+   de `main_header_background` (fundalul de sus) și era goală — cădea implicit
+   pe una din culorile globale (verde închis, `global_color_2`, după paleta
+   nouă). Setată acum explicit, la fel cu restul antetului.
+3. **Suprapunere pe pagina Contact.** `.contact-info` și `.homepage-contact`
+   folosesc offset-uri (`top: -80px`, înălțime fixă 800px) calculate pentru un
+   layout cu poză mare de fundal. Pe Tarife/Ateliere funcționează, pentru că
+   secțiunea de contact vine după carduri care îi dau deja spațiu; pe
+   `/contact/`, unde vine imediat după titlu, offset-ul o trăgea peste titlu și
+   formular. Fix scopat la `body.page-id-186`, ca să nu afecteze celelalte
+   pagini cu același marcaj.
+
 ### D3. Două reguli de accesibilitate pe care Sydney 2.71 nu le are
 
 Verificat în CSS-ul temei:
