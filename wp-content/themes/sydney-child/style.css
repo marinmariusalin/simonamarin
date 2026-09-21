@@ -254,3 +254,62 @@ cover` umple cutia rezervata fara sa o deformeze.
 	aspect-ratio: 16 / 9;
 	object-fit: cover;
 }
+
+/*
+==============================================================================
+TIPOGRAFIE SI SPATIERE - modernizare, la cerere explicita (21.09.2026)
+==============================================================================
+
+Sydney 2.71 randeaza corect, dar aglomerat: titlurile au doar 10px deasupra
+(vezi ../sydney/css/styles.css, regula `h1, h2, h3, h4, h5, h6 { margin: 10px
+0 24px; }`), iar corpul de text sta la 16px cu paragrafe la 20px distanta.
+Rezultatul e un ritm vertical strans, care pe un site de lectura (articole
+lungi despre psihoterapie) obliga ochiul sa munceasca mai mult decat trebuie.
+
+Regulile de mai jos nu schimba structura sau culorile - doar respiratia:
+marimea de baza a textului, distanta dintre paragrafe si distanta de deasupra
+titlurilor. Nu ating `.servicii-box`, `.tarife-box` sau alte clase din
+marcajul scris direct in continutul paginilor (vezi CLAUDE.md: continutul nu
+se atinge), ca sa nu depind de structura HTML a unei pagini anume.
+*/
+
+body {
+	font-size: 17px;
+}
+
+p {
+	margin-bottom: 26px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	/*
+	 * Sydney da acelasi ritm (10px sus, 24px jos) oricarui nivel de titlu.
+	 * Un h2 care incepe o sectiune noua are nevoie de mai mult aer deasupra
+	 * decat un h4 in interiorul aceleiasi sectiuni - de-aia valoarea de sus
+	 * scade odata cu nivelul, in loc sa fie fixa.
+	 */
+	margin-top: 1.4em;
+	margin-bottom: 0.6em;
+}
+
+h4, h5, h6 {
+	margin-top: 1em;
+}
+
+/*
+Corpul unui articol e text continuu, lung - acolo conteaza cel mai mult
+lungimea de rand (45-75 de caractere e intervalul recomandat pentru lectura
+continua; vezi Bringhurst, citat si in DESIGN.md). La latimea normala a
+coloanei Sydney randul e deja rezonabil, dar `line-height` mai mare ajuta
+la text lung, mai ales pentru cineva obosit sau anxios - publicul tipic al
+acestui site.
+*/
+.entry-content {
+	line-height: 1.75;
+}
+
+.entry-content > p,
+.entry-content > ul,
+.entry-content > ol {
+	margin-bottom: 28px;
+}
