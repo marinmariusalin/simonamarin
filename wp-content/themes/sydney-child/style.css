@@ -1,0 +1,70 @@
+/*
+Theme Name: Sydney Child - Cabinet Simona Marin
+Theme URI: https://simonamarin.ro
+Description: Tema copil pentru Sydney. Exista ca personalizarile site-ului sa nu mai fie scrise direct in fisierele temei parinte, unde primul update al lui Sydney le sterge fara avertisment. Orice CSS, sablon sau functie proprie a site-ului se pune de aici inainte AICI, nu in ../sydney/.
+Author: Cabinet Individual de Psihologie Simona Marin
+Template: sydney
+Version: 1.0.0
+Requires PHP: 7.4
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: sydney-child
+*/
+
+/*
+==============================================================================
+CE FACE ACEST FISIER SI DE CE EXISTA
+==============================================================================
+
+Tema parinte (sydney) isi incarca stilul prin `get_stylesheet_uri()`, care
+intr-o tema copil returneaza FISIERUL ACESTA, nu pe cel al parintelui. De aceea
+functions.php al copilului incarca explicit si style.css-ul parintelui - fara
+acea linie site-ul ar ramane complet nestilizat.
+
+Ordinea de incarcare este: parinte intai, copil dupa. Deci orice regula scrisa
+aici bate regula echivalenta din parinte, fara sa fie nevoie de `!important`.
+
+------------------------------------------------------------------------------
+CONTEXT ISTORIC - de ce a fost nevoie de tema copil
+------------------------------------------------------------------------------
+
+Pana la 21.09.2026, personalizarile site-ului erau scrise direct in
+wp-content/themes/sydney/. Consecintele erau vizibile:
+
+  - `sydney/style.css` si-a pierdut antetul de tema. Regula `a,i { ... }` de
+    mai jos fusese scrisa PESTE blocul de comentariu care continea
+    "Theme Name: Sydney", cel mai probabil dintr-o editare in Appearance >
+    Theme File Editor. Rezultatul: WordPress vedea tema Sydney cu numele gol.
+  - orice update al temei Sydney ar fi sters tot, fara avertisment si fara
+    posibilitate de recuperare - tema nu era sub control de versiune.
+
+Regula mutata mai jos este singurul CSS custom care se afla in style.css-ul
+parintelui. Restul acelui fisier este CSS-ul original Sydney si ramane acolo.
+==============================================================================
+*/
+
+/*
+Tinte de atingere de minim 24x24px pentru linkuri si pentru iconite.
+Corespunde criteriului WCAG 2.2 - 2.5.8 (Target Size, Minimum), care cere ca
+un element interactiv sa nu fie mai mic de 24x24 CSS px.
+
+COPIATA AICI din ../sydney/style.css, unde ocupa exact locul antetului de tema.
+Copiata, nu mutata: originalul a fost lasat neatins in parinte, pentru ca acest
+pas sa nu modifice NICIUN fisier al temei parinte. Regula se incarca deci de
+doua ori, identic, ceea ce nu are efect vizual. La primul update al lui Sydney
+copia din parinte dispare si ramane doar aceasta - exact rezultatul dorit.
+
+DE REVIZUIT: regula este mai larga decat trebuie. `min-width` si `min-height`
+nu au niciun efect pe elemente inline nereplacate, deci pe un link obisnuit din
+mijlocul unui paragraf nu face nimic - iar acolo unde link-ul ESTE
+inline-block sau block, il inalta la 24px si poate desface ritmul vertical al
+textului. `!important` o face imposibil de corectat punctual.
+Varianta corecta este sa se aplice tintelor reale (butoane, iconite de retele
+sociale, elemente de meniu), nu tuturor elementelor <a> si <i>. Nu am schimbat-o
+in acest commit: scopul mutarii a fost sa nu se modifice NIMIC vizual.
+*/
+a,
+i {
+	min-width: 24px !important;
+	min-height: 24px !important;
+}
