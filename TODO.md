@@ -142,6 +142,27 @@ Nu s-a adăugat text nou de conținut — eticheta „WhatsApp" de pe buton reia
 eticheta deja existentă în antet, nu e text nou scris. Verificat pe desktop și
 mobil (emulare reală 390×844).
 
+**Chestionar de design pe 7 pagini (21.09.2026).** ~60 de decizii discutate
+și aprobate punctual, în chat, pentru Home, Articole, Servicii, Tarife,
+Despre mine, Contact și pagina de articol. Implementare în lucru, pagină cu
+pagină; ce s-a făcut până acum:
+
+- **Home:**
+  - Coerență vizuală: `.servicii-container` (cutia cu cardurile de servicii)
+    avea fundal alb, în contrast dur cu verde pastel al hero-ului de la
+    modernizare — acum verde pastel și ea, aceeași suprafață continuă.
+  - Cardurile de servicii aveau fundal aproape transparent
+    (`rgba(0,0,0,0.03)`), care pe fundalul nou verde se pierdea complet — au
+    acum fundal alb-cald solid (`#FAF8F5`), ca să iasă în evidență.
+  - Tab-urile „Contact”/„Detalii” din fiecare card (poziționate absolut, cu
+    colțuri pătrate) ieșeau vizibil din cardurile cu colțuri rotunjite de la
+    modernizare — `overflow: hidden` pe card, ca totul să se taie după
+    aceleași colțuri.
+  - Telefon/WhatsApp lângă butonul Contact din hero (decizie 1.6): iconiță
+    nouă, fără text nou (eticheta „WhatsApp” există deja în antet).
+  - Rest neschimbat: structura hero, poza, ordinea secțiunilor — conform
+    deciziilor 1.1, 1.5, 1.9.
+
 ### D3. Două reguli de accesibilitate pe care Sydney 2.71 nu le are
 
 Verificat în CSS-ul temei:
