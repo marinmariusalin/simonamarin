@@ -110,6 +110,15 @@ function sydney_child_async_parent_style( $html, $handle, $href ) {
 }
 add_filter( 'style_loader_tag', 'sydney_child_async_parent_style', 10, 3 );
 
+/**
+ * Iconite SVG inline, in locul webfonturilor FontAwesome.
+ *
+ * Fisierul este generat din chiar webfonturile livrate cu tema parinte, deci
+ * iconitele arata identic. Motivatia completa si instructiunile de regenerare
+ * sunt in antetul lui inc/icons.php.
+ */
+require_once get_stylesheet_directory() . '/inc/icons.php';
+
 /*
  * ============================================================================
  * CE URMEAZA SA FIE MUTAT AICI DIN TEMA PARINTE

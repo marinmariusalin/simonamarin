@@ -68,3 +68,53 @@ i {
 	min-width: 24px !important;
 	min-height: 24px !important;
 }
+
+/*
+==============================================================================
+ICONITE SVG INLINE
+==============================================================================
+
+Elementul exterior ramane un <i>, exact ca inainte, si de aceea NU este nevoie
+de nicio regula aici care sa ii dea culoare, marime sau spatiere: regulile care
+faceau asta pana acum continua sa se aplice neschimbate. Verificate pe site-ul
+de productie, ele sunt `.header-links i` pentru culoare, `a, i` pentru cutia de
+24x24 px si `.whatsapp-footer` pentru butonul flotant de 80px.
+
+Singurul lucru de reglat este desenul dinauntru:
+
+  - `height: 1em` il face sa aiba exact inaltimea unei glife de font, deci
+    creste si scade odata cu textul, ca inainte.
+  - `width: auto` lasa browserul sa calculeze latimea din proportia din
+    viewBox. Conteaza: glifa WhatsApp e mai ingusta decat patrata (448 din 512
+    unitati), asa ca la 80px iese 70x80 px - exact dimensiunea masurata pe
+    productie. Cu `width: 1em` ar fi iesit 80x80, cu spatiu gol pe laturi.
+  - `display: block` scoate spatiul de linie de sub SVG, care altfel ar fi
+    inaltat cutia cu cativa pixeli fata de ce era.
+==============================================================================
+*/
+.sm-icon {
+	display: inline-block;
+	line-height: 1;
+}
+
+/*
+Cele doua proprietati de mai sus nu sunt decorative, sunt CONDITIA ca restul sa
+functioneze. Erau declarate pana acum de CSS-ul FontAwesome, pe clasele .fab si
+.fas, si au disparut odata cu el:
+
+  - `display: inline-block` este ceea ce face ca regula `a, i { min-width: 24px;
+    min-height: 24px !important }` sa aiba vreun efect. Pe un element `inline`
+    obisnuit, min-width si min-height sunt pur si simplu ignorate de browser.
+    Fara linia asta iconitele masoara 16x16 in loc de 24x24, si intreaga
+    spatiere dintre ele se strange vizibil.
+  - `line-height: 1` scoate spatiul suplimentar de rand pe care il adauga
+    cutia de linie; fara el, linkul din jur creste de la 25px la aproape 60px.
+
+Ambele au fost stabilite comparand valorile masurate pe site-ul de productie cu
+cele obtinute local, nu din memorie.
+*/
+.sm-icon > svg {
+	display: block;
+	height: 1em;
+	width: auto;
+}
