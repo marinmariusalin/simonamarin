@@ -119,6 +119,16 @@ add_filter( 'style_loader_tag', 'sydney_child_async_parent_style', 10, 3 );
  */
 require_once get_stylesheet_directory() . '/inc/icons.php';
 
+/**
+ * Legaturile de contact din antet (MIG-01).
+ *
+ * Se adauga la finalul meniului principal printr-un filtru din nucleul
+ * WordPress, nu printr-un sablon propriu si nu prin modulul de constructie a
+ * antetului din Sydney. Motivatia completa, si variantele respinse, sunt in
+ * antetul fisierului.
+ */
+require_once get_stylesheet_directory() . '/inc/contact-links.php';
+
 /*
  * ============================================================================
  * MIGRAREA LA SYDNEY 2.71 - STARE SI DECIZII RAMASE

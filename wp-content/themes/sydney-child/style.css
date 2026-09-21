@@ -118,3 +118,97 @@ cele obtinute local, nu din memorie.
 	height: 1em;
 	width: auto;
 }
+
+/*
+==============================================================================
+LEGATURILE DE CONTACT DIN MENIU (MIG-01)
+==============================================================================
+
+Cele cinci legaturi stau intr-un singur element de meniu, ca sa nu poata fi
+rupte pe doua randuri de mecanismul de incadrare (vezi comentariul din
+inc/contact-links.php). Regulile de aici le aseaza pe o linie si le dau
+spatierea potrivita pentru iconite fara text - tema stilizeaza elementele de
+meniu presupunand ca au cuvinte inauntru.
+
+`white-space: nowrap` este a doua plasa de siguranta: chiar daca antetul devine
+foarte ingust, grupul ramane intreg si iese mai degraba in afara, unde se vede,
+decat sa se rupa tacut in doua randuri.
+==============================================================================
+*/
+.sm-contact-group {
+	/*
+	 * `inline-flex`, nu `flex`. Diferenta nu este cosmetica: `display: flex`
+	 * produce o cutie de nivel bloc, iar un element de nivel bloc intr-o lista
+	 * de meniu isi ocupa propriul rand. Rezultatul, vizibil in browser, era ca
+	 * grupul de iconite cobora sub linia meniului, desi mai era loc din belsug
+	 * pe orizontala. `inline-flex` pastreaza asezarea interioara pe o linie,
+	 * dar lasa grupul sa stea langa celelalte elemente de meniu.
+	 */
+	display: inline-flex;
+	align-items: center;
+	gap: 0.55rem;
+	margin-left: 0.75rem;
+	white-space: nowrap;
+	vertical-align: middle;
+}
+
+.sm-contact-group > .sm-contact-link {
+	display: inline-flex;
+	align-items: center;
+	padding: 0;
+}
+
+/*
+==============================================================================
+INCADRAREA ANTETULUI DUPA ADAUGAREA LEGATURILOR DE CONTACT
+==============================================================================
+
+Cele cinci iconite adauga in jur de 200px pe latimea meniului. Fara ajustarile
+de mai jos, meniul nu mai incape pe o linie si grupul de iconite - care este un
+element flotant, ca toate elementele de meniu din Sydney - coboara sub randul
+de navigatie, iar titlul site-ului se rupe in doua linii.
+
+Toate cele trei valori de mai jos sunt aduse la ce are site-ul de PRODUCTIE,
+masurat, nu alese ca sa incapa:
+  titlu site  22px  (in 2.71 pornea de la 24px)
+  meniu       17px
+Singura valoare aleasa de mine este spatierea laterala a elementelor de meniu,
+redusa de la 14px la 9px. Recastiga circa 70px, adica exact cat lipsea, si
+ramane peste pragul la care doua elemente de meniu ar parea lipite.
+==============================================================================
+*/
+.site-title,
+.site-title a {
+	font-size: 22px;
+}
+
+/*
+`white-space: nowrap` se aplica DOAR pe ecrane late, si motivul merita scris:
+pus neconditionat, a facut titlul "Cabinet Individual de Psihologie" sa ocupe
+peste 330px pe un telefon de 390px latime. Coloana cu logo-ul a umplut atunci
+tot randul si a impins butonul de meniu in afara ecranului - adica un site pe
+care nu se mai putea naviga deloc de pe telefon, fara niciun semn vizibil ca
+ceva e in neregula. Titlul aratase perfect; doar meniul disparuse.
+Pe mobil titlul are voie sa se rupa pe doua randuri; acolo nu concureaza cu
+niciun meniu orizontal.
+*/
+@media ( min-width: 1025px ) {
+
+	.site-title,
+	.site-title a {
+		white-space: nowrap;
+	}
+}
+
+#mainnav li {
+	padding: 0 9px;
+}
+
+/*
+Grupul de contact nu mai primeste marginea suplimentara din stanga: separarea
+vizuala fata de ultimul element de meniu este deja asigurata de spatierea
+proprie a elementelor.
+*/
+.sm-contact-group {
+	margin-left: 0.25rem;
+}
