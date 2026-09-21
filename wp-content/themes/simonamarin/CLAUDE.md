@@ -50,19 +50,44 @@ composer.json      - PHP version requirement
 
 ## 🚀 Prioritate de Lucru
 
-### Prioritate 1 - URGENT (1-2 săptămâni)
-1. Update PHP requirement: 5.6 → 7.4+
-2. Update WordPress tested: 5.4 → 6.4+
-3. Implementa Security Headers (CSP, X-Frame-Options)
-4. Fix escaping în header.php linia 44
-5. Rescrie customizer.js fără jQuery
+### Prioritate 1 - URGENT
+1. ✅ **REZOLVAT** Update PHP requirement: 5.6 → 7.4 (composer.json + style.css)
+2. ✅ **REZOLVAT** Update WordPress tested: 5.4 → 7.0
+   Nota: WP-ul instalat este **7.0.5**, nu 6.4. Verificat în `wp-includes/version.php`.
+3. ✅ **REZOLVAT PARȚIAL** Security headers → `inc/security.php`
+   X-Content-Type-Options, Referrer-Policy, X-Frame-Options, Permissions-Policy.
+   HSTS scris dar **off implicit** (se pornește cu o constantă în wp-config.php).
+   **CSP rămâne deschis ca SEC-11** - se face întâi în mod Report-Only.
+4. ✅ **REZOLVAT** Escaping în header.php → `wp_kses_post()`. Era la linia 189,
+   nu 44 (linia 44 era în blocul de comentarii).
+5. ⏸️ **DEPRIORITIZAT** Rescrie customizer.js fără jQuery.
+   Auditul din 2026-09-21 a reevaluat asta de la CRITICAL la LOW, cu motiv bun:
+   fișierul se încarcă **doar** în previzualizarea din Customizer, niciodată pe
+   frontend, iar jQuery e oricum încărcat de WordPress în acel ecran. Impact pe
+   performanță și SEO: zero. Nu merită efort înaintea SEO/PERF.
 
-### Prioritate 2 - IMPORTANT (1-2 luni)
-1. Implementa JSON-LD structured data
-2. Add cache control headers
-3. Implementa lazy loading imagini
-4. Migrare node-sass → sass
-5. Add Block Editor support
+### Prioritate 2 - IMPORTANT
+1. ⬜ JSON-LD structured data (SEO-01)
+2. ⬜ Cache control headers
+3. ⬜ Lazy loading imagini
+4. ⬜ Migrare node-sass → sass
+5. ✅ **REZOLVAT PARȚIAL** Block Editor support
+   Adăugate: `editor-styles` + `add_editor_style`, `wp-block-styles`,
+   `responsive-embeds`.
+   **NU** s-a adăugat `align-wide` - fără `theme.json` nu face nimic vizibil.
+   **theme.json (PUB-01) rămâne deschis și are nevoie de decizia ta** - vezi mai jos.
+
+### ⚠️ Blocat pe decizia utilizatorului
+
+**theme.json (PUB-01, CRITICAL)** este piesa centrală care oprește obiceiul de
+a pune CSS inline în fiecare articol. Nu poate fi scris fără două lucruri pe
+care nu le pot inventa:
+- **lățimile reale** ale coloanei site-ului (`contentSize` / `wideSize`),
+  măsurate în browser - auditul cere explicit să nu fie valori copiate;
+- **paleta de brand** (culorile reale ale cabinetului).
+
+Odată ce le am, în aceeași sesiune intră și `align-wide` (PUB-04) și
+`add_image_size()` (SEO-04 / UX-76), care depind de aceeași grilă.
 
 ### Prioritate 3 - NICE-TO-HAVE (2-3 luni)
 1. CSS custom properties
@@ -194,5 +219,5 @@ git push origin main
 
 ---
 
-**Last Updated:** 21 septembrie 2026  
-**Status:** Active development - Audit phase
+**Last Updated:** 21 septembrie 2026 (sesiune de implementare)  
+**Status:** Implementare - Prioritatea 1 terminată, theme.json blocat pe decizie
