@@ -1,0 +1,56 @@
+# WordPress
+wp-admin/
+wp-includes/
+wp-content/plugins/
+wp-content/upgrade/
+wp-content/backup-*
+wp-content/cache/
+wp-content/temp/
+wp-config.php
+wp-config-local.php
+.htaccess
+.htaccess.bk
+license.txt
+readme.html
+
+# WordPress core files
+wp-activate.php
+wp-blog-header.php
+wp-comments-post.php
+wp-cron.php
+wp-links-opml.php
+wp-load.php
+wp-login.php
+wp-mail.php
+wp-settings.php
+wp-signup.php
+wp-trackback.php
+xmlrpc.php
+wp-config-sample.php
+wp-content/index.php
+
+# Local/Development
+.DS_Store
+.well-known/
+local-xdebuginfo.php
+hostvision.php
+clear-opcache.php
+superpwa-amp-sw.js
+litespeed.conf
+.litespeed_flag
+
+# Node/Composer
+node_modules/
+vendor/
+package-lock.json
+composer.lock
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Keep theme files
+!wp-content/themes/simonamarin/
