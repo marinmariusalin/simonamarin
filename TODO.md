@@ -132,6 +132,16 @@ activă.
    formular. Fix scopat la `body.page-id-186`, ca să nu afecteze celelalte
    pagini cu același marcaj.
 
+**WhatsApp ca prim canal de contact (21.09.2026).** Discutat și aprobat:
+formularul de contact probabil nu mai e canalul preferat — un buton WhatsApp
+mare, cu iconița deja folosită în antet, a fost adăugat înaintea formularului
+pe `/contact/` (pagina 186, în conținutul paginii, nu în temă). Formularul
+rămâne funcțional neschimbat, doar stilizat mai discret (font mai mic, buton
+de submit cu contur în loc de fundal plin), separat printr-o linie subțire.
+Nu s-a adăugat text nou de conținut — eticheta „WhatsApp" de pe buton reia
+eticheta deja existentă în antet, nu e text nou scris. Verificat pe desktop și
+mobil (emulare reală 390×844).
+
 ### D3. Două reguli de accesibilitate pe care Sydney 2.71 nu le are
 
 Verificat în CSS-ul temei:
