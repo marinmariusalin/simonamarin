@@ -130,9 +130,9 @@ function simonamarin_asset_version( $relative_path ) {
  *   Fix: preload pentru style.css si pentru imaginea LCP; preconnect catre
  *        fonts.gstatic.com / Google Tag Manager daca sunt folosite.
  *
- * TODO [PERF-05][MEDIUM]: Nu exista editor-styles, deci previzualizarea din
- *   admin nu seamana cu frontend-ul.
- *   Fix: add_theme_support( 'editor-styles' ) + add_editor_style().
+ * PERF-05 [MEDIUM] - REZOLVAT 2026-09-21. editor-styles + add_editor_style(
+ *   'style.css' ) sunt acum in simonamarin_setup(). Varianta mai curata, cu un
+ *   fisier de continut dedicat incarcat in ambele contexte, ramane PUB-17.
  *
  * TODO [PERF-06][MEDIUM]: style-rtl.css (961 linii) este generat si livrat desi
  *   site-ul e in romana. Nu se incarca in browser (doar la locale RTL), dar se
@@ -378,17 +378,80 @@ function simonamarin_setup() {
 		*/
 	add_theme_support( 'post-thumbnails' );
 
-	// TODO [SEO-04][HIGH]: Aici lipsesc add_image_size() proprii. Fara ele,
-	// srcset-ul generat contine doar marimile WP default (thumbnail/medium/large),
-	// care rareori se potrivesc cu grila temei -> imagini supradimensionate pe mobil.
-	//
-	// TODO [SEO-06][HIGH]: Lipsesc add_theme_support( 'responsive-embeds' ) si
-	// add_theme_support( 'align-wide' ) - necesare pentru editorul de blocuri.
-	//
-	// TODO [PERF-05][MEDIUM]: Lipseste add_theme_support( 'editor-styles' ).
+	// TODO [SEO-04][HIGH] / [UX-76][HIGH]: Aici lipsesc add_image_size() proprii.
+	// Fara ele, srcset-ul contine doar marimile WP default, care rareori se
+	// potrivesc cu grila temei -> imagini supradimensionate pe mobil, si carduri
+	// de inaltimi diferite in listari.
+	// NU s-a rezolvat in aceasta sesiune si este intentionat: dimensiunile
+	// corecte se aleg DUPA ce grila reala a site-ului este decisa si masurata
+	// (vezi PUB-01), altfel se regenereaza mediateca de doua ori degeaba.
 
 	/*
-	 * TODO [PUB-02][CRITICAL]: Lipsesc add_theme_support( 'editor-styles' ) si
+	 * PUB-05 [HIGH] / SEO-06 [HIGH] - REZOLVAT 2026-09-21.
+	 *
+	 * Un YouTube sau o postare incorporata isi pastra dimensiunea fixa a
+	 * iframe-ului si depasea coloana pe telefon. Autorul compensa punandu-i o
+	 * latime inline in articol - exact tiparul pe care il descrie PUB-*.
+	 * Cu acest suport, WordPress adauga singur wrapper-ul care pastreaza
+	 * proportia, iar embed-ul se incadreaza in coloana pe orice ecran.
+	 */
+	add_theme_support( 'responsive-embeds' );
+
+	/*
+	 * PUB-03 [HIGH] - REZOLVAT 2026-09-21.
+	 *
+	 * Incarca stilurile de baza ale blocurilor core (citat, tabel, separator,
+	 * galerie, buton). Fara ele blocurile arata nefinisat pe site, iar autorul
+	 * compensa manual in articol.
+	 *
+	 * PUB-03 cerea o decizie inainte: 'wp-block-styles' SAU reguli proprii ale
+	 * temei pentru aceleasi blocuri (PUB-10), nu amandoua, ca sa nu apara
+	 * conflicte de specificitate. Decizia luata aici este 'wp-block-styles',
+	 * pentru ca tema nu are in acest moment nicio regula proprie pentru blocuri.
+	 * DACA se scriu vreodata reguli proprii (PUB-10), linia asta trebuie
+	 * reevaluata atunci - nu lasata pur si simplu pe loc.
+	 */
+	add_theme_support( 'wp-block-styles' );
+
+	/*
+	 * PUB-02 [CRITICAL] / PERF-05 [MEDIUM] / UX-77 [MEDIUM] - REZOLVAT 2026-09-21.
+	 *
+	 * Pana acum, in editor textul aparea cu fontul, latimea si spatierile
+	 * default ale WordPress, nu cu ale site-ului. Autorul nu vedea ce publica,
+	 * incerca sa corecteze din editor si, negasind un control potrivit, ajungea
+	 * sa scrie CSS direct in articol. Acum editorul incarca stilul temei.
+	 *
+	 * Se incarca style.css pentru ca este, deocamdata, singurul CSS al temei.
+	 * PUB-17 ramane deschis si descrie varianta mai curata: un fisier separat,
+	 * doar cu regulile care privesc continutul (elemente + .wp-block-*),
+	 * incarcat si in editor si pe site, ca sa existe o singura sursa de adevar.
+	 *
+	 * Functioneaza si cu classic-editor instalat - TinyMCE respecta editor-styles.
+	 *
+	 * DE VERIFICAT DUPA ACEASTA MODIFICARE: deschide un articol in editor si
+	 * compara-l cu aceeasi pagina pe site. Daca editorul arata acum ciudat (nu
+	 * doar diferit), cauza este ca style.css contine reguli de layout global
+	 * (body, .site) pe care WordPress le rescrie pe .editor-styles-wrapper - si
+	 * atunci se trece la varianta din PUB-17.
+	 */
+	add_theme_support( 'editor-styles' );
+	add_editor_style( 'style.css' );
+
+	/*
+	 * TODO [PUB-04][HIGH]: add_theme_support( 'align-wide' ) NU a fost adaugat,
+	 * si este o omisiune deliberata, nu una uitata.
+	 * PUB-04 spune el insusi ca align-wide are efect real doar impreuna cu
+	 * layout.contentSize / wideSize din theme.json (PUB-01) sau cu reguli
+	 * .alignwide / .alignfull in CSS (PUB-13). Adaugat singur, i-ar da autorului
+	 * doua butoane noi in editor care nu produc nimic vizibil pe site - ceea ce
+	 * este mai rau decat lipsa lor, pentru ca il trimite inapoi la latimi inline.
+	 * Se adauga in aceeasi sesiune cu theme.json.
+	 */
+
+	/*
+	 * PUB-02 [CRITICAL] - REZOLVAT 2026-09-21, mai jos in aceasta functie.
+	 * Textul original al constatarii, pastrat pentru context:
+	 * Lipsesc add_theme_support( 'editor-styles' ) si
 	 * add_editor_style(). Consecinta directa asupra publicarii: in editor textul
 	 * apare cu fontul, latimea si spatierile default ale WordPress, nu cu ale
 	 * site-ului. Autorul nu vede ce publica, incearca sa corecteze din editor si,
@@ -401,7 +464,9 @@ function simonamarin_setup() {
 	 * .editor-styles-wrapper). Cel mai curat este un fisier separat, cu reguli pe
 	 * elemente si pe .wp-block-*, incarcat in ambele contexte. Vezi PUB-10.
 	 *
-	 * TODO [PUB-03][HIGH]: Lipseste add_theme_support( 'wp-block-styles' ). Fara
+	 * PUB-03 [HIGH] - REZOLVAT 2026-09-21, mai jos in aceasta functie.
+	 * Textul original al constatarii, pastrat pentru context:
+	 * Lipseste add_theme_support( 'wp-block-styles' ). Fara
 	 * el, stilurile de baza ale blocurilor core (citat, tabel, separator, galerie,
 	 * buton) nu se incarca pe site; blocurile arata nefinisat, iar autorul
 	 * compenseaza manual, in articol.
@@ -417,7 +482,9 @@ function simonamarin_setup() {
 	 * wideSize din theme.json (PUB-01) sau cu reguli .alignwide / .alignfull in
 	 * CSS (PUB-13).
 	 *
-	 * TODO [PUB-05][HIGH]: Lipseste add_theme_support( 'responsive-embeds' ).
+	 * PUB-05 [HIGH] - REZOLVAT 2026-09-21, mai jos in aceasta functie.
+	 * Textul original al constatarii, pastrat pentru context:
+	 * Lipseste add_theme_support( 'responsive-embeds' ).
 	 * Un YouTube sau o postare lipita in articol isi pastreaza dimensiunea fixa a
 	 * iframe-ului si depaseste coloana pe telefon, asa ca autorul ii pune latime
 	 * inline. Fix: add_theme_support( 'responsive-embeds' ) - WordPress adauga
@@ -463,7 +530,8 @@ function simonamarin_setup() {
 	 * Taierea (crop) garantata din PHP e mai sigura decat object-fit din CSS,
 	 * pentru ca livreaza si fisiere mai mici pe mobil.
 	 *
-	 * TODO [UX-77][MEDIUM]: Lipsesc add_theme_support( 'editor-styles' ) +
+	 * UX-77 [MEDIUM] - REZOLVAT 2026-09-21 odata cu PUB-02. Constatarea originala:
+	 * Lipsesc add_theme_support( 'editor-styles' ) +
 	 * add_editor_style(). Impact de UX pentru cel care administreaza site-ul:
 	 * in editor textul arata altfel decat pe site, deci formatarea se face
 	 * "pe ghicite" si rezultatul se verifica abia dupa publicare.
