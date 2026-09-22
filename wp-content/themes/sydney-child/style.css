@@ -54,19 +54,30 @@ pas sa nu modifice NICIUN fisier al temei parinte. Regula se incarca deci de
 doua ori, identic, ceea ce nu are efect vizual. La primul update al lui Sydney
 copia din parinte dispare si ramane doar aceasta - exact rezultatul dorit.
 
-DE REVIZUIT: regula este mai larga decat trebuie. `min-width` si `min-height`
-nu au niciun efect pe elemente inline nereplacate, deci pe un link obisnuit din
-mijlocul unui paragraf nu face nimic - iar acolo unde link-ul ESTE
-inline-block sau block, il inalta la 24px si poate desface ritmul vertical al
-textului. `!important` o face imposibil de corectat punctual.
-Varianta corecta este sa se aplice tintelor reale (butoane, iconite de retele
-sociale, elemente de meniu), nu tuturor elementelor <a> si <i>. Nu am schimbat-o
-in acest commit: scopul mutarii a fost sa nu se modifice NIMIC vizual.
+REVIZUITA (redesign, Faza 5). Varianta anterioara era `a, i { min-width: 24px
+!important; min-height: 24px !important }`, iar comentariul de atunci nota deja
+ca e prea larga si ca `!important` o face imposibil de corectat punctual. Exact
+asta s-a intamplat: butoanele noi cereau 52px inaltime si primeau 24, pentru ca
+`!important` bate orice selector, oricat de specific.
+
+Acum se aplica tintelor reale - iconitele si comenzile -, nu oricarui <a> si
+<i> din pagina, si fara `!important`. Pe un link inline dintr-un paragraf
+regula oricum nu avea efect: `min-width` si `min-height` sunt ignorate pe
+elemente inline nereplacate. Singurul loc unde CONTA era `.sm-icon`, care e
+`inline-block` si de acolo isi lua cutia de 24x24 - de aceea apare primul in
+lista. Un buton cu inaltime proprie mai mare o depaseste, cum si trebuie.
 */
-a,
-i {
-	min-width: 24px !important;
-	min-height: 24px !important;
+.sm-icon,
+.header-links a,
+.site-branding a,
+.mainnav a,
+#mainnav-mobi a,
+.whatsapp-footer,
+button,
+input[type="submit"],
+input[type="button"] {
+	min-width: 24px;
+	min-height: 24px;
 }
 
 /*
