@@ -226,7 +226,7 @@ Planul complet, cu fazele și estimările, e în
 | 1 — eroul de pe Home | **făcut** |
 | 2 — cardurile de servicii | **făcut** |
 | 3 — blocul „despre mine" de pe Home | **făcut** |
-| 4 — antet și subsol | deschis |
+| 4 — antet și subsol | **făcut** |
 | 5 — paginile interioare | **făcut** |
 | 6 — articolele | **făcut** |
 
@@ -267,6 +267,20 @@ vedea din citirea fișierelor:
    așa că prima variantă a foii a transformat titlurile de secțiune din
    articole în paragrafe obișnuite. Elementul decide rolul, nu clasa.
 
+Din Faza 4, încă două:
+
+7. **Un selector doar cu clase pierde în fața unui ID, oricât de lung ar fi.**
+   Sydney își scrie regulile de meniu cu `#mainnav ul li a`, atât în foaia
+   proprie cât și în CSS-ul generat din Customizer. Prima variantă a foii de
+   antet nu folosea ID-ul, așa că meniul își păstra `float`-urile temei și
+   rândul de pictograme cădea sub elementele de meniu, pe al doilea rând.
+8. **Butonul flotant WhatsApp era vizibil pe desktop, rupt.** În CSS-ul
+   istoric, `.whatsapp-footer { display: flex !important }` bătea
+   `display: none` de deasupra ei, la orice lățime — dar `position: fixed`
+   venea doar dintr-un `@media (max-width: 980px)`. Rezultatul: pe fiecare
+   pagină de desktop, o pictogramă de 24px lată cât ecranul, în curs, sub
+   subsol. Se vede în toate capturile de dinainte.
+
 Ce **nu** s-a atins, în nicio fază: niciun cuvânt din conținut, niciun slug,
 nicio pagină din tema inactivă. Titlurile care apar de două ori pe aceeași
 pagină (o dată în antetul Sydney, o dată în conținut, pe Articole, Ateliere și
@@ -304,9 +318,20 @@ sunt încă necesare. **Este cea mai mare optimizare disponibilă pe acest site.
 
 ### 2. MIG-03 — subsolul personalizat
 
+**Rămâne deschis după Faza 4.** Faza 4 a rezolvat doar *prezentarea* subsolului
+existent: o singură bandă în cerneala paletei, cu creditele centrate și
+discrete. Nu a adăugat conținut — asta e MIG-03 și e o decizie separată.
+
 Subsolul de dinainte (contact, Facebook, Instagram, email, lista de servicii) a
 dispărut la migrare, fiind scris direct în `footer.php`. Acum se afișează
 varianta implicită Sydney.
+
+De știut înainte de a începe: zona de widgeturi din subsol **nu e goală** —
+conține Categorii, Arhive și Comentarii recente, toate trei ascunse prin
+decizia „fără sidebar, fără comentarii". Până acum ele lăsau în urmă 190px de
+negru gol pe fiecare pagină; acum zona se ascunde automat câtă vreme tot ce e
+în ea e ascuns, și reapare singură la primul widget care chiar se vede. Deci
+MIG-03 se poate face prin widgeturi, fără nicio modificare de CSS.
 
 Se reconstruiește **prin widgeturi sau hook-uri**, nu printr-un `footer.php`
 copiat în copil — altfel se rupe la următorul update, exact ca prima dată.
@@ -471,6 +496,7 @@ loc); implementarea în sine e simplă odată aleasă formularea.
 | Butonul „Contact" din erou, făcut link real | `sydney-child/assets/js/cta-fix.js` | `<div href>` înlocuit cu `<a>` către `/contact/` |
 | Sistem de design pe paginile interioare (Fazele 5–6) | `sydney-child/assets/css/redesign-pages.css` | 10 pagini verificate la 1440px, patru și la 390px; fără derulare orizontală |
 | Regula `a, i { min-height: 24px !important }` restrânsă | `sydney-child/style.css` | antetul comparat pixel cu pixel înainte/după: identic |
+| Antet, subsol și butonul flotant (Faza 4) | `sydney-child/assets/css/redesign-chrome.css` | antet 86px, lipit de conținut fără gol; fără derulare orizontală la 390 / 768 / 1024 / 1440 |
 
 Toate cinci de mai sus au fost migrate din tema inactivă pe 21 septembrie 2026.
 Verificarea făcută efectiv a fost `php -l` pe fiecare fișier modificat — nu o
