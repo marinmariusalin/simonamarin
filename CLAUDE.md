@@ -13,7 +13,7 @@ despre ce rulează pe site.
 | | |
 |---|---|
 | Temă activă | **`sydney-child`**, părinte `sydney` **2.71** |
-| Cod independent de temă | `wp-content/mu-plugins/simonamarin-hardening.php` |
+| Cod independent de temă | `wp-content/mu-plugins/simonamarin-hardening.php`<br>`wp-content/mu-plugins/simonamarin-fara-comentarii.php` |
 | **Inactivă, de ignorat** | `wp-content/themes/simonamarin/` |
 
 `wp-content/themes/simonamarin/` este o temă instalată dar **niciodată

@@ -12,7 +12,7 @@
 | | |
 |---|---|
 | Temă activă | **`sydney-child`** (copil), părinte **`sydney` 2.71** |
-| Cod independent de temă | `wp-content/mu-plugins/simonamarin-hardening.php` |
+| Cod independent de temă | `wp-content/mu-plugins/simonamarin-hardening.php`<br>`wp-content/mu-plugins/simonamarin-fara-comentarii.php` |
 | Temă **inactivă**, ignorabilă | `wp-content/themes/simonamarin/` |
 
 ⚠️ **Tema `simonamarin/` nu rulează și nu a rulat niciodată.** Conține ~263 de
@@ -36,26 +36,41 @@ Acestea au fost discutate și aprobate, apoi implementate în tema
 `simonamarin/` — care nu rulează. Nu sunt idei noi: sunt decizii deja luate,
 care așteaptă să fie aplicate acolo unde contează.
 
-### D1. Comentariile — decizia „site fără comentarii" nu e în vigoare
+### D1. Comentariile — REZOLVAT (22.09.2026)
 
-Ai decis explicit că site-ul nu are comentarii, deloc. Pe site acum:
+Ai decis explicit că site-ul nu are comentarii, deloc, și ai repetat-o de mai
+multe ori: nici adăugare, nici vizualizare. Decizia stătea aici, în TODO, în
+timp ce pe fiecare articol se afișa în continuare „Lasă un răspuns". Acum e
+aplicată pe site.
 
-| | |
-|---|---|
-| Setare globală `default_comment_status` | **`open`** |
-| Articole și pagini cu comentarii deschise | **32** |
-| Comentarii în baza de date | **119** |
-| Formularul de comentarii pe pagina articolului | **se afișează** |
+**Ce s-a schimbat**
 
-Oricine poate lăsa un comentariu public sub un articol. Pe un site de cabinet
-de psihoterapie asta are implicații de confidențialitate proprii domeniului:
-un vizitator care comentează sub un articol despre o problemă personală își
-asociază public numele cu acea problemă, permanent și indexabil.
+| | Înainte | Acum |
+|---|---|---|
+| `default_comment_status` | `open` | `closed` |
+| Conținut cu comentarii deschise | **81** (32 articole + 47 atașamente + 2 ciorne) | **0** |
+| Formularul de comentarii pe articol | se afișa | nu mai există în HTML |
+| Comentarii aprobate, vizibile public | **2** | **0 afișate** |
+| Feed de comentarii (`/articol/feed/`, `/comments/feed/`) | 200 | 404 |
+| `/wp-json/wp/v2/comments` pentru vizitatori | servea comentariile | 404 |
+| Trimitere directă către `wp-comments-post.php` | accepta | 403 |
 
-Se rezolvă în două părți, separat: **oprirea** comentariilor noi (setare
-globală plus cele 32 de articole) și **decizia despre cele 119 existente** —
-ascunse sau șterse. A doua atinge conținut, deci e decizia ta, nu a mea.
+Regulile sunt în `wp-content/mu-plugins/simonamarin-fara-comentarii.php`, nu în
+temă și nu doar în setări: o setare se poate reactiva dintr-un clic sau la
+importul unei configurații, un mu-plugin nu poate fi dezactivat din panou.
+Fiecare filtru are în fișier motivul pentru care există.
 
+**Cifra de 119 comentarii era înșelătoare.** Defalcarea reală: 48 spam, 69
+neaprobate și **doar 2 aprobate** — acelea două erau singurele vizibile
+vreodată public, pe articolul „Psihoterapia la distanță".
+
+**Ce rămâne decizia ta:** cele 119 nu sunt șterse, doar scoase din afișare.
+Ștergerea atinge conținut. Din același motiv am lăsat neatins ecranul
+*Comentarii* din administrare — dacă vrei să le ștergi, ai nevoie de el.
+
+**Verificat**, nu presupus: toate cele 32 de articole publicate au fost cerute
+una câte una și niciunul nu mai conține `id="respond"`, `comment-form` sau
+`id="comments"`.
 ### D2. Paleta și sistemul de design — aplicată pe Sydney 2.71 (21.09.2026)
 
 Rezultatul din `wp-content/themes/simonamarin/DESIGN.md` (paletă verde-albastru
