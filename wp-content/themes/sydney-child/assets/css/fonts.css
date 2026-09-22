@@ -1,0 +1,186 @@
+/**
+ * Fonturi gazduite local — Taviraj, Poppins, Sacramento
+ * ============================================================================
+ *
+ * De ce local si nu de pe CDN-ul Google:
+ *
+ * 1. GDPR. Un <link> catre fonts.googleapis.com trimite adresa IP a fiecarui
+ *    vizitator catre Google, la fiecare incarcare de pagina. Pe un site care
+ *    colecteaza date de sanatate prin formularul de contact (art. 9), transferul
+ *    acesta nu are temei si nu are nevoie sa existe: fisierele sunt 231 KB in
+ *    total si se servesc din acelasi domeniu.
+ * 2. Randare. Pana acum `.signature-font` cerea 'Sacramento, cursive' fara ca
+ *    Sacramento sa fie incarcat nicaieri — singurul @font-face din CSS-ul din
+ *    Customizer era gol, cu `font-display: swap` si nimic altceva. Windows
+ *    rezolva `cursive` ca Comic Sans, deci semnatura de pe prima pagina se
+ *    randa in Comic Sans.
+ *
+ * Subseturi: doar `latin` si `latin-ext`. Diacriticele romanesti au nevoie de
+ * amandoua — ă (U+0103), ș (U+0219), ț (U+021B) sunt in latin-ext, iar î si â
+ * in latin. Subsetul devanagari livrat de Google pentru Poppins si Taviraj a
+ * fost lasat afara: peste 100 KB pe care acest site nu ii foloseste niciodata.
+ *
+ * `font-display: swap` peste tot: textul se citeste cu fontul de sistem din
+ * prima clipa si se schimba cand ajunge fontul. Pentru cineva in criza, textul
+ * invizibil cateva sute de milisecunde e mai rau decat un schimb de font.
+ *
+ * Licenta: toate trei sunt SIL Open Font License 1.1, care permite
+ * gazduirea proprie si redistribuirea. Fisierele vin de la fonts.gstatic.com,
+ * neconvertite si nemodificate.
+ *
+ * Regenerare: se ia CSS-ul de la
+ * https://fonts.googleapis.com/css2?family=Taviraj:wght@400;500;600&family=Poppins:wght@300;400;500;600&family=Sacramento&display=swap
+ * cu un User-Agent de browser modern (altfel Google serveste .ttf, nu .woff2),
+ * se pastreaza blocurile latin si latin-ext si se rescriu URL-urile.
+ */
+
+/* --- Taviraj ---------------------------------------------------------- */
+
+@font-face {
+	font-family: 'Taviraj';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('../fonts/taviraj-400-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+	font-family: 'Taviraj';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('../fonts/taviraj-400-latin-ext.woff2') format('woff2');
+	unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+	font-family: 'Taviraj';
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+	src: url('../fonts/taviraj-500-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+	font-family: 'Taviraj';
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+	src: url('../fonts/taviraj-500-latin-ext.woff2') format('woff2');
+	unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+	font-family: 'Taviraj';
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+	src: url('../fonts/taviraj-600-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+	font-family: 'Taviraj';
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+	src: url('../fonts/taviraj-600-latin-ext.woff2') format('woff2');
+	unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* --- Poppins ---------------------------------------------------------- */
+
+@font-face {
+	font-family: 'Poppins';
+	font-style: normal;
+	font-weight: 300;
+	font-display: swap;
+	src: url('../fonts/poppins-300-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+	font-family: 'Poppins';
+	font-style: normal;
+	font-weight: 300;
+	font-display: swap;
+	src: url('../fonts/poppins-300-latin-ext.woff2') format('woff2');
+	unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+	font-family: 'Poppins';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('../fonts/poppins-400-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+	font-family: 'Poppins';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('../fonts/poppins-400-latin-ext.woff2') format('woff2');
+	unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+	font-family: 'Poppins';
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+	src: url('../fonts/poppins-500-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+	font-family: 'Poppins';
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+	src: url('../fonts/poppins-500-latin-ext.woff2') format('woff2');
+	unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+	font-family: 'Poppins';
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+	src: url('../fonts/poppins-600-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+	font-family: 'Poppins';
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+	src: url('../fonts/poppins-600-latin-ext.woff2') format('woff2');
+	unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* --- Sacramento ---------------------------------------------------------- */
+
+@font-face {
+	font-family: 'Sacramento';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('../fonts/sacramento-400-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+	font-family: 'Sacramento';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('../fonts/sacramento-400-latin-ext.woff2') format('woff2');
+	unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
