@@ -307,30 +307,48 @@ alt rol vizual.
 
 ## Deschis, în ordinea valorii
 
-### 0. Imaginile din cardurile de pe `/ateliere/` nu se încarcă
+### 0. Imaginile din cardurile de pe `/ateliere/` — REZOLVAT (22.09.2026)
 
-**Suspendat (22.09.2026).** Ai renunțat deocamdată la secțiunea Ateliere și am
-scos legătura din meniul principal. Pagina `/ateliere/` rămâne publicată și
-accesibilă direct, doar că nu mai e în navigație — deci imaginile rupte nu mai
-sunt vizibile pe un drum firesc prin site. Rămâne aici pentru cazul în care
-secțiunea revine.
+Ipoteza de aici era greșită și o las scrisă ca să nu fie reluată: se
+presupunea că e o diferență de mediu local, adică lipsa unei reguli de
+rescriere din `.htaccess`, și că în producție imaginile s-ar vedea. **Verificat
+direct pe `simonamarin.ro`: erau rupte și acolo**, cu același `301`. Lecția e
+cea din secțiunea de metodă — „de verificat pe producție" trebuie chiar
+verificat, nu presupus.
 
-Modificarea e în baza de date, nu în cod: elementul de meniu `nav_menu_item`
-1295 (meniul „Menu set 1", term 2), care trimitea la pagina 1279. Git nu o
-poate urmări. Se reface din *Aspect → Meniuri*, adăugând pagina Ateliere pe
-poziția a treia, între Articole și Servicii.
+Cauza reală: adresele `…insarcinate.webp` și `…prezentare-1024x576.webp` erau
+scrise direct în conținutul paginii 1279 de plugin-ul *Converter for Media*,
+dezinstalat între timp. Fișierul real se numea `…jpg.webp` și era generat de
+LiteSpeed.
 
-**Nu ține de design și nu e cauzat de redesign** — se vedea la fel și înainte.
-Marcajul cere `.../grup-de-suport-pentru-femei-insarcinate.webp`, dar în
-`wp-content/uploads/` fișierul se numește `...-insarcinate.jpg.webp`. Cererea
-răspunde cu 301, iar în card rămâne textul alternativ.
+Reparat cu markup generat de WordPress din biblioteca media, care nu depinde de
+niciun plugin și are `srcset` potrivit slotului real. Detaliile complete, plus
+restul lucrului pe imagini, în [audit-imagini.md](audit-imagini.md).
 
-Tiparul e al unui plugin de conversie WebP care rescrie `.jpg` în `.webp` în
-HTML și se bazează pe o regulă de rescriere din `.htaccess` ca să servească
-fișierul real. `.htaccess` nu e în git (e în `.gitignore`), deci local regula
-lipsește. **De verificat pe producție înainte de orice reparație**: dacă acolo
-imaginile se văd, nu e nimic de reparat în cod, e doar o diferență de mediu
-local.
+Rămâne deschis doar faptul că legătura către Ateliere e scoasă din meniul
+principal, la cererea ta. Modificarea e în baza de date, nu în cod: elementul
+`nav_menu_item` 1295 (meniul „Menu set 1", term 2). Git nu o poate urmări. Se
+reface din *Aspect → Meniuri*, adăugând pagina pe poziția a treia, între
+Articole și Servicii.
+
+### 0b. Imaginile optimizate trebuie duse în producție
+
+Lucrul pe imagini din 22.09.2026 (vezi [audit-imagini.md](audit-imagini.md)) e
+făcut **doar pe local**: `uploads` a scăzut de la 124 MB la 17 MB, cea mai grea
+pagină de articol de la 1187 KB la 27 KB, iar livrarea nu mai depinde de
+LiteSpeed. Producția are încă starea veche.
+
+Migrarea are două jumătăți care trebuie să plece împreună, altfel paginile
+arată către fișiere care nu există:
+
+- **fișierele** din `wp-content/uploads`;
+- **baza de date**: conținutul paginilor 192, 215, 989, 794, 1279 și 1512,
+  textele alternative (`_wp_attachment_image_alt`), metadata atașamentelor
+  (`_wp_attached_file`, `_wp_attachment_metadata`) și setările Rank Math
+  `add_img_alt` / `add_img_title`.
+
+Copie de siguranță completă dinainte de modificări:
+`E:\simonamarin\_backup-imagini-2026-09-22\`.
 
 ### 1. Google Tag Manager — 520 KB, 53% din pagină
 

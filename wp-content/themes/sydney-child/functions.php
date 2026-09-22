@@ -155,6 +155,14 @@ require_once get_stylesheet_directory() . '/inc/meta-enhancements.php';
  */
 require_once get_stylesheet_directory() . '/inc/design-system.php';
 
+/**
+ * Reguli pentru imagini: calitate de compresie, plafon de dimensiune la
+ * incarcare si atributul `sizes`, prin care browserul alege varianta potrivita.
+ * Sunt filtre de nucleu, ca livrarea imaginilor sa nu mai depinda de un plugin
+ * de optimizare.
+ */
+require_once get_stylesheet_directory() . '/inc/images.php';
+
 /*
  * ============================================================================
  * MIGRAREA LA SYDNEY 2.71 - CE A RAMAS
