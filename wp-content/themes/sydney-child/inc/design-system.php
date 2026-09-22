@@ -105,6 +105,19 @@ function sydney_child_enqueue_design_system() {
 	$redesign = sydney_child_asset( 'assets/css/redesign.css' );
 	if ( $redesign ) {
 		wp_enqueue_style( 'sydney-child-redesign', $redesign[0], $deps, $redesign[1] );
+		$deps[] = 'sydney-child-redesign';
+	}
+
+	/*
+	 * Paginile interioare. Fisier separat de redesign.css nu din motive tehnice
+	 * - ar merge si intr-unul singur - ci pentru ca sunt doua etape diferite de
+	 * lucru: prima pagina s-a verificat si s-a inchis, restul site-ului se
+	 * verifica pagina cu pagina. Doua fisiere inseamna doua diff-uri separate.
+	 * Jetoanele (`:root`) sunt declarate in redesign.css, deci depinde de el.
+	 */
+	$pages = sydney_child_asset( 'assets/css/redesign-pages.css' );
+	if ( $pages ) {
+		wp_enqueue_style( 'sydney-child-redesign-pages', $pages[0], $deps, $pages[1] );
 	}
 }
 add_action( 'wp_enqueue_scripts', 'sydney_child_enqueue_design_system', 12 );

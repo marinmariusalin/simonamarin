@@ -1,0 +1,1098 @@
+/**
+ * Sistemul de design — paginile interioare (Fazele 5 si 6)
+ * ============================================================================
+ *
+ * Continuarea lui redesign.css, care acopera doar prima pagina. Aceleasi
+ * jetoane (`:root` e declarat acolo), aceleasi decizii: doua voci tipografice,
+ * saturatie joasa pe suprafete mari, o singura actiune principala pe ecran.
+ *
+ * Toti selectorii tintesc clase care exista deja in continutul paginilor
+ * (`.about-me-overlay`, `.about-me-presentation`, `.tarife-box`,
+ * `.articole-box`, `.single-article-container`), exact ca pe Home. Nu s-a
+ * editat niciun cuvant din baza de date.
+ *
+ * DOUA LUCRURI DESPRE STRUCTURA, fara de care selectorii de mai jos par
+ * arbitrari:
+ *
+ * 1. Paginile folosesc trei sabloane diferite, si de asta se comporta diferit:
+ *      page_front-page  - Servicii, Tarife, Contact. NU au antetul Sydney, deci
+ *                         titlul paginii vine din continut (`.about-me-overlay`).
+ *      page_fullwidth   - Despre mine, Terapia online.
+ *      default          - Articole, Ateliere, grupurile, Politica, Termenii.
+ *                         Acestea DOUA au si antetul Sydney (`<h1 class="title-post">`),
+ *                         si un titlu propriu in continut.
+ *    Titlul din continut nu se ascunde - ar insemna sa scot text din pagina.
+ *    Acolo unde exista deja un `<h1>` deasupra, primeste rolul de eticheta
+ *    (mic, majuscule, distantat) peste blocul de semnatura. E aceeasi
+ *    informatie, intr-un rol vizual care nu mai concureaza cu titlul.
+ *
+ * 2. Marcajul e trecut prin `wpautop`, deci are `</p>` nepereche si `<br>`-uri
+ *    in locuri in care nu te astepti. De aceea apar `:last-of-type` in loc de
+ *    `:last-child` si reguli care ascund `<br>`-uri din interiorul butoanelor.
+ *    Motivul complet e in antetul lui redesign.css.
+ *
+ * Ordinea sectiunilor:
+ *   1. Invelis, grile mostenite   6. Contact (formular + date)
+ *   2. Eroul de pagina            7. Articole si ateliere (carduri)
+ *   3. Tipografia de continut     8. Articolul singur
+ *   4. Despre mine                9. Politica / Termeni
+ *   5. Tarife                    10. Responsive
+ */
+
+/* ===========================================================================
+   1. INVELIS SI GRILE MOSTENITE
+   Aceleasi doua reparatii ca pe Home, aplicate pe restul site-ului.
+   =========================================================================== */
+
+/**
+ * Benzile de sectiune ies pe toata latimea ferestrei prin margini negative
+ * calculate in `vw`. `100vw` include bara de derulare, deci surplusul se taie
+ * de pe invelisul paginii, care are exact latimea corecta.
+ */
+body:not(.home) .page-wrap {
+	overflow-x: clip;
+}
+
+/**
+ * `.row::before` si `.row::after` din Bootstrap sunt curatare de float-uri.
+ * In momentul in care `.row` devine `grid` sau `flex`, ele devin elemente ale
+ * grilei si ocupa primele celule. Pe Home asta a mutat textul in coloana a
+ * doua si fotografia pe randul urmator. Se anuleaza peste tot unde schimbam
+ * modul de afisare.
+ */
+body:not(.home) .entry-content .row::before,
+body:not(.home) .entry-content .row::after {
+	display: none;
+}
+
+/**
+ * Coloanele Bootstrap se neutralizeaza, iar layout-ul il preiau containerele
+ * semantice. Grila `col-md-*` e fragila si depinde de tema; un layout pus pe
+ * `.about-me-presentation` sau `.tarife-box-container` supravietuieste
+ * inclusiv unei schimbari complete de tema, iar marcajul ramane neatins.
+ */
+body:not(.home) .entry-content [class*="col-md-"],
+body:not(.home) .entry-content [class*="col-xs-"],
+body:not(.home) .entry-content [class*="col-lg-"] {
+	float: none;
+	width: auto;
+	max-width: none;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+/**
+ * Bootstrap trage fiecare `.row` cu 15px in afara, ca sa compenseze padding-ul
+ * coloanelor - pe care l-am scos. Lasata asa, regula anuleaza exact gutterul
+ * lateral al containerului parinte: pe mobil, campurile formularului de contact
+ * ajungeau lipite de marginea ecranului.
+ */
+body:not(.home) .entry-content .row {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+body:not(.home) .entry-content > .row,
+body:not(.home) .entry-content .about-me-page > .row {
+	display: block;
+	/**
+	 * `auto`, nu `0`. Bootstrap pune `-15px` pe `.row` ca sa compenseze
+	 * padding-ul coloanelor, pe care l-am scos mai sus. Dar unele containere
+	 * de continut SUNT si ele `.row` (`.about-me-presentation` pe Despre mine),
+	 * iar aceasta regula are specificitate mai mare decat cea care le
+	 * centreaza. Cu `auto`, un container cu `max-width` ramane centrat, iar un
+	 * rand obisnuit, de latime plina, se comporta identic cu `0`.
+	 */
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* Coloanele goale erau distantiere intr-o grila care nu mai exista. */
+body:not(.home) .entry-content .col-md-1:empty,
+body:not(.home) .entry-content .col-md-2:empty,
+body:not(.home) .entry-content .col-md-3:empty {
+	display: none;
+}
+
+/**
+ * Sydney lasa 86px de spatiu sub antetul fix si 100px inainte de subsol,
+ * amandoua scrise in CSS-ul din Customizer al temei. Banda de erou trebuie sa
+ * inceapa lipita de antet, deci spatiul de sus se muta din invelis in banda.
+ */
+body:not(.home) .page-wrap {
+	padding-top: 0;
+}
+
+body:not(.home) .site-main {
+	padding-top: 0;
+}
+
+/* ===========================================================================
+   2. EROUL DE PAGINA
+   Toate paginile incep la fel: o banda linistita pe toata latimea, titlul in
+   Taviraj, un semn grafic scurt sub el. Pana acum fiecare pagina incepea
+   altfel - unele cu un card mentă plutind in alb, altele cu un titlu simplu
+   lipit de antet, iar Despre mine cu ~150px de gol.
+   =========================================================================== */
+
+/**
+ * Specificitatea e scrisa lung intentionat. `.about-me-overlay` este si
+ * `col-md-8`, iar regulile de coloana de mai sus au specificitate mare; o
+ * versiune mai scurta pierdea, si banda ramanea o coloana de 740px fara fundal.
+ */
+body:not(.home) .entry-header,
+body.page-template-page_front-page:not(.home) .entry-content .about-me-page .about-me-overlay {
+	margin-left: calc(50% - 50vw);
+	margin-right: calc(50% - 50vw);
+	padding: calc(86px + var(--sm-space-16)) var(--sm-space-6) var(--sm-space-16);
+	background: linear-gradient(168deg, var(--sm-mint) 0%, var(--sm-teal-tint) 45%, var(--sm-sand) 100%);
+	text-align: center;
+	/* Fara umbra si fara colturi rotunjite: o banda, nu un card care pluteste. */
+	box-shadow: none;
+	border-radius: 0;
+	position: static;
+	top: auto;
+	min-height: 0;
+	height: auto;
+}
+
+body:not(.home) .entry-header .title-post,
+body.page-template-page_front-page:not(.home) .entry-content .about-me-page .about-me-overlay .text2 {
+	font-family: var(--sm-font-display);
+	font-size: clamp(2rem, 1.25rem + 2.6vw, 3rem);
+	font-weight: 500;
+	line-height: 1.12;
+	letter-spacing: -0.01em;
+	color: var(--sm-ink);
+	max-width: 20ch;
+	margin: 0 auto;
+	text-align: center;
+}
+
+/* Semnul grafic de sub titlu — singurul loc unde teracota apare pe pagina. */
+body:not(.home) .entry-header .title-post::after,
+body.page-template-page_front-page:not(.home) .entry-content .about-me-page .about-me-overlay .text2::after {
+	content: "";
+	display: block;
+	width: 68px;
+	height: 3px;
+	margin: var(--sm-space-6) auto 0;
+	background-color: var(--sm-terracotta);
+	border-radius: 2px;
+}
+
+/* --- Blocul de semnatura din erou ---------------------------------------- */
+
+body:not(.home) .about-me-overlay .signature-font,
+body:not(.home) .about-me-overlay > .row {
+	font-family: var(--sm-font-script);
+	font-size: var(--sm-text-2xl);
+	line-height: 1.2;
+	color: var(--sm-teal);
+	margin: var(--sm-space-6) 0 0;
+	text-align: center;
+}
+
+/* Paragrafele din erou nu sunt text de citit, sunt parte din titlu. */
+body:not(.home) .entry-content .about-me-overlay p,
+body:not(.home) .entry-content .about-me-overlay h2,
+body:not(.home) .entry-content .about-me-overlay h3,
+body:not(.home) .entry-content .about-me-overlay div {
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/**
+ * A doua linie e titulatura, nu semnatura. Apare in trei forme, dupa pagina:
+ * `<span itemprop="jobTitle">` intr-un `<p>` separat (Ateliere, Articole), a
+ * doua coloana dintr-un `.row` (Servicii, Tarife), sau deloc (Contact, unde
+ * titulatura e in aceeasi propozitie cu numele). `:last-of-type` si nu
+ * `:last-child`, pentru ca `wpautop` lasa un `<p>` gol ca ultim copil.
+ */
+body:not(.home) .entry-content .about-me-overlay [itemprop="jobTitle"],
+body:not(.home) .about-me-overlay .signature-font > span,
+body:not(.home) .about-me-overlay .signature-font .col-md-12:last-of-type,
+body:not(.home) .about-me-overlay > .row .col-md-12:last-of-type {
+	display: block;
+	font-family: var(--sm-font-body);
+	font-size: var(--sm-text-xs);
+	font-weight: 500;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--sm-ink-mute);
+	margin-top: var(--sm-space-2);
+}
+
+/**
+ * Pe paginile care au deja un `<h1>` in antetul Sydney, titlul din continut
+ * devine eticheta deasupra semnaturii. Nu se sterge nimic: aceleasi cuvinte,
+ * alt rol vizual, ca sa nu citesti acelasi titlu de doua ori la rand.
+ */
+body.page-template-default .about-me-overlay,
+body.page-template-page_fullwidth .about-me-presentation > div > .text4 {
+	max-width: var(--sm-container);
+	margin: 0 auto;
+	padding: var(--sm-space-16) var(--sm-space-6) 0;
+	text-align: center;
+	background: none;
+	box-shadow: none;
+	border-radius: 0;
+	position: static;
+}
+
+body.page-template-default .about-me-overlay .text2,
+body.page-template-page_fullwidth .about-me-presentation .text4 > .text2 {
+	font-family: var(--sm-font-body) !important; /* stilul e scris inline in continut */
+	font-size: var(--sm-text-xs) !important;
+	font-weight: 500;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--sm-ink-mute);
+	margin: 0 0 var(--sm-space-3);
+	line-height: 1.4;
+}
+
+body.page-template-default .about-me-overlay .text2::after,
+body.page-template-page_fullwidth .about-me-presentation .text4 > .text2::after {
+	content: none;
+}
+
+/* ===========================================================================
+   3. TIPOGRAFIA DE CONTINUT
+   O singura coloana de citit, de aceeasi latime pe tot site-ul. Pana acum
+   fiecare pagina avea alta latime, iar pe Servicii textul statea intr-o
+   coloana ingusta cu o treime de ecran goala langa ea.
+   =========================================================================== */
+
+:root {
+	/* ~72 de caractere la 18px Poppins — pragul peste care ochiul pierde randul. */
+	--sm-page-measure: 740px;
+}
+
+/**
+ * Doar containerele de TEXT primesc latimea de citit. Prima varianta a acestei
+ * reguli tintea si `.col-md-8`/`.col-md-10`, pornind de la ideea ca acolo sta
+ * continutul - dar aceleasi coloane sunt, pe Contact, banda de erou si blocul
+ * de formular, care au nevoie de latimea intreaga. Rezultatul a fost un erou
+ * fara fundal si un formular inghesuit in 395px.
+ */
+body:not(.home) .entry-content .about-me-presentation,
+body:not(.home) .entry-content .single-article-container {
+	max-width: var(--sm-page-measure);
+	margin: 0 auto;
+	padding: var(--sm-space-16) var(--sm-space-6) 0;
+	/* Cardurile mostenite se desfac: fundal, umbra grea si colturi rotunjite. */
+	background: none;
+	box-shadow: none;
+	border-radius: 0;
+	position: static;
+	top: auto;
+	min-height: 0;
+}
+
+/**
+ * `.text5`, `.text6` si `.text7` NU apar aici, desi par clase de text. In
+ * articole sunt puse pe `<h2>`, iar o regula pe clasa are specificitate mai
+ * mare decat una pe element - le-ar transforma in paragrafe, si exact asta s-a
+ * si intamplat la prima incercare: titlurile din articole s-au randat ca text
+ * obisnuit. Elementul decide rolul, nu clasa.
+ */
+body:not(.home) .entry-content .textP,
+body:not(.home) .entry-content p,
+body:not(.home) .entry-content .list-group-item {
+	/**
+	 * Textul justificat fara despartire in silabe face „rauri" albe verticale,
+	 * vizibile cu ochiul liber in romana. Aliniat la stanga, spatiile dintre
+	 * cuvinte raman egale. Indentarea de prima linie e o conventie de carte
+	 * tiparita, unde nu exista spatiu intre paragrafe; pe web exista.
+	 * Cuvintele raman exact aceleasi.
+	 */
+	text-align: left;
+	text-indent: 0;
+	hyphens: none;
+	font-family: var(--sm-font-body);
+	font-size: var(--sm-text-base);
+	font-weight: 400;
+	line-height: 1.75;
+	color: var(--sm-ink-soft);
+}
+
+body:not(.home) .entry-content p {
+	margin: 0 0 var(--sm-space-6);
+}
+
+body:not(.home) .entry-content h1,
+body:not(.home) .entry-content h2,
+body:not(.home) .entry-content h3,
+body:not(.home) .entry-content h4,
+body:not(.home) .entry-content .text4,
+body:not(.home) .entry-content .textTS {
+	font-family: var(--sm-font-display);
+	font-weight: 500;
+	line-height: 1.25;
+	letter-spacing: -0.01em;
+	color: var(--sm-ink);
+}
+
+body:not(.home) .entry-content h2,
+body:not(.home) .entry-content .text4 {
+	font-size: var(--sm-text-3xl);
+	margin: var(--sm-space-16) 0 var(--sm-space-4);
+}
+
+body:not(.home) .entry-content h3 {
+	font-size: var(--sm-text-xl);
+	margin: var(--sm-space-12) 0 var(--sm-space-3);
+}
+
+body:not(.home) .entry-content h4 {
+	font-size: var(--sm-text-lg);
+	margin: var(--sm-space-8) 0 var(--sm-space-2);
+}
+
+/**
+ * In articole, `.text6` este titlul de sectiune si `.text5` subtitlul lui -
+ * amandoua scrise ca `<h2>`. Fara distinctia de mai jos ar avea aceeasi
+ * marime, si s-ar pierde ierarhia pe care o avea textul inainte.
+ */
+body:not(.home) .entry-content h2.text6 {
+	font-size: var(--sm-text-2xl);
+}
+
+body:not(.home) .entry-content h2.text5,
+body:not(.home) .entry-content h3.text5 {
+	font-size: var(--sm-text-lg);
+	margin-top: var(--sm-space-8);
+}
+
+/* Doua titluri unul dupa altul nu au nevoie de spatiul dintre sectiuni. */
+body:not(.home) .entry-content h2 + h2,
+body:not(.home) .entry-content h2 + h3,
+body:not(.home) .entry-content h3 + h4 {
+	margin-top: var(--sm-space-3);
+}
+
+/* --- Liste ---------------------------------------------------------------- */
+
+/**
+ * `.list-group` e o clasa Bootstrap: scoate bulinele si face din fiecare
+ * element o caseta cu chenar. Pe o lista de studii sau de teme de atelier,
+ * asta transforma o enumerare intr-un tabel. Revine la o lista normala, cu
+ * bulina in culoarea de accent.
+ */
+body:not(.home) .entry-content .list-group {
+	list-style: none;
+	margin: 0 0 var(--sm-space-8);
+	padding: 0;
+}
+
+body:not(.home) .entry-content .list-group-item {
+	position: relative;
+	display: block;
+	background: none;
+	border: 0;
+	padding: 0 0 var(--sm-space-3) var(--sm-space-6);
+	margin: 0;
+}
+
+body:not(.home) .entry-content .list-group-item::before {
+	content: "";
+	position: absolute;
+	left: var(--sm-space-2);
+	top: 0.72em;
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background-color: var(--sm-teal);
+}
+
+/* --- Legaturi in text ----------------------------------------------------- */
+
+body:not(.home) .entry-content a:not(.wp-block-button__link):not([class*="btn"]):not(.sm-whatsapp-cta-link):not(.tarife-detalii):not(.articole-box) {
+	color: var(--sm-teal);
+	text-decoration-color: color-mix(in srgb, var(--sm-teal) 35%, transparent);
+	text-underline-offset: 3px;
+}
+
+body:not(.home) .entry-content a:hover {
+	color: var(--sm-teal-dark);
+	text-decoration-color: currentColor;
+}
+
+body:not(.home) a:focus-visible,
+body:not(.home) button:focus-visible,
+body:not(.home) input:focus-visible,
+body:not(.home) textarea:focus-visible {
+	outline: 2px solid var(--sm-teal);
+	outline-offset: 3px;
+	border-radius: 4px;
+}
+
+/* --- Imagini din continut ------------------------------------------------- */
+
+body:not(.home) .entry-content img {
+	max-width: 100%;
+	height: auto;
+	border-radius: var(--sm-radius);
+}
+
+body:not(.home) .entry-content .img-groups {
+	display: block;
+	width: 100%;
+	margin: 0 0 var(--sm-space-8);
+}
+
+/* ===========================================================================
+   4. DESPRE MINE
+   Pagina cea mai lunga de pe site si singura in care cineva chiar citeste de
+   la cap la coada. Fotografia iese din cursul textului, unde taia randurile in
+   doua; titlurile primesc aer; lista de formari devine lista, nu tabel.
+   =========================================================================== */
+
+body:not(.home) .entry-content .about-me-page > .about-me-presentation:not(.tarife-box-container),
+body:not(.home) .entry-content .about-me-presentation.container {
+	max-width: var(--sm-page-measure);
+	margin-inline: auto;
+	/* Marginea de sus e scrisa inline in continut, cu `!important` — nu poate
+	   fi anulata din foaie, dar dupa banda de erou spatiul e oricum binevenit. */
+	padding-top: 0;
+}
+
+/* Semnatura din blocul de titlu al paginii Despre mine. */
+body:not(.home) .entry-content .about-me-presentation .signature-font {
+	font-family: var(--sm-font-script) !important; /* marimea e scrisa inline */
+	font-size: var(--sm-text-2xl) !important;
+	line-height: 1.2;
+	color: var(--sm-teal);
+	margin: 0 0 var(--sm-space-2);
+	text-align: center;
+}
+
+/**
+ * Blocul de titlu al paginii e marcat `.text-center` in continut, dar regula
+ * generala de paragraf (sectiunea 3) are specificitate mai mare si il alinia la
+ * stanga - titulatura ajungea singura, lipita de marginea coloanei.
+ */
+body:not(.home) .entry-content .about-me-presentation .text-center,
+body:not(.home) .entry-content .about-me-presentation .text-center p,
+body:not(.home) .entry-content .about-me-presentation .text-center span {
+	text-align: center;
+}
+
+body:not(.home) .entry-content .about-me-presentation .d-block.text-muted {
+	font-family: var(--sm-font-body);
+	font-size: var(--sm-text-xs) !important;
+	font-weight: 500 !important;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--sm-ink-mute);
+}
+
+/**
+ * Fotografia statea in cursul textului, care o inconjura — randurile ajungeau
+ * de 3-4 cuvinte langa ea si de 90 de caractere sub ea. Devine o imagine de
+ * sine statatoare, cu aceeasi rama decalata ca pe Home.
+ */
+/**
+ * `!important` aici nu e lene. Imaginea are, in continut,
+ * `style="display:inline-block; width:auto; max-width:100%; object-fit:contain"`,
+ * iar o declaratie din atributul `style` bate orice selector, oricat de lung.
+ * Singurul mod de a o aseza din foaia de stil - fara sa editez continutul, care
+ * apartine utilizatorului - este `!important`.
+ */
+body:not(.home) .entry-content .profile-picture.about-me,
+body:not(.home) .entry-content .about-me-presentation > .row img.img-fluid {
+	float: none;
+	display: block !important;
+	width: 100% !important;
+	max-width: 320px !important;
+	height: auto;
+	margin: 0 auto var(--sm-space-8) !important;
+	border-radius: var(--sm-radius);
+	box-shadow: var(--sm-shadow);
+}
+
+/* Blocul de date de contact de la finalul paginii. */
+body:not(.home) .entry-content .contact-info-about-me {
+	max-width: var(--sm-page-measure);
+	margin: var(--sm-space-16) auto 0;
+	padding-top: var(--sm-space-8);
+	border-top: 1px solid var(--sm-line);
+}
+
+/* ===========================================================================
+   5. TARIFE
+   Ce era: sapte carduri cu inaltime fixa, asezate cu `float`, care nu incapeau
+   pe rand — doua randuri cu goluri intre ele si butoanele „Contact" taiate,
+   exact bug-ul reparat pe Home. Aceeasi solutie: o grila reala.
+   =========================================================================== */
+
+body:not(.home) .entry-content .about-me-page .tarife-box-container {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: var(--sm-space-6);
+	max-width: var(--sm-container);
+	margin: 0 auto;
+	padding: var(--sm-space-16) var(--sm-space-6) 0;
+	background: none;
+	box-shadow: none;
+	border-radius: 0;
+}
+
+body:not(.home) .entry-content .tarife-box {
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	padding: var(--sm-space-8);
+	min-height: 0; /* era 271px fix — de aici veneau cardurile inegale */
+	background-color: var(--sm-surface);
+	border: 1px solid var(--sm-line);
+	border-radius: var(--sm-radius);
+	box-shadow: none;
+	transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+body:not(.home) .entry-content .tarife-box:hover {
+	border-color: var(--sm-mint);
+	box-shadow: var(--sm-shadow);
+}
+
+body:not(.home) .entry-content .tarife-box .textTarifeT {
+	font-family: var(--sm-font-display);
+	font-size: var(--sm-text-lg);
+	line-height: 1.3;
+	color: var(--sm-ink);
+	margin: 0 0 var(--sm-space-4);
+}
+
+/* `<br>`-urile din titlurile de card sunt rupturi de rand scrise in continut,
+   potrivite pentru alta latime de card. Intr-o grila care se aseaza singura,
+   incurca. Textul ramane neatins. */
+body:not(.home) .entry-content .tarife-box .textTarifeT br {
+	display: none;
+}
+
+body:not(.home) .entry-content .tarife-box .textTarifePrie {
+	font-family: var(--sm-font-body);
+	font-size: var(--sm-text-xl);
+	font-weight: 500;
+	color: var(--sm-teal);
+	margin: 0 0 var(--sm-space-6);
+}
+
+/* Randul de actiune se lipeste de baza cardului, ca inaltimile sa se citeasca
+   egal chiar si cand titlurile au lungimi diferite. */
+body:not(.home) .entry-content .tarife-box > p:last-of-type {
+	margin: auto 0 0;
+}
+
+body:not(.home) .entry-content .tarife-detalii {
+	position: static;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	height: auto;
+	min-height: 46px;
+	padding: 0 var(--sm-space-6);
+	background-color: transparent;
+	border: 1px solid var(--sm-teal);
+	border-radius: var(--sm-radius-pill);
+	box-shadow: none;
+	color: var(--sm-teal);
+	font-family: var(--sm-font-body);
+	font-size: var(--sm-text-sm);
+	font-weight: 500;
+	text-decoration: none;
+	transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+body:not(.home) .entry-content .tarife-detalii:hover,
+body:not(.home) .entry-content .tarife-detalii:focus-visible {
+	background-color: var(--sm-teal);
+	color: #fff;
+}
+
+/* ===========================================================================
+   6. CONTACT — formular si date
+   Datele din acest formular sunt date de sanatate (GDPR art. 9). Nu schimb
+   nimic din ce se colecteaza; schimb doar cat de usor e de completat: campuri
+   lizibile, etichete deasupra, o singura coloana, fara chenare dure.
+   =========================================================================== */
+
+body:not(.home) .entry-content .homepage-contact {
+	max-width: var(--sm-container);
+	margin: var(--sm-space-16) auto 0;
+	padding: var(--sm-space-16) var(--sm-space-6) 0;
+	background: none;
+	box-shadow: none;
+	border-radius: 0;
+	position: static;
+	top: auto;
+}
+
+body:not(.home) .entry-content .homepage-contact > .row {
+	display: grid;
+	grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+	align-items: start;
+	gap: var(--sm-space-16);
+}
+
+/* --- WhatsApp, primul canal de contact (decizie luata separat) ------------ */
+
+body:not(.home) .entry-content .sm-whatsapp-cta {
+	margin: 0 0 var(--sm-space-8);
+	text-align: left;
+}
+
+body:not(.home) .entry-content .sm-whatsapp-cta-link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--sm-space-3);
+	min-height: 52px;
+	padding: 0 var(--sm-space-8);
+	/* Verde, nu teracota: teracota e rezervata semnului grafic de sub titlu.
+	   Doua accente tari pe acelasi ecran se concureaza. */
+	background-color: var(--sm-teal);
+	color: #fff;
+	border: 1px solid var(--sm-teal);
+	border-radius: var(--sm-radius-pill);
+	font-family: var(--sm-font-body);
+	font-size: var(--sm-text-sm);
+	font-weight: 500;
+	text-decoration: none;
+	transition: background-color 0.18s ease;
+}
+
+body:not(.home) .entry-content .sm-whatsapp-cta-link:hover,
+body:not(.home) .entry-content .sm-whatsapp-cta-link:focus-visible {
+	background-color: var(--sm-teal-dark);
+	color: #fff;
+}
+
+body:not(.home) .entry-content .sm-whatsapp-cta-link .sm-icon svg {
+	width: 22px;
+	height: 22px;
+	display: block;
+}
+
+/* --- Campurile formularului ---------------------------------------------- */
+
+body:not(.home) .entry-content .wpcf7-form label {
+	display: block;
+	font-family: var(--sm-font-body);
+	font-size: var(--sm-text-sm);
+	font-weight: 500;
+	color: var(--sm-ink);
+	margin-bottom: var(--sm-space-2);
+}
+
+body:not(.home) .entry-content .wpcf7-form-control {
+	width: 100%;
+	min-height: 48px;
+	padding: var(--sm-space-3) var(--sm-space-4);
+	background-color: var(--sm-surface);
+	/* Chenarul vechi era #666 — suficient de contrastant, dar dur pe o pagina
+	   asa de calma. `--sm-ink-mute` pastreaza 4.5:1 fata de alb. */
+	border: 1px solid var(--sm-ink-mute);
+	border-radius: 8px;
+	font-family: var(--sm-font-body);
+	font-size: var(--sm-text-base);
+	color: var(--sm-ink);
+	transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+body:not(.home) .entry-content textarea.wpcf7-form-control {
+	min-height: 160px;
+	resize: vertical;
+}
+
+body:not(.home) .entry-content .wpcf7-form-control:focus {
+	border-color: var(--sm-teal);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--sm-teal) 18%, transparent);
+	outline: none;
+}
+
+body:not(.home) .entry-content .wpcf7-form-control.wpcf7-submit,
+body:not(.home) .entry-content input[type="submit"] {
+	width: auto;
+	min-height: 52px;
+	padding: 0 var(--sm-space-12);
+	background-color: var(--sm-teal);
+	border: 1px solid var(--sm-teal);
+	color: #fff;
+	font-size: var(--sm-text-sm);
+	font-weight: 500;
+	letter-spacing: 0.02em;
+	cursor: pointer;
+}
+
+body:not(.home) .entry-content .wpcf7-form-control.wpcf7-submit:hover,
+body:not(.home) .entry-content input[type="submit"]:hover {
+	background-color: var(--sm-teal-dark);
+	border-color: var(--sm-teal-dark);
+	color: #fff;
+}
+
+/* --- Datele de contact ---------------------------------------------------- */
+
+body:not(.home) .entry-content .contact-info {
+	position: static;
+	width: auto;
+	height: auto;
+	top: auto;
+	right: auto;
+	margin: 0;
+	padding: var(--sm-space-8);
+	background-color: var(--sm-surface);
+	border: 1px solid var(--sm-line);
+	border-radius: var(--sm-radius);
+	box-shadow: none;
+}
+
+body:not(.home) .entry-content .contact-info-row {
+	display: block;
+	margin: 0 0 var(--sm-space-6);
+}
+
+body:not(.home) .entry-content .contact-info-row:last-of-type {
+	margin-bottom: 0;
+}
+
+body:not(.home) .entry-content .contact-info .label-contact {
+	font-family: var(--sm-font-body);
+	font-size: var(--sm-text-xs);
+	font-weight: 500;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--sm-ink-mute);
+	margin-bottom: var(--sm-space-1);
+}
+
+body:not(.home) .entry-content .contact-info .messaje {
+	font-size: var(--sm-text-base);
+	line-height: 1.6;
+	color: var(--sm-ink);
+}
+
+/* ===========================================================================
+   7. ARTICOLE SI ATELIERE — cardurile
+   Ce era: doua coloane inegale, cu imaginea plutind in interiorul rezumatului
+   si textul justificat curgand in jurul ei. Rezultatul: randuri de patru
+   cuvinte si carduri de inaltimi diferite pe acelasi rand.
+   Ce devine: o grila cu imagine sus, titlu, rezumat — carduri egale.
+   =========================================================================== */
+
+body:not(.home) .entry-content .articles-container {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	gap: var(--sm-space-8);
+	max-width: var(--sm-container);
+	margin: 0 auto;
+	padding: var(--sm-space-16) var(--sm-space-6) 0;
+	background: none;
+	box-shadow: none;
+}
+
+body:not(.home) .entry-content .articole-box {
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: var(--sm-surface);
+	border: 1px solid var(--sm-line);
+	border-radius: var(--sm-radius);
+	box-shadow: none;
+	text-decoration: none;
+	cursor: pointer;
+	transition: border-color 0.18s ease, box-shadow 0.18s ease,
+	            transform 0.18s ease;
+}
+
+body:not(.home) .entry-content .articole-box:hover {
+	border-color: var(--sm-mint);
+	box-shadow: var(--sm-shadow);
+	transform: translateY(-2px);
+}
+
+body:not(.home) .entry-content .articole-box .card-content {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	margin: 0;
+}
+
+/**
+ * Imaginea urca in capul cardului. `order` nu ajuta: in marcaj ea nu e sora cu
+ * titlul, ci nepoata, iar `order` functioneaza doar intre frati. Asa ca iese
+ * din curs si se ancoreaza sus, iar cardul isi rezerva inaltimea ei prin
+ * `padding-top`. Avantajul fata de o simpla reordonare: toate imaginile de pe
+ * un rand incep la aceeasi inaltime, indiferent daca titlul are un rand sau
+ * trei. Marcajul si ordinea de citire raman neschimbate.
+ */
+body:not(.home) .entry-content .articole-box {
+	padding-top: 200px;
+}
+
+/**
+ * Coloanele Bootstrap au `position: relative`, deci imaginea de mai jos s-ar
+ * ancora de coloana in care sta, nu de card - si ar ajunge peste primele
+ * randuri ale rezumatului, nu in capul cardului. Asa a si aratat prima
+ * incercare. Cu coloanele scoase din pozitionare, cardul devine reperul.
+ */
+body:not(.home) .entry-content .articole-box .card-content > [class*="col-"] {
+	position: static;
+}
+
+body:not(.home) .entry-content .articole-box .article-img-content {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 200px;
+	float: none;
+	width: auto;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+/* Un card fara imagine nu trebuie sa lase 200px de gol in capul lui. */
+body:not(.home) .entry-content .articole-box:not(:has(.article-img-content img)) {
+	padding-top: 0;
+}
+
+body:not(.home) .entry-content .articole-box .article-img-content img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	margin: 0;
+	border-radius: 0;
+}
+
+/* Cardurile fara imagine nu trebuie sa lase un gol in locul ei. */
+body:not(.home) .entry-content .articole-box .article-img-content:empty {
+	display: none;
+}
+
+body:not(.home) .entry-content .articole-box .text4 {
+	font-family: var(--sm-font-display);
+	font-size: var(--sm-text-xl);
+	line-height: 1.3;
+	color: var(--sm-ink);
+	margin: 0;
+	padding: var(--sm-space-6) var(--sm-space-6) 0;
+}
+
+body:not(.home) .entry-content .articole-box .text4 .text4 {
+	padding: 0;
+	margin: 0;
+}
+
+body:not(.home) .entry-content .articole-box .textP {
+	font-size: var(--sm-text-sm);
+	line-height: 1.65;
+	color: var(--sm-ink-soft);
+	margin: var(--sm-space-3) 0 0;
+	padding: 0 var(--sm-space-6);
+}
+
+/* Unele carduri (Ateliere) continua cu o lista dupa rezumat. */
+body:not(.home) .entry-content .articole-box .list-group {
+	margin: var(--sm-space-4) 0 0;
+	padding: 0 var(--sm-space-6);
+}
+
+body:not(.home) .entry-content .articole-box .list-group-item {
+	font-size: var(--sm-text-sm);
+	line-height: 1.55;
+}
+
+/**
+ * Un semn ca de aici se merge mai departe — cardul intreg e deja un link.
+ * Stă pe `.card-content`, nu pe rezumat: pe Ateliere, dupa rezumat mai urmeaza
+ * o lista, iar ancorat de rezumat semnul ajungea la mijlocul cardului. Ca
+ * ultim element al unei coloane flex, cu `margin-top: auto`, coboara la baza
+ * indiferent ce contine cardul.
+ */
+body:not(.home) .entry-content .articole-box .card-content::after {
+	content: "Citește ›";
+	display: block;
+	margin-top: auto;
+	padding: var(--sm-space-6) var(--sm-space-6) var(--sm-space-8);
+	font-family: var(--sm-font-body);
+	font-size: var(--sm-text-sm);
+	font-weight: 500;
+	color: var(--sm-teal);
+}
+
+/* Cardurile de pe Ateliere sunt mai putine si mai bogate: doua pe rand. */
+body.page-id-1279 .entry-content .articles-container {
+	grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+}
+
+/* ===========================================================================
+   8. ARTICOLUL SINGUR
+   Aici nu se alege nimic, se citeste. Singurele decizii sunt lungimea randului
+   si ritmul vertical.
+   =========================================================================== */
+
+/**
+ * Pe Despre mine si Terapia online, continutul are in marcaj
+ * `style="margin-top: 90px !important"`. O declaratie `!important` din
+ * atributul `style` nu poate fi anulata din foaia de stil, asa ca spatiul se
+ * scade de unde se poate: din banda de deasupra si de pe containerul parinte.
+ * Fara asta raman ~210px de gol intre titlul paginii si primul rand de text.
+ */
+body.page-template-page_fullwidth .entry-header {
+	padding-bottom: var(--sm-space-8);
+}
+
+body.page-template-page_fullwidth .entry-content .about-me-page {
+	margin-top: calc(-1 * var(--sm-space-16));
+}
+
+body.single .entry-header {
+	padding-bottom: var(--sm-space-12);
+}
+
+body.single .entry-header .title-post {
+	max-width: 24ch;
+}
+
+/**
+ * `text-align: center` singur nu face nimic aici: Sydney pune `float: left` pe
+ * fiecare element din meta (autor, data, categorie), iar textul aliniat nu
+ * misca un element flotant. Randul devine flex si se centreaza ca intreg.
+ */
+body.single .entry-meta {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	column-gap: var(--sm-space-4);
+	text-align: center;
+	margin-top: var(--sm-space-8);
+	font-family: var(--sm-font-body);
+	font-size: var(--sm-text-xs);
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--sm-ink-mute);
+}
+
+body.single .entry-meta > span {
+	float: none;
+}
+
+body.single .entry-meta a {
+	color: var(--sm-ink-mute);
+	text-decoration: none;
+}
+
+body.single .entry-thumb {
+	max-width: var(--sm-container);
+	margin: var(--sm-space-16) auto 0;
+	padding: 0 var(--sm-space-6);
+}
+
+body.single .entry-thumb img {
+	display: block;
+	width: 100%;
+	max-height: 460px;
+	object-fit: cover;
+	border-radius: var(--sm-radius);
+}
+
+body.single .entry-content {
+	max-width: var(--sm-page-measure);
+	margin: 0 auto;
+	padding: var(--sm-space-16) var(--sm-space-6) 0;
+}
+
+body.single .entry-content > h2 {
+	font-size: var(--sm-text-2xl);
+}
+
+/* Subsolul de articol (categorii, etichete) nu e continut, e navigare. */
+body.single .entry-footer {
+	max-width: var(--sm-page-measure);
+	margin: var(--sm-space-16) auto 0;
+	padding: var(--sm-space-6) var(--sm-space-6) 0;
+	border-top: 1px solid var(--sm-line);
+	font-size: var(--sm-text-xs);
+	color: var(--sm-ink-mute);
+}
+
+/* ===========================================================================
+   9. POLITICA DE CONFIDENTIALITATE SI TERMENII
+   Primesc doar tipografie. Sunt texte pe care nimeni nu le citeste din
+   placere, dar cine le citeste are un motiv serios si merita sa poata.
+   =========================================================================== */
+
+body.page-id-579 .entry-content,
+body.page-id-582 .entry-content {
+	max-width: var(--sm-page-measure);
+	margin: 0 auto;
+	padding: var(--sm-space-16) var(--sm-space-6) 0;
+}
+
+/* ===========================================================================
+   10. RESPONSIVE
+   Punctele de rupere sunt alese dupa continut, nu dupa nume de dispozitive.
+   =========================================================================== */
+
+@media (max-width: 1024px) {
+	body:not(.home) .entry-header,
+	body.page-template-page_front-page:not(.home) .about-me-overlay {
+		padding-top: calc(86px + var(--sm-space-12));
+		padding-bottom: var(--sm-space-12);
+	}
+
+	body:not(.home) .entry-content .homepage-contact > .row {
+		gap: var(--sm-space-12);
+	}
+}
+
+@media (max-width: 900px) {
+	/* Formularul si datele de contact trec una sub alta: la doua coloane,
+	   campurile devin prea inguste pentru un numar de telefon. */
+	body:not(.home) .entry-content .homepage-contact > .row {
+		grid-template-columns: 1fr;
+		gap: var(--sm-space-8);
+	}
+}
+
+@media (max-width: 860px) {
+	body:not(.home) .entry-content .about-me-presentation,
+	body:not(.home) .entry-content .single-article-container,
+	body:not(.home) .entry-content .articles-container,
+	body:not(.home) .entry-content .tarife-box-container,
+	body:not(.home) .entry-content .homepage-contact,
+	body.single .entry-content,
+	body.single .entry-thumb {
+		padding-left: var(--sm-space-4);
+		padding-right: var(--sm-space-4);
+	}
+
+	body:not(.home) .entry-header,
+	body.page-template-page_front-page:not(.home) .about-me-overlay {
+		padding-left: var(--sm-space-4);
+		padding-right: var(--sm-space-4);
+	}
+}
+
+@media (max-width: 560px) {
+	body:not(.home) .entry-content .articles-container,
+	body.page-id-1279 .entry-content .articles-container {
+		grid-template-columns: 1fr;
+	}
+
+	body:not(.home) .entry-content .wpcf7-form-control.wpcf7-submit,
+	body:not(.home) .entry-content input[type="submit"] {
+		width: 100%;
+	}
+}
