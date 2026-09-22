@@ -1,0 +1,1370 @@
+/**
+ * CSS-ul istoric al site-ului, mutat din Customizer in fisier
+ * ============================================================================
+ *
+ * Continutul de mai jos este EXACT ce statea pana acum in "Aspect > Personalizare
+ * > CSS suplimentar" (wpez_posts ID 171, 27 011 de caractere). Nu a fost
+ * rescris, reordonat sau curatat — o singura schimbare la mutare ar fi facut
+ * imposibil de spus daca o diferenta vizuala vine din mutare sau din redesign.
+ *
+ * De ce a fost mutat:
+ *
+ * 1. WordPress stocheaza CSS-ul din Customizer PER TEMA. La orice schimbare de
+ *    tema dispare din pagina, fara avertisment. Pe acest site s-a intamplat deja
+ *    o data cu antetul, subsolul si datele structurate scrise in tema parinte.
+ * 2. Intr-un camp din baza de date nu exista diff, nu exista istoric si nu
+ *    intra in backup odata cu codul. 27 KB de design pe care nimeni nu-i poate
+ *    revizui.
+ * 3. Ordinea de incarcare. Customizer-ul isi tipareste CSS-ul inline in <head>
+ *    la `wp_head` prioritatea 101, adica DUPA orice foaie de stil pusa in coada.
+ *    Orice regula noua de aceeasi specificitate pierdea in fata lui. Ca fisier,
+ *    intra in lantul de dependente si se aseaza unde trebuie: dupa style.css-ul
+ *    temei copil si inaintea lui redesign.css.
+ *
+ * Fisierul e tranzitoriu. Regulile de aici sunt, in parte, exact ce repara
+ * redesign.css (line-height: 1em pe body, user-select: none, inaltimile fixe de
+ * card). Pe masura ce fiecare e inlocuita, se sterge de aici — dar se sterge
+ * explicit, intr-un commit care se vede, nu prin suprascriere tacuta.
+ *
+ * Restaurare, daca e nevoie: continutul de sub acest comentariu se pune inapoi
+ * in post_content-ul postarii custom_css cu ID 171.
+ */
+
+.img-fluid{
+	height: auto !important;
+}
+.about-me-overlay{
+	min-height: 350px;
+}
+.about-me-img-container{
+	height: auto;
+}
+
+.about-me-img-container{
+	display: none !important;
+}
+
+@media (min-width: 980px) {
+  .single-article-container {
+  clear: both; /* Ensures the container sits below any floated elements above it */
+  padding-top: 100px;
+}
+}
+
+@media (max-width: 980px) {
+     .about-me-img-container {
+       display: none !important;
+    }
+}
+/* 1. Fix general body and contact info text contrast */
+body.home,
+.homepage-contact,
+.contact-info,
+.label-contact {
+    color: #222222 !important; 
+}
+
+/* 2. Fix Contact Form 7 input text and background contrast */
+.wpcf7-form-control {
+    color: #222222 !important;
+    background-color: #ffffff !important; 
+    border: 1px solid #666666 !important; 
+}
+
+/* 3. Fix form placeholder text (often the hidden cause of input contrast failures) */
+.wpcf7-form-control::placeholder {
+    color: #595959 !important;
+    opacity: 1 !important; /* Firefox lowers opacity by default */
+}
+a,i{
+	min-height: 24px !important;
+	min-width: 24px !important;
+}
+@font-face {
+  font-display: swap;
+}
+
+.i-amphtml-layout-size-defined .i-amphtml-fill-content{
+	width: 720px;
+  height: 1200px;
+}
+
+.i-amphtml-layout-size-defined img.lazy{
+	min-height:200px
+}
+body {
+	line-height: 1em;
+	color: #666;
+	font-size: 17px;
+	-moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.page-wrap{
+	padding-bottom:0;
+}
+
+.inside-link{
+	color: #000;
+  font-weight: 600;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+#menu-menu-set-1{
+	display: inline-flex;
+	flex-direction: row;
+}
+
+.header-links{
+	display: inline-block;
+}
+
+.header-links .fa-facebook{
+	margin-left: 10px;
+	height: 20px;
+ margin-bottom: 10px;
+  line-height: 20px;
+}
+
+.header-links i{
+	margin: 0 2px;
+	color: #000;
+	font-size: 16px;
+}
+
+.terapie-online-contact-form label{
+	color: #000;
+}
+
+.page-wrap{
+	margin-top: 0px!important;
+	padding-top: 0px!important;
+}
+
+
+.site-title a, .site-title a:hover {
+    float: left;
+    font-size: 19px;
+    color: #20292f;
+}
+
+.site-header, .site-header.float-header{
+			background-color: #FAF8F5;
+	    box-shadow: 0 0 30px rgba(7,51,84,0.17)!important;
+			height: 72px;
+			padding: 25px 0;
+}
+
+.site-header.float-header{
+		height: 54px;
+		padding: 15px 0;
+}
+
+
+.btn-menu .sydney-svg-icon{
+	fill: #3D6F65;
+	font-size: 10px;
+	margin: 0;
+}
+
+#mainnav ul li a {
+	font-size: 15px;
+	font-weight: 600;
+	font-family: 'Poppins', sans-serif;
+	line-height: 1em;
+	color:#20292f;
+}
+
+#mainnav ul li a:hover {
+	color: #a5a1a1;
+}
+
+#mainnav-mobi{
+	background-color: #fff;
+}
+
+#mainnav-mobi ul li {
+    border-top: 1px solid #ddd;
+    margin: 0 10px;
+}
+
+#mainnav-mobi ul li a{
+    color:#20292f;
+		font-weight: 500;
+}
+
+
+.homepage-description{
+	padding-left: 40px;
+}
+
+<!-- header top day 1  -->
+
+<!-- homepage  -->
+.homepage-container, .about-me-page{
+	display: block;
+	position: relative;
+}
+
+.homepage-container .homepage-img-container , .about-me-page .about-me-img-container{
+	  overflow: hidden;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.homepage-container .homepage-img, .about-me-page .about-me-img-container{
+    background-repeat: no-repeat;
+    background-position: top;
+    background-size: cover;
+    display: block;
+    height: 700px;
+    position: relative;
+    margin: 0 16px;
+}
+
+.homepage-container .homepage-presentation, .about-me-page .about-me-presentation{
+	background-color: #f7f7f7f0;
+	top: 100px;
+    height: 600px;
+    box-shadow: 0px 35px 105px 8px rgb(25 22 58 / 62%);
+	
+}
+
+.homepage-d-container{
+	margin-top: 70px;
+	margin-left: 40px;
+}
+.profile-picture-container{
+	margin-top: 100px
+}
+.profile-picture{
+background-repeat: no-repeat;
+    background-position: top;
+    background-size: cover;
+    display: block;
+    width: 350px;
+    height: 450px;
+    position: absolute;
+    right: 20px;
+}
+
+.profile-picture-container-mobile{
+		background-repeat: no-repeat;
+    background-position: top;
+    background-size: cover;
+    display: none;
+    height: 450px;
+    position: relative;
+		margin-bottom: 100px;
+}
+
+.servicii-container, .home-page-about-me-container{
+	background-color: #fff;
+    z-index: 2;
+    position: relative;
+    box-shadow: 0px 40px 110px 0px rgb(46 37 50 / 50%);
+    padding: 40px;
+}
+ 
+
+.hompage-description{
+	padding: 0 10px;
+}
+
+.homepage-title-description{
+	font-family: 'Dancing Script', cursive;	
+}
+
+.signature-font{
+font-family: 'Sacramento', cursive;
+    font-size: 26px;
+    font-weight: 300;
+    text-align: center;
+    color: #000;
+}
+ .article-post-signature{
+	display: none;
+}
+.single-article-container .article-post-signature{
+	text-align: right;
+	display: block;
+}
+
+.homepage-button{
+	box-shadow: 0px 6px 16px -8px rgb(149 86 58 / 45%);
+    color: #fff;
+    font-family: 'Taviraj', serif;
+    font-weight: 600;
+    height: 50px;
+    width: 175px;
+    margin-left: 10px;
+    background-color: #95563A;
+    text-align: center;
+    padding: 15px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    display: inline-flex;
+    position: relative;
+}
+
+.homepage-button .button-text{
+	margin: 0 15px;
+}
+
+a.homepage-button:hover{
+	color: #fff;
+}
+
+a.homepage-button{
+	color: #fff;
+}
+
+.homepage-button .fa-angle-right{
+		font-size: 20px;
+    line-height: 20px;
+    position: absolute;
+    right: 64px;
+    top: 13px;
+}
+
+.about-me-button{
+	width: 190px;
+	margin-bottom: 10px;
+}
+.home-page-about-me-container .about-me-button{
+	margin-left: 0;
+}
+
+.message-header-top{
+background-color: #fff;
+    width: 350px;
+    height: 80px;
+    bottom: -30px;
+    z-index: 4;
+    right: 0;
+    position: absolute;
+    box-shadow: 0px 12px 40px -6px rgb(131 146 167 / 30%);
+}
+
+.message-header-bottom{
+		background-color: #fff;
+    width: 100%;
+		height: 80px;
+    bottom: -65px;
+    z-index: 4;
+    right: 0;
+    position: absolute;
+    box-shadow: 0px 12px 40px -6px rgb(131 146 167 / 30%);
+}
+
+.homepage-about-me{
+    margin-top: 120px;
+    background-repeat: no-repeat;
+    background-position: top;
+    background-size: cover;
+}
+
+.home-page-about-me-container{
+    top: -20px;
+    padding: 55px 45px 77px 54px;
+    min-height: 610px;
+}
+
+.home-page-about-me-title{
+	margin-bottom: 25px;
+	text-align: right;
+}
+
+.home-page-about-me-sub.text3{
+	text-indent: 0;
+	padding-left: 0;
+	margin-bottom: 20px;
+}
+<!-- end of homepage -->
+
+.text1, .textP,.textTS, .textS, .textTarifePrie, .list-group-item{
+		line-height: 1.8em;
+    font-weight: 500;
+    width: auto;
+    height: auto;
+		font-family: 'Poppins', sans-serif;
+		color: #000;
+}
+
+.text2, .text4, .textTarifeT{
+		font-family: 'Taviraj', serif;
+    font-size: 50px;
+    line-height: 1.2em;
+    font-weight: 500;
+	  color: #000;
+}
+
+
+.textTarifePrie, .textTarifeT{
+	font-size: 20px;
+}
+.homepage-title.text2{
+	font-size: 40px;
+	margin-top: 90px;
+}
+
+.textP{
+	text-align: justify;
+}
+<!-- Contact homepage -->
+.homepage-contact{
+	  background-color: #f2f2f2;
+    z-index: 2;
+    position: relative;
+    box-shadow: 0px 40px 110px 0px rgb(46 37 50 / 50%);
+    padding: 40px;
+		margin-top: 120px;
+}
+
+.homepage-contact .wpcf7-form-control.wpcf7-submit, input[type="submit"]{
+	box-shadow: 0px 6px 16px -8px rgb(149 86 58 / 45%);
+    color: #fff;
+    font-family: 'Taviraj', serif;
+    font-weight: 600;
+    height: 50px;
+    width: 175px;
+    margin-left: 10px;
+	background-color: #95563A;
+    text-align: center;
+    padding: 15px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    display: inline-flex;
+    position: relative;
+    border: none;
+    border-radius: 0;
+}
+
+input[type="submit"]{
+	width: 225px;
+}
+
+input[type="submit"]:hover{
+	color: #fff;
+}
+
+.homepage-contact input.wpcf7-form-control, .homepage-contact textarea.wpcf7-form-control{
+	border: none;
+  margin-top: 10px;
+	width: 100%;
+}
+
+.homepage-contact .wpcf7-response-output{
+	border-color: #3D6F65 !important;
+}
+
+.homepage-contact  .wpcf7-not-valid-tip{
+	padding-top: 5px;
+}
+
+.contact-info{
+	  z-index: 2;
+    position: relative;
+    box-shadow: 0px 40px 110px 0px rgb(46 37 50 / 50%);
+    top: -80px;
+    padding: 40px;
+		padding-top: 100px;
+    width: 350px;
+    height: 800px;
+	  right:60px;
+    background-color: rgb(255 255 255 / 21%);
+}
+
+
+.contact-info-row{
+	margin-top: 60px;
+}
+
+.contact-info .label-contact{
+	color:#a4a4a4;
+	font-size: 25px;
+	line-height: 25px;
+	margin-bottom:10px
+}
+
+.contact-info {
+	color: #000;
+	font-size: 23x;
+	line-height: 30px;
+	margin-bottom:25;
+	font-family: 'Poppins', cursive;
+	font-size: 20px;
+	margin-top: 5px;
+}
+
+.contact-info a{
+	color: #000 !important;
+}
+<!-- End of contact homepage->
+
+<!-- About me -->
+.about-me-page .about-me-img-container{
+	height: 370px;
+	margin: 0;
+  position: absolute;
+}
+
+.about-me-overlay{
+    background-color: #f7f7f785;
+    top: 100px;
+    height: 250px;
+    padding-top: 80px;
+    padding-left: 60px;
+    box-shadow: 0px 35px 105px 8px rgb(25 22 58 / 62%);
+}
+
+.text3{
+		padding: 0;
+    margin: 0;
+    text-align: left;
+    padding-left: 50px;
+}
+
+.about-me-page .about-me-presentation{
+	height: 100%;
+	margin-top: -10px;
+	padding: 25px;
+	margin-bottom: 100px;
+}
+
+.profile-picture.about-me{
+		position: relative;
+	  display: block;
+    right: 0;
+    top: 0;
+    float: left;
+    margin-right: 20px;
+	  margin-bottom: 10px;
+}
+
+.textP,  .list-group-item{
+	font-size: 17px;
+	color: #000;
+	line-height: 25px;
+	text-indent: 50px;
+}
+
+.list-group-item{
+	text-indent: 0;
+}
+
+.text4{
+	font-size: 30px;
+	font-weight: 550;
+	color: #000;
+	margin-bottom: 10px;
+}
+
+.text5{
+	font-size: 21px;
+	font-weight: 650;
+	color: #000;
+}
+
+.contact-info-about-me{
+	margin-top: 70px;
+}
+
+	.about-me-img-container.homepage-img-max{
+		display: block;
+	}
+	.about-me-img-container.homepage-img-mini{
+		display:none;
+	}
+	.homepage-img.homepage-img-max{
+		display: block;
+	}
+	.homepage-img.homepage-img-mini{
+		display:none;
+	}
+@media (max-width: 980px){
+	.about-me-img-container.homepage-img-max{
+		display: none;
+	}
+	.about-me-img-container.homepage-img-mini{
+		display:block;
+	}
+		.homepage-img.homepage-img-max{
+		display: none;
+	}
+	.homepage-img.homepage-img-mini{
+		display:block;
+	}
+	.about-me-page .text3{
+		padding-left: 10px;
+		font-size: 28px;
+	}
+	.profile-picture.profile-picture-container-mobile.about-me{
+		height: 400px;
+    width: 100%;
+	}
+}
+<!-- End of about me -->
+
+<!-- Articole List-->
+
+.articles-container{
+    margin: 30px 40px;
+		padding-top: 30px;
+    margin-top: 8px;
+    width: auto;
+    display: block;
+    position: relative;
+}
+
+.articole-box{
+		margin: 10px 30px;
+    background-color: #f7f7f7;
+    box-shadow: 0px 0px 79px 3px rgb(25 22 58 / 12%);
+    padding: 20px;
+    display: block;
+    float: left;
+		cursor: pointer;
+	  min-height: 450px;
+}
+
+.articole-box img{
+		width: 250px;
+    max-height: 250px;
+}
+
+.card-content .article-img-content{
+	max-width: 250px;
+    max-height: 350px;
+    padding: 30px;
+    float: left;
+}
+
+<!-- End of Articole List-->
+
+<!-- Singe Article container -->
+.single-article-container {
+    background-color: #f7f7f7f0;
+    margin-top: 8px;
+    box-shadow: -2px 38px 129px -8px rgb(25 22 58 / 42%);
+    height: auto;
+    width: auto;
+    display: block;
+    position: relative;
+		padding: 30px;
+}
+
+.article-img{
+	float: left;
+	margin: 20px;
+}
+.single-article-container .list-group{
+	padding-left: 70px;
+	clear: both;
+}
+
+.single-article-container .text4{
+	padding-left: 45px;
+}
+
+.single-article-container img{
+	max-width: 300px;
+  max-height: 420px;
+}
+.single-article-container .img-groups{
+	max-width: 1024px;
+  max-height: 720px;
+	float: right;
+}
+.article-groups .list-group{
+	clear: none;
+}
+.text6, .text7{
+	font-size: 25px;
+  font-weight: 600;
+}
+
+.text7{
+  font-weight: 500;
+}
+<!-- End of single article container -->
+
+.tarife-page{
+	margin-bottom: 120px;
+}
+.ateliere-container{
+	margin-top: 70px;
+}
+
+
+.contact-presentation{
+	margin-top:100px;
+}
+
+.site-footer{
+	background-color: #fff;
+    box-shadow: 0 0 30px rgba(7,51,84,0.17)!important;
+    color: #000;
+    font-weight: 600;
+		margin-top: 100px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.text8{
+	color: #000;
+	font-size: 18px;
+}
+
+.site-footer a {
+    color: #000;
+}
+
+
+
+@media (max-width: 1152px){
+	.profile-picture{
+		display: none;
+	}	
+	.profile-picture-container-mobile{
+		display: block;	
+	}
+	.text2{
+		font-size:35px;
+	}
+	.text1{
+		font-size: 20px;
+	}
+		.about-me-page .about-me-presentation{
+		margin-top: 0;
+	}
+	
+			.servicii-container .about-me-presentation{
+		margin-top: -31px;
+	}
+}
+
+
+@media (max-width: 1024px){
+	.site-header, .site-header.float-header{
+			height: 100px;
+	}
+	.menu-menu-set-1-container{
+		border-top: 3px solid #3D6F65;
+	}
+	#mainnav-mobi{
+		margin-top: 10px;
+	}
+}
+
+@media (max-width: 660px){
+		.site-header, .site-header.float-header, 
+	.site-header.fixed{
+		height: auto;
+    padding: 15px;
+    margin-bottom: 15px;
+	}
+	.profile-picture.about-me{
+		width: 100%;
+	}
+}
+
+.info-Box{    
+	background-color: #f2f2f2;
+    z-index: 2;
+    position: relative;
+    box-shadow: 0px 40px 110px 0px rgb(46 37 50 / 50%);
+    padding: 20px;
+    margin-top: 40px;}
+
+.info-Box a{
+	color: #000;
+}
+
+.info-Box .text8{
+	font-size: 15px;
+	font-weight: 300;
+}
+
+.col-info-box{
+	line-height: 45px;
+	height: 60px;
+}
+
+.servicii-cards .col-md-3{
+	margin: 0 20px;
+	margin-bottom: 60px;
+}
+
+.servicii-box, .tarife-box{
+	background-color: rgba(0,0,0,0.03);
+	min-height: 271px;
+}
+
+.servicii-box .servicii-detalii,
+.tarife-box .tarife-detalii{
+background-color: #fff;
+    width: 50%;
+    height: 50px;
+    bottom: -2px;
+    z-index: 4;
+    right: 0;
+    position: absolute;
+    text-align: center;
+    padding-right: 50px;
+    box-shadow: 0px 12px 40px -6px rgb(131 146 167 / 30%);
+    padding-top: 9px;
+		color: #3D6F65;
+}
+
+.about-me-button-detalii{
+	background-color: #fff;
+    z-index: 4;
+    right: 20px;
+    position: absolute;
+    box-shadow: 0px 12px 40px -6px rgb(131 146 167 / 30%);
+    color: #3D6F65;
+    height: 50px;
+    text-align: center;
+    padding: 13px;
+    margin-top: 20px;
+    width: 250px;
+}
+
+
+.tarife-box .tarife-detalii{
+	width: 100%;
+	cursor: pointer;
+}
+
+.servicii-box .servicii-detalii:last-child{
+	left:0;
+	right: auto;
+}
+.servicii-box .servicii-detalii:hover{
+	color: #2C524A;
+}
+
+.servicii-box .textS:last-child(-1){
+	border-bottom: none;
+}
+
+@media (max-width: 980px){
+	.servicii-cards .col-xs-12{
+	margin: 0;
+	margin-bottom: 60px;
+}
+	.servicii-cards .col-xs-12:first-child {
+		margin-bottom:0;
+	}
+}
+
+.textTS{
+	font-family: 'Taviraj',Georgia,"Times New Roman",serif;
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 1.2em;
+
+	padding-top:15px;
+}
+.textS{
+	font-weight: 450;
+    font-size: 13px;
+    color: #000000!important;
+    line-height: 1.4em;
+	border-bottom: 1px solid #cfcccc7d;
+    padding-bottom: 10px;
+}
+
+.one-element{
+	padding-top: 150px;
+	text-align: center;
+}
+
+.servicii-sub-title{
+	margin-left: -30px;
+}
+
+.tarife-box{
+	margin: 20px 15px;
+  padding: 20px;
+}
+
+@media (max-width: 980px){
+	.contact-info{
+		top: 0;
+		width: auto;
+		right:0;
+	}
+	.text2{
+		font-size: 25px !important;
+	}
+	.homepage-container .homepage-img, .about-me-page .about-me-img-container{
+		margin: 0;
+	}
+	.site-header, .site-header.float-header, .site-header.fixed{
+		height: auto;
+    padding: 15px;
+    margin-bottom: 10px;
+		min-height: 120px;
+	}
+	.price-box{
+		border-bottom: 1px solid #e1e1e1;
+    margin-bottom: 25px;
+    text-align: center;
+	}
+	.articles-container{
+		margin: 0 !important;
+	}
+	
+	.servicii-container .about-me-overlay{
+		padding: 25px;	
+	}
+	
+	.servicii-sub-title{
+			margin: 0;
+	}
+	.about-me-presentation{
+		padding: 0 15px;
+	}
+	
+	.about-me-presentation .text7, .about-me-presentation .text6{
+		padding-left:0;
+		font-weight: 500;
+	}
+	.about-me-presentation .list-group{
+	padding-left:20px;	
+}
+	.signature-font{
+		font-size: 20px;
+    line-height: 24px;
+    padding: 0;
+    font-family: Dancing Script;
+	}
+	.signature-font.text3{
+		font-size: 20px;
+		padding-left: 0;
+	}
+	.single-article-container img{
+		width: auto;
+		height: auto;
+				max-height: 200px;
+		max-width: 250px;
+	}
+	.single .hentry .title-post{
+		font-size: 25px;
+	}
+	
+	.single-article-container .text4{
+		padding-left:0;
+		font-size: 25px;
+	}
+	 .single-article-container .list-group{
+		padding-left:15px;
+	}
+}
+
+.signature-font-all-App{
+	padding-left: 0;
+}
+.signature-font-all-App .col-md-12:last-child{
+	text-align: center;
+  width: 150px;
+}
+
+.btn-menu{
+	z-index: 200;
+  height: 40px;
+ width: 40px;
+}
+
+.preloader{
+	display: none;
+}
+.sydney-svg-icon{
+	z-index: 1000;
+}
+
+.parteneri-box{
+		height: 150px;
+		width: 150px;
+    margin: 0;
+    padding: 0;
+}
+
+.parteneri-logo{
+	background-repeat: no-repeat;
+    background-position: top;
+    background-size: cover;
+    display: block;
+    width: 150px;
+    height: 150px;
+    position: absolute;
+}
+
+.info-Box, .single-article-container, .articole-box, .about-me-overlay, .homepage-contact, .homepage-container .homepage-presentation, .about-me-page, .span-tag, .footer-data, .about-me-presentation{
+	  background-color: #f7f7f7f0;
+}
+
+.footer-data a{
+	color: #000;
+	text-decoration: none;
+}
+.footer-data{
+	height: auto;bottom: -2px;text-align: center;padding-right: 50px;box-shadow: 0px 12px 40px -6px rgb(131 146 167 / 30%);padding-top: 9px;
+    box-shadow: 0px 40px 110px 0px rgb(46 37 50 / 50%);
+padding: 20px;
+	margin: 10px 0;
+}
+
+.span-tag{
+	color:#000;max-height: 100px;bottom: -2px;text-align: center;padding-right: 50px;box-shadow: 0px 12px 40px -6px rgb(131 146 167 / 30%);padding-top: 9px;
+    box-shadow: 0px 40px 110px 0px rgb(46 37 50 / 50%);
+padding: 20px;
+	margin: 20px;
+}
+.whatsapp-footer{
+	display: none;
+}
+@media (max-width: 980px){
+.whatsapp-footer{
+	display: block;
+	color: #075E54;
+    font-size: 80px;
+    position: fixed;
+    bottom: 10px;
+    right: 20px;
+    cursor: pointer;
+	z-index: 99999999999999;
+}
+}
+
+/*
+==============================================================================
+MODERNIZARE - fundaluri colorate, tipografie mare, poze rotunjite (21.09.2026)
+==============================================================================
+La cererea explicita de a apropia aspectul de un site modern (referinta:
+sectiuni cu fundal pastel, titlu mare cu accent subliniat, poze cu colturi
+rotunjite, umbre domoale in loc de umbre grele si intunecate).
+
+Layout-ul (pozitia pozei, a textului, a butonului) NU s-a schimbat - doar
+culorile, umbrele si formele. Bloc nou, nu editare pe loc: regulile vechi de
+mai sus au prea multe variatii de spatiere ca sa fie sigur de potrivit prin
+text; un bloc separat e usor de revizuit sau de sters daca nu place.
+*/
+
+.homepage-container .homepage-presentation,
+.about-me-page .about-me-presentation {
+	background-color: #DCE7E3 !important;
+	box-shadow: 0 24px 60px -20px rgba(44, 82, 74, 0.28) !important;
+	border-radius: 20px !important;
+}
+
+.profile-picture,
+.profile-picture-container-mobile,
+.profile-picture.about-me {
+	border-radius: 20px !important;
+}
+
+.homepage-title.text2 {
+	font-size: 46px !important;
+	position: relative;
+}
+
+/* Accent subliniat sub titlul principal - un singur element, culoarea
+   accentului din paleta (D2), ca sa nu concureze cu butonul de CTA. */
+.homepage-title.text2::after {
+	content: "";
+	display: block;
+	width: 90px;
+	height: 4px;
+	margin-top: 16px;
+	background-color: #95563A;
+	border-radius: 2px;
+}
+
+.servicii-container,
+.home-page-about-me-container {
+	box-shadow: 0 20px 50px -22px rgba(36, 48, 44, 0.22) !important;
+	border-radius: 20px !important;
+}
+
+.servicii-box,
+.tarife-box {
+	border-radius: 14px !important;
+	box-shadow: 0 10px 28px -14px rgba(36, 48, 44, 0.15);
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.servicii-box:hover,
+.tarife-box:hover {
+	transform: translateY(-4px);
+	box-shadow: 0 16px 38px -16px rgba(36, 48, 44, 0.22);
+}
+
+.homepage-button,
+.homepage-contact .wpcf7-form-control.wpcf7-submit,
+input[type="submit"] {
+	border-radius: 999px !important;
+}
+
+/*
+==============================================================================
+FIX - suprapunere pe pagina Contact (ID 186), 21.09.2026
+==============================================================================
+Vezi explicatia de mai sus (in scriptul care a scris acest bloc). Scopat la
+body.page-id-186, ca sa nu ating Tarife/Ateliere, unde acelasi CSS generic
+functioneaza corect.
+*/
+body.page-id-186 .contact-info {
+	position: static !important;
+	top: 0 !important;
+	right: 0 !important;
+	width: 100% !important;
+	height: auto !important;
+	margin-top: 30px;
+}
+
+body.page-id-186 .homepage-contact {
+	margin-top: 40px !important;
+}
+
+body.page-id-186 .about-me-overlay {
+	position: relative !important;
+	top: 0 !important;
+	margin-bottom: 20px;
+}
+
+/*
+==============================================================================
+WHATSAPP CA CANAL PRINCIPAL PE /contact/, FORMULAR SECUNDAR (21.09.2026)
+==============================================================================
+Discutat si aprobat: majoritatea oamenilor nu mai completeaza formulare de
+contact, prefera un mesaj direct. Butonul de mai jos e acum principalul CTA
+al paginii - de-aia primeste culoarea accentului (D2, folosita altfel o
+singura data pe pagina). Formularul ramane functional neschimbat, doar
+stilizat vizual mai discret (mai mic, contur in loc de fundal plin).
+*/
+
+.sm-whatsapp-cta {
+	text-align: center;
+	margin-bottom: 36px;
+}
+
+.sm-whatsapp-cta-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 14px;
+	background-color: #95563A;
+	color: #fff !important;
+	padding: 18px 40px;
+	border-radius: 999px;
+	font-size: 20px;
+	font-weight: 600;
+	box-shadow: 0 10px 28px -10px rgba(149, 86, 58, 0.45);
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sm-whatsapp-cta-link:hover,
+.sm-whatsapp-cta-link:focus {
+	color: #fff !important;
+	transform: translateY(-2px);
+	box-shadow: 0 14px 34px -10px rgba(149, 86, 58, 0.55);
+}
+
+.sm-whatsapp-cta-link .sm-icon {
+	display: inline-flex;
+}
+
+.sm-whatsapp-cta-link .sm-icon svg {
+	width: 26px;
+	height: 26px;
+}
+
+/* Formularul devine optiunea a doua: mai mic, fara fundal plin pe buton,
+   separat printr-o linie subtire, fara text nou adaugat. */
+.sm-contact-form-secondary {
+	border-top: 1px solid #DDD5CA;
+	padding-top: 28px;
+	font-size: 15px;
+}
+
+.sm-contact-form-secondary .wpcf7-form-control {
+	font-size: 15px;
+}
+
+.sm-contact-form-secondary .wpcf7-form-control.wpcf7-submit,
+.sm-contact-form-secondary input[type="submit"] {
+	background-color: transparent !important;
+	color: #3D6F65 !important;
+	border: 1.5px solid #3D6F65 !important;
+	box-shadow: none !important;
+	height: 42px !important;
+	width: auto !important;
+	padding: 0 28px !important;
+	font-size: 14px !important;
+}
+
+.sm-contact-form-secondary .wpcf7-form-control.wpcf7-submit:hover,
+.sm-contact-form-secondary input[type="submit"]:hover {
+	background-color: #3D6F65 !important;
+	color: #fff !important;
+}
+
+/*
+==============================================================================
+COERENTA VIZUALA - fundal continuu, colturi care nu mai ies din card (21.09.2026)
+==============================================================================
+Vezi explicatia din scriptul care a scris acest bloc (scratch-coherence-fix.php,
+pastrat local, nu in git - schimbarea traieste in baza de date).
+*/
+
+.servicii-container,
+.home-page-about-me-container {
+	background-color: #DCE7E3 !important;
+}
+
+.servicii-box,
+.tarife-box {
+	overflow: hidden;
+}
+
+.servicii-box, .tarife-box { background-color: #FAF8F5 !important; }
+
+
+.sm-hero-cta-row {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+}
+
+.sm-hero-whatsapp {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 50px;
+	height: 50px;
+	border-radius: 999px;
+	background-color: #3D6F65;
+	color: #fff !important;
+	transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.sm-hero-whatsapp:hover,
+.sm-hero-whatsapp:focus {
+	background-color: #2C524A;
+	transform: translateY(-2px);
+}
+
+.sm-hero-whatsapp .sm-icon svg {
+	width: 22px;
+	height: 22px;
+}
+
+/*
+Grila de carduri de pe Home (.servicii-cards) foloseste col-md-3 (25%
+Bootstrap) plus margini fixe in px - combinatia nu imparte curat pe randuri
+la latimea reala a containerului, asa ca un card ramane singur, izolat, pe
+ultimul rand, cu spatiu gol langa el. Inlocuita cu CSS Grid, scopat DOAR la
+aceasta grila (verificat: apare doar pe Home) - nu afecteaza Servicii,
+Tarife sau Ateliere, care folosesc alt marcaj.
+*/
+.servicii-cards > .row {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+	gap: 24px;
+}
+
+.servicii-cards > .row > [class*="col-"] {
+	float: none;
+	width: auto;
+	margin: 0;
+}
+
+.servicii-cards > .row > .col-md-12 { grid-column: 1 / -1; }
+
+
+/*
+==============================================================================
+CORECTII DIN FEEDBACK DIRECT (21.09.2026, dupa verificare la 1440/1920px)
+==============================================================================
+*/
+
+/* Butonul Contact din hero avea latime fixa (175px) si spatiu rezervat
+   pentru sageata FontAwesome (.fa-angle-right), care nu mai exista in tema
+   (inlocuita cu SVG-uri proprii, vezi inc/icons.php) - textul "Contact"
+   ramanea singur, mic, intr-un buton mult prea lat. Latime automata,
+   text centrat. */
+.homepage-button {
+	width: auto !important;
+	min-width: 0 !important;
+	padding: 0 28px !important;
+	justify-content: center;
+	align-items: center;
+}
+.homepage-button .button-text {
+	margin: 0 !important;
+	font-size: 17px;
+}
+.homepage-button .fa-angle-right,
+.about-me-button-detalii .fa-angle-right,
+.servicii-box .servicii-detalii .fa-angle-right {
+	display: none;
+}
+
+/* Alinierea butonului Contact cu iconita WhatsApp de langa el. */
+.sm-hero-cta-row {
+	align-items: center;
+}
+
+/* Sidebar-ul din subsol (Categorii/Arhive/Comentarii recente) - decizie
+   luata explicit (D1 si chestionarul de design): fara comentarii, fara
+   sidebar, nicaieri pe site. */
+.widget_categories,
+.widget_archive,
+.widget_recent_comments {
+	display: none !important;
+}
+
+/* Butonul flotant WhatsApp (vezi contact-links.php) foloseste acum SVG
+   inline, nu o glifa de font - "font-size: 80px" din regula de mai sus nu
+   mai are ce sa dimensioneze. Dimensiunea reala vine de aici. */
+.whatsapp-footer {
+	display: flex !important;
+	align-items: center;
+	justify-content: center;
+}
+@media (max-width: 980px) {
+	.whatsapp-footer .sm-icon svg {
+		width: 44px;
+		height: 44px;
+	}
+}
+
+/*
+UNIFICARE - un singur "card verde", peste tot (21.09.2026, dupa feedback
+direct: "toate cardurile verzi au dimensiuni diferite, nu da impresia de
+continuitate"). Site-ul are trei familii de clase mostenite din teme vechi
+pentru card-uri (.homepage-presentation pe Home, .about-me-overlay si
+.about-me-presentation pe Tarife/Ateliere/Contact/Despre mine/Servicii,
+.servicii-container pe Home) cu fundaluri diferite - alb-crem pe unele,
+verde pe altele. Acelasi fundal, aceleasi colturi, aceeasi umbra, peste tot -
+nu se schimba inaltimile/marginile mostenite, doar aspectul de suprafata.
+*/
+.about-me-overlay,
+.about-me-page .about-me-presentation,
+.about-me-presentation {
+	background-color: #DCE7E3 !important;
+	box-shadow: 0 24px 60px -20px rgba(44, 82, 74, 0.28) !important;
+	border-radius: 20px !important;
+}
