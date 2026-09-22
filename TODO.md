@@ -227,8 +227,8 @@ Planul complet, cu fazele și estimările, e în
 | 2 — cardurile de servicii | **făcut** |
 | 3 — blocul „despre mine" de pe Home | **făcut** |
 | 4 — antet și subsol | deschis |
-| 5 — paginile interioare | deschis |
-| 6 — articolele | deschis |
+| 5 — paginile interioare | **făcut** |
+| 6 — articolele | **făcut** |
 
 Trei lucruri care merită reținute din Fazele 0–3, pentru că niciunul nu se
 vedea din citirea fișierelor:
@@ -248,12 +248,49 @@ vedea din citirea fișierelor:
    transformă în `<p>`-uri goale care devin ultimul copil, așa că `:last-child`
    nu prinde ce pare că prinde. Se folosește `:last-of-type`.
 
+Încă trei din Fazele 5–6, la fel de puțin evidente:
+
+4. **O declarație `!important` din atributul `style` nu poate fi anulată din
+   foaia de stil.** Nu e o chestiune de specificitate — `style="..."` e deja
+   cea mai mare, iar `!important` scris acolo bate inclusiv un `!important` din
+   fișier. Pe „Despre mine", `margin-top: 90px !important` e scris în conținut,
+   deci spațiul se scade de unde se poate: din banda de deasupra și de pe
+   containerul părinte.
+5. **`a, i { min-height: 24px !important }` din `style.css` tăia fiecare buton
+   nou la 24px.** Regula era deja marcată „DE REVIZUIT" chiar în comentariul de
+   lângă ea, cu exact acest motiv. Restrânsă acum la țintele reale (iconițe,
+   meniu, comenzi) și fără `!important`. Efect colateral bun: butonul
+   „Contact" de pe prima pagină se ridică de la 36px la 52px și ajunge, în
+   sfârșit, la aceeași înălțime cu butonul WhatsApp de lângă el.
+6. **Clasele `.text5`, `.text6`, `.text7` nu sunt clase de text.** În articole
+   sunt puse pe `<h2>`. O regulă scrisă pe clasă bate una scrisă pe element,
+   așa că prima variantă a foii a transformat titlurile de secțiune din
+   articole în paragrafe obișnuite. Elementul decide rolul, nu clasa.
+
 Ce **nu** s-a atins, în nicio fază: niciun cuvânt din conținut, niciun slug,
-nicio pagină din tema inactivă.
+nicio pagină din tema inactivă. Titlurile care apar de două ori pe aceeași
+pagină (o dată în antetul Sydney, o dată în conținut, pe Articole, Ateliere și
+Despre mine) **nu au fost ascunse** — ar fi însemnat să scot text din pagină.
+Al doilea primește rol de etichetă mică deasupra semnăturii: aceleași cuvinte,
+alt rol vizual.
 
 ---
 
 ## Deschis, în ordinea valorii
+
+### 0. Imaginile din cardurile de pe `/ateliere/` nu se încarcă
+
+**Nu ține de design și nu e cauzat de redesign** — se vedea la fel și înainte.
+Marcajul cere `.../grup-de-suport-pentru-femei-insarcinate.webp`, dar în
+`wp-content/uploads/` fișierul se numește `...-insarcinate.jpg.webp`. Cererea
+răspunde cu 301, iar în card rămâne textul alternativ.
+
+Tiparul e al unui plugin de conversie WebP care rescrie `.jpg` în `.webp` în
+HTML și se bazează pe o regulă de rescriere din `.htaccess` ca să servească
+fișierul real. `.htaccess` nu e în git (e în `.gitignore`), deci local regula
+lipsește. **De verificat pe producție înainte de orice reparație**: dacă acolo
+imaginile se văd, nu e nimic de reparat în cod, e doar o diferență de mediu
+local.
 
 ### 1. Google Tag Manager — 520 KB, 53% din pagină
 
@@ -432,6 +469,8 @@ loc); implementarea în sine e simplă odată aleasă formularea.
 | Fonturi găzduite local, fără Google Fonts (Faza 0.2) | `sydney-child/assets/css/fonts.css` + `assets/fonts/` | `<link>` către `fonts.googleapis.com` dispărut din `<head>`; semnătura nu mai e Comic Sans |
 | Sistem de design pe Home — erou, carduri, „despre mine" (Fazele 1–3) | `sydney-child/assets/css/redesign.css` | capturi desktop 1440 și mobil 390, comparate cu previzualizarea |
 | Butonul „Contact" din erou, făcut link real | `sydney-child/assets/js/cta-fix.js` | `<div href>` înlocuit cu `<a>` către `/contact/` |
+| Sistem de design pe paginile interioare (Fazele 5–6) | `sydney-child/assets/css/redesign-pages.css` | 10 pagini verificate la 1440px, patru și la 390px; fără derulare orizontală |
+| Regula `a, i { min-height: 24px !important }` restrânsă | `sydney-child/style.css` | antetul comparat pixel cu pixel înainte/după: identic |
 
 Toate cinci de mai sus au fost migrate din tema inactivă pe 21 septembrie 2026.
 Verificarea făcută efectiv a fost `php -l` pe fiecare fișier modificat — nu o
