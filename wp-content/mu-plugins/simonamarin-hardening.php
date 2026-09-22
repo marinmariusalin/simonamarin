@@ -262,6 +262,23 @@ function simonamarin_block_author_enumeration() {
 }
 add_action( 'template_redirect', 'simonamarin_block_author_enumeration' );
 
+/**
+ * SEC-12 - Mesaj generic la esecul autentificarii.
+ *
+ * Implicit, WordPress raspunde diferit dupa ce anume e gresit: "utilizatorul
+ * nu exista" cand numele e gresit, "parola gresita" cand numele e corect.
+ * Diferenta ii spune unui atacator, gratuit, daca un nume de utilizator
+ * ghicit este valid, inainte sa incerce parole. Un singur mesaj, identic in
+ * ambele cazuri, scoate acest semnal fara sa afecteze un utilizator legitim,
+ * care oricum trebuie sa reincerce cu datele corecte.
+ *
+ * @return string Mesajul generic, in locul celui original al WordPress.
+ */
+function simonamarin_generic_login_error() {
+	return __( 'Autentificare esuata. Verifica numele de utilizator si parola.', 'sydney-child' );
+}
+add_filter( 'login_errors', 'simonamarin_generic_login_error' );
+
 /*
  * TODO [SEC-13][HIGH]: Formularul de contact transmite date de sanatate, care
  * intra sub articolul 9 din GDPR. De verificat, in afara codului: transportul
