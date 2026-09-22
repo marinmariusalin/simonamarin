@@ -294,6 +294,17 @@ alt rol vizual.
 
 ### 0. Imaginile din cardurile de pe `/ateliere/` nu se încarcă
 
+**Suspendat (22.09.2026).** Ai renunțat deocamdată la secțiunea Ateliere și am
+scos legătura din meniul principal. Pagina `/ateliere/` rămâne publicată și
+accesibilă direct, doar că nu mai e în navigație — deci imaginile rupte nu mai
+sunt vizibile pe un drum firesc prin site. Rămâne aici pentru cazul în care
+secțiunea revine.
+
+Modificarea e în baza de date, nu în cod: elementul de meniu `nav_menu_item`
+1295 (meniul „Menu set 1", term 2), care trimitea la pagina 1279. Git nu o
+poate urmări. Se reface din *Aspect → Meniuri*, adăugând pagina Ateliere pe
+poziția a treia, între Articole și Servicii.
+
 **Nu ține de design și nu e cauzat de redesign** — se vedea la fel și înainte.
 Marcajul cere `.../grup-de-suport-pentru-femei-insarcinate.webp`, dar în
 `wp-content/uploads/` fișierul se numește `...-insarcinate.jpg.webp`. Cererea
