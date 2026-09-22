@@ -119,6 +119,16 @@ function sydney_child_enqueue_design_system() {
 	if ( $pages ) {
 		wp_enqueue_style( 'sydney-child-redesign-pages', $pages[0], $deps, $pages[1] );
 	}
+
+	/*
+	 * Antetul si subsolul. Al treilea fisier, si nu o sectiune in unul dintre
+	 * cele doua de mai sus, pentru ca sunt singurele piese care apar pe TOATE
+	 * paginile: nu pot fi scopate nici pe `.home`, nici pe `body:not(.home)`.
+	 */
+	$chrome = sydney_child_asset( 'assets/css/redesign-chrome.css' );
+	if ( $chrome ) {
+		wp_enqueue_style( 'sydney-child-redesign-chrome', $chrome[0], $deps, $chrome[1] );
+	}
 }
 add_action( 'wp_enqueue_scripts', 'sydney_child_enqueue_design_system', 12 );
 

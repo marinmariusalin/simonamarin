@@ -1,0 +1,378 @@
+/**
+ * Sistemul de design — antetul, subsolul si butonul flotant (Faza 4)
+ * ============================================================================
+ *
+ * A treia foaie, dupa redesign.css (prima pagina) si redesign-pages.css
+ * (paginile interioare). Separata de amandoua pentru ca antetul si subsolul
+ * sunt singurele piese care apar pe TOATE paginile, deci nu pot fi scopate nici
+ * pe `.home`, nici pe `body:not(.home)`.
+ *
+ * Aici nu se adauga nimic. Cele trei piese din referinta — semnatura in stanga,
+ * meniul in mijloc, pictogramele in dreapta — exista deja in marcaj, puse acolo
+ * de `inc/contact-links.php` printr-un filtru de nucleu. Ce lipseste e
+ * distantarea si ierarhia: acum titlul site-ului, elementele de meniu si
+ * pictogramele au aproape aceeasi greutate vizuala si aceeasi departare intre
+ * ele, asa ca antetul se citeste ca un singur sir lung de cuvinte.
+ *
+ * Marcajul NU se atinge: niciun `header.php` sau `footer.php` copiat in tema
+ * copil. Un sablon copiat e scris pentru markup-ul unei versiuni si se rupe
+ * tacut la urmatoarea — exact asa s-au pierdut antetul si subsolul la migrarea
+ * la Sydney 2.71. Rationamentul complet e in antetul lui inc/contact-links.php.
+ *
+ * Ordinea sectiunilor:
+ *   1. Antet — asezare      4. Subsol
+ *   2. Antet — semnatura    5. Butonul flotant WhatsApp
+ *   3. Antet — meniu si pictograme
+ */
+
+/* ===========================================================================
+   1. ANTET — ASEZAREA CELOR TREI PIESE
+   =========================================================================== */
+
+.main-header {
+	background-color: var(--sm-sand);
+	/* O linie subtire, nu o umbra. Antetul e lipit sus tot timpul
+	   (`sticky-always`), iar o umbra permanenta peste un fundal deschis arata
+	   ca o dunga murdara, nu ca o separare. */
+	border-bottom: 1px solid var(--sm-line);
+	box-shadow: none;
+}
+
+.main-header .container,
+.main-header .site-header-inner {
+	max-width: var(--sm-container);
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+}
+
+/**
+ * Bootstrap curata float-urile din `.row` cu doua pseudo-elemente `display:
+ * table`. Intr-un container devenit `flex` ele devin ELEMENTE ale randului si
+ * introduc goluri intre piese. Aceeasi cauza ca pe prima pagina, unde mutasera
+ * textul eroului in coloana a doua.
+ */
+.main-header .site-header-inner .row::before,
+.main-header .site-header-inner .row::after {
+	display: none;
+}
+
+.main-header .site-header-inner .row.valign {
+	display: flex;
+	align-items: center;
+	gap: var(--sm-space-8);
+	margin-left: 0;
+	margin-right: 0;
+	/**
+	 * 55px + cele 2x15px de padding ale invelisului dau exact cei 85px pe care
+	 * ii avea antetul. Nu e o cifra estetica: Sydney rezerva spatiul de sub
+	 * antetul fix cu `.page-wrap { padding-top: 86px }`, scris in CSS-ul
+	 * generat din Customizer. Un antet mai scund ar lasa o dunga goala sub el,
+	 * unul mai inalt ar acoperi inceputul paginii.
+	 */
+	min-height: 55px;
+}
+
+.main-header .header-col {
+	float: none;
+	width: auto;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+/* Meniul si pictogramele se lipesc de marginea dreapta; semnatura ramane in
+   stanga. Cele trei piese din referinta, fara nicio schimbare de marcaj. */
+.main-header .header-col.menu-col {
+	margin-left: auto;
+}
+
+/* Coloana a treia e goala in aceasta configuratie de antet si nu face decat sa
+   consume din spatiul dintre piese. */
+.main-header .header-col.header-elements:empty {
+	display: none;
+}
+
+/* ===========================================================================
+   2. ANTET — SEMNATURA
+   Titlul site-ului si titulatura de sub el sunt doua lucruri diferite si
+   trebuie sa arate diferit. Pana acum erau amandoua Poppins, la marimi
+   apropiate, deci se citeau ca doua randuri ale aceluiasi lucru.
+   =========================================================================== */
+
+.main-header .site-branding {
+	margin: 0;
+}
+
+.main-header .site-title {
+	margin: 0;
+	line-height: 1.2;
+}
+
+.main-header .site-title a {
+	font-family: var(--sm-font-display);
+	font-size: 1.3125rem;
+	font-weight: 500;
+	letter-spacing: -0.01em;
+	color: var(--sm-ink);
+	text-decoration: none;
+}
+
+.main-header .site-title a:hover,
+.main-header .site-title a:focus-visible {
+	color: var(--sm-teal);
+}
+
+.main-header .site-description {
+	margin: 3px 0 0;
+	font-family: var(--sm-font-body);
+	font-size: 0.6875rem;
+	font-weight: 500;
+	line-height: 1.3;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--sm-ink-mute);
+}
+
+/* ===========================================================================
+   3. ANTET — MENIU SI PICTOGRAME
+   Pictogramele stau in ACELASI `<ul>` ca elementele de meniu, ca ultim `<li>`
+   (asa le adauga filtrul din contact-links.php). Nu le mut in alt loc din
+   marcaj; le separ vizual, prin spatiu si o linie.
+
+   DE CE APARE `#mainnav` IN SELECTORI. Sydney isi scrie regulile de meniu cu
+   `#mainnav ul li a` si `.main-header #mainnav .menu > li > a`, atat in foaia
+   proprie cat si in CSS-ul generat din Customizer. Un selector doar cu clase
+   pierde in fata unui ID, oricat de lung ar fi. Prima varianta a acestui
+   fisier nu folosea ID-ul: meniul isi pastra float-urile temei si randul de
+   pictograme cadea sub elementele de meniu, pe al doilea rand.
+
+   CULORILE. Tema da elementelor de meniu aproape-negrul #24302c, la fel pentru
+   toate. Aici primesc verdele-gri de text al paletei, iar pagina curenta se
+   distinge prin greutate. Hover-ul ramane cel al temei (#2C524A) — e deja
+   verdele inchis din paleta, deci nu am ce corecta.
+   =========================================================================== */
+
+.main-header #mainnav .menu {
+	display: flex;
+	flex-wrap: nowrap;
+	align-items: center;
+	gap: var(--sm-space-6);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.main-header #mainnav .menu > li {
+	display: flex;
+	align-items: center;
+	float: none;
+	margin: 0;
+	padding: 0;
+}
+
+.main-header #mainnav .menu > li > a {
+	display: inline-flex;
+	align-items: center;
+	font-family: var(--sm-font-body);
+	font-size: 0.9375rem;
+	font-weight: 400;
+	line-height: 1.4;
+	letter-spacing: 0.005em;
+	/* Fara rupere de rand: „Despre mine" se despartea in doua randuri si
+	   inalta tot antetul cu cateva zeci de pixeli. */
+	white-space: nowrap;
+	color: var(--sm-ink-soft);
+	text-decoration: none;
+	transition: color 0.18s ease;
+}
+
+
+
+/* Pagina curenta se marcheaza prin greutatea textului, nu printr-o linie sub
+   el: o linie sub un element de meniu arata ca un link subliniat, adica exact
+   ca ceva pe care nu ai apasat inca. */
+.main-header #mainnav .menu > li.current-menu-item > a,
+.main-header #mainnav .menu > li.current_page_item > a {
+	font-weight: 600;
+}
+
+/* --- Pictogramele de contact --------------------------------------------- */
+
+.main-header #mainnav .sm-contact-group {
+	display: flex;
+	align-items: center;
+	gap: var(--sm-space-2);
+	margin-left: var(--sm-space-2);
+	padding-left: var(--sm-space-6);
+	border-left: 1px solid var(--sm-line);
+}
+
+/**
+ * Pictogramele sunt si ele `.menu > li > a`, deci regula de mai sus le prinde -
+ * si o prinde cu doua elemente in plus in selector, deci castiga. Selectorul de
+ * aici numara clasele explicit (`li.sm-contact-group > a.sm-contact-link`) ca
+ * sa ajunga peste ea, fara `!important`.
+ */
+.main-header #mainnav .menu > li.sm-contact-group > a.sm-contact-link {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	border-radius: var(--sm-radius-pill);
+	border: 1px solid transparent;
+	color: var(--sm-ink-mute);
+	transition: color 0.18s ease, border-color 0.18s ease,
+	            background-color 0.18s ease;
+}
+
+.main-header #mainnav .menu > li.sm-contact-group > a.sm-contact-link:hover,
+.main-header #mainnav .menu > li.sm-contact-group > a.sm-contact-link:focus-visible {
+	color: var(--sm-teal);
+	border-color: var(--sm-mint);
+	background-color: var(--sm-teal-tint);
+}
+
+.main-header #mainnav .menu > li.sm-contact-group > a.sm-contact-link .sm-icon svg {
+	width: 17px;
+	height: 17px;
+	display: block;
+}
+
+/* ===========================================================================
+   4. SUBSOL
+   Ce era: o banda neagra de 190px complet goala, urmata de o banda alba cu
+   creditele scrise cu bold, aliniate la stanga intr-o coloana de jumatate de
+   latime, langa o a doua coloana goala.
+   Ce devine: o singura banda, in cerneala paletei, cu creditele centrate si
+   discrete.
+   =========================================================================== */
+
+/**
+ * Zona de widgeturi din subsol PARE goala, dar nu e: contine Categorii, Arhive
+ * si Comentarii recente. Toate trei sunt ascunse prin decizia „fara sidebar,
+ * fara comentarii, nicaieri pe site" — regula e in CSS-ul istoric. Ce ramane
+ * vizibil e doar invelisul lor: 190px de negru gol pe fiecare pagina.
+ *
+ * Conditia de mai jos ascunde zona exact atunci cand tot ce e in ea e deja
+ * ascuns, si o aduce inapoi singura in ziua in care se adauga un widget care
+ * chiar se vede. E si lista de verificat daca vreodata un widget nou nu apare:
+ * daca e una dintre cele trei, cauza e decizia, nu o eroare.
+ */
+.footer-widgets:not(:has(.widget:not(.widget_categories):not(.widget_archive):not(.widget_recent_comments))) {
+	display: none;
+}
+
+.site-footer {
+	background-color: var(--sm-ink);
+	color: #b9c4c0; /* 8.1:1 pe fundalul de mai sus */
+	font-family: var(--sm-font-body);
+	font-weight: 400;
+	margin-top: 0;
+	box-shadow: none;
+}
+
+.site-footer .site-info {
+	max-width: var(--sm-container);
+	margin: 0 auto;
+	padding: var(--sm-space-12) var(--sm-space-6);
+}
+
+.site-footer .site-info .row {
+	display: block;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+/* A doua coloana e goala; prima ocupa tot randul si se centreaza. */
+.site-footer .site-info [class*="col-"] {
+	float: none;
+	width: auto;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.site-footer .site-info [class*="col-"]:empty {
+	display: none;
+}
+
+.site-footer .sydney-credits {
+	text-align: center;
+	font-size: var(--sm-text-xs);
+	line-height: 1.6;
+	color: inherit;
+}
+
+.site-footer a {
+	color: #dce7e3;
+	text-decoration-color: rgba(220, 231, 227, 0.4);
+	text-underline-offset: 3px;
+}
+
+.site-footer a:hover,
+.site-footer a:focus-visible {
+	color: #fff;
+	text-decoration-color: currentColor;
+}
+
+.site-footer a:focus-visible {
+	outline: 2px solid var(--sm-mint);
+	outline-offset: 3px;
+	border-radius: 4px;
+}
+
+/* ===========================================================================
+   5. BUTONUL FLOTANT WHATSAPP
+   Exista un bug vechi aici, vizibil pe orice pagina: regula
+   `.whatsapp-footer { display: flex !important }` din CSS-ul istoric bate
+   `display: none` de deasupra ei, la ORICE latime. In afara punctului de
+   rupere de 980px butonul nu primeste insa `position: fixed`, asa ca ramane in
+   curs, la baza paginii, ca o pictograma de 24px lata cat ecranul. Se vede in
+   fiecare captura de desktop, sub subsol.
+   =========================================================================== */
+
+/**
+ * Pe desktop butonul nu are ce cauta: WhatsApp e deja in antet, la doi
+ * centimetri de cursor. Ramane doar pe ecranele mici, unde antetul e strans
+ * intr-un meniu hamburger si un canal direct chiar economiseste pasi.
+ */
+.whatsapp-footer {
+	display: none !important;
+}
+
+@media (max-width: 980px) {
+	.whatsapp-footer {
+		display: flex !important;
+		align-items: center;
+		justify-content: center;
+		position: fixed;
+		right: 16px;
+		bottom: 16px;
+		z-index: 90;
+		width: 56px;
+		height: 56px;
+		border-radius: var(--sm-radius-pill);
+		background-color: var(--sm-teal);
+		color: #fff;
+		box-shadow: 0 10px 24px -8px rgba(31, 42, 39, 0.45);
+		transition: background-color 0.18s ease;
+	}
+
+	.whatsapp-footer:hover,
+	.whatsapp-footer:focus-visible {
+		background-color: var(--sm-teal-dark);
+		color: #fff;
+	}
+
+	.whatsapp-footer .sm-icon svg {
+		width: 28px;
+		height: 28px;
+		display: block;
+	}
+
+	/* Butonul „sus" al temei sta in acelasi colt; urca deasupra celui de
+	   WhatsApp, ca sa nu se acopere unul pe altul. */
+	.go-top.position-right {
+		bottom: 84px;
+	}
+}
