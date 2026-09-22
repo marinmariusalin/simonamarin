@@ -213,6 +213,46 @@ versiunea temei.
 
 ---
 
+## Redesign — unde s-a ajuns
+
+Planul complet, cu fazele și estimările, e în
+[plan-redesign-lifecoach.md](plan-redesign-lifecoach.md).
+
+| Faza | Stare |
+|---|---|
+| 0.1 — CSS-ul scos din baza de date în fișier | **făcut** |
+| 0.2 — fonturi găzduite local | **făcut** |
+| 0.3 — jetoane de design (culori, scară tipografică, spațiere) | **făcut** |
+| 1 — eroul de pe Home | **făcut** |
+| 2 — cardurile de servicii | **făcut** |
+| 3 — blocul „despre mine" de pe Home | **făcut** |
+| 4 — antet și subsol | deschis |
+| 5 — paginile interioare | deschis |
+| 6 — articolele | deschis |
+
+Trei lucruri care merită reținute din Fazele 0–3, pentru că niciunul nu se
+vedea din citirea fișierelor:
+
+1. **`.row::before` și `.row::after` din Bootstrap devin elemente de grilă.**
+   În Bootstrap sunt doar curățare de float-uri, invizibile. În momentul în
+   care același `.row` devine `grid` sau `flex`, ele devin copii cu drepturi
+   depline și `::before` ocupă prima celulă. Efectul văzut pe Home: textul
+   eroului sărea în coloana a doua, fotografia pe rândul următor, iar secțiunea
+   de dedesubt intra peste ea. Se anulează explicit în `redesign.css`.
+2. **CSS-ul din Customizer se tipărește ultimul**, inline în `<head>` la
+   `wp_head` prioritatea 101, deci după orice foaie de stil pusă în coadă. Atâta
+   timp cât stătea acolo, orice regulă nouă de aceeași specificitate pierdea, iar
+   singura scăpare rămânea `!important` — de asta ajunsese la 27 KB. Mutat în
+   fișier, intră în lanțul de dependențe și se așază unde trebuie.
+3. **Marcajul paginilor are `</p>` nepereche**, din `wpautop`. Parserul HTML le
+   transformă în `<p>`-uri goale care devin ultimul copil, așa că `:last-child`
+   nu prinde ce pare că prinde. Se folosește `:last-of-type`.
+
+Ce **nu** s-a atins, în nicio fază: niciun cuvânt din conținut, niciun slug,
+nicio pagină din tema inactivă.
+
+---
+
 ## Deschis, în ordinea valorii
 
 ### 1. Google Tag Manager — 520 KB, 53% din pagină
@@ -246,12 +286,19 @@ Se completează în **Rank Math → Titles & Meta → Local SEO**, nu în cod. U
 JSON-LD scris de mână ar crea a doua entitate concurentă pentru aceeași
 afacere, ceea ce e mai rău decât lipsa datelor.
 
-### 4. MIG-05 — tipografia
+### 4. MIG-05 — tipografia pe paginile interioare
 
-De reverificat pe toate paginile. Fonturile sunt setate (Poppins), dar pe unele
-titluri apare alt font decât pe producție. Cauza probabilă: CSS-ul adițional al
-site-ului (opțiunea `custom_css_post_id`, ID 171) țintește clase din Sydney 1.x
-care nu mai există.
+**Cauza a fost găsită și eliminată pe Home.** Nu era o setare de font: Taviraj
+și Sacramento nu se încărcau deloc. `.signature-font` cerea
+`'Sacramento', cursive`, iar singurul `@font-face` din CSS-ul din Customizer
+era gol — doar `font-display: swap`, fără niciun fișier. Windows rezolvă
+`cursive` ca **Comic Sans**, deci semnătura de pe prima pagină se randa în
+Comic Sans. Acum toate trei fonturile sunt găzduite local
+(`assets/css/fonts.css`).
+
+Ce a mai rămas: paginile interioare (Despre mine, Servicii, Tarife, Ateliere,
+Terapia online, articolele) folosesc încă tipografia veche. Sunt Faza 5 și
+Faza 6 din `plan-redesign-lifecoach.md`.
 
 ### 5. MIG-04 — semnătura de sub titlul articolelor
 
@@ -381,6 +428,10 @@ loc); implementarea în sine e simplă odată aleasă formularea.
 | Alt-text implicit pe imaginea reprezentativă (SEO-19/20) | `inc/meta-enhancements.php`, filtru `wp_get_attachment_image_attributes` | `php -l` fără erori; nu verificat pe o pagină reală cu imagine fără alt |
 | `noindex` pe căutări fără rezultate (SEO-49) | `inc/meta-enhancements.php`, filtru `wp_robots` | `php -l` fără erori; nu verificat output-ul real de `<meta name="robots">` |
 | Mesaj generic la autentificare eșuată (SEC-12) | mu-plugin, filtru `login_errors` | `php -l` fără erori; nu testat cu o încercare reală de login |
+| CSS-ul din Customizer mutat în fișier (Faza 0.1) | `sydney-child/assets/css/legacy-customizer.css` | 6 pagini comparate pixel cu pixel înainte/după: 0 diferențe reale |
+| Fonturi găzduite local, fără Google Fonts (Faza 0.2) | `sydney-child/assets/css/fonts.css` + `assets/fonts/` | `<link>` către `fonts.googleapis.com` dispărut din `<head>`; semnătura nu mai e Comic Sans |
+| Sistem de design pe Home — erou, carduri, „despre mine" (Fazele 1–3) | `sydney-child/assets/css/redesign.css` | capturi desktop 1440 și mobil 390, comparate cu previzualizarea |
+| Butonul „Contact" din erou, făcut link real | `sydney-child/assets/js/cta-fix.js` | `<div href>` înlocuit cu `<a>` către `/contact/` |
 
 Toate cinci de mai sus au fost migrate din tema inactivă pe 21 septembrie 2026.
 Verificarea făcută efectiv a fost `php -l` pe fiecare fișier modificat — nu o

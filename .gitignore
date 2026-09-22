@@ -73,3 +73,6 @@ wp-content/object-cache1.php
 wp-content/post-smtp-migration.log
 wp-content/themes/index.php
 /index.php
+
+# Fisiere de lucru dintr-o sesiune, nu cod al proiectului.
+scratch-*

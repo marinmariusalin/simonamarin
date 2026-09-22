@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Previzualizare redesign — Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Taviraj:wght@400;500;600&family=Poppins:wght@300;400;500;600&family=Sacramento&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="wp-content/themes/sydney-child/assets/css/redesign.css">
+<style>
+/* Doar pentru previzualizare: reset minim + antet/subsol schitate.
+   Pe site acestea vin din tema Sydney. */
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+.pv-header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--sm-line);}
+.pv-header-in{max-width:1180px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;gap:32px}
+.pv-brand{display:flex;flex-direction:column;line-height:1.15;text-decoration:none}
+.pv-brand b{font-family:var(--sm-font-display);font-size:19px;font-weight:500;color:var(--sm-ink);letter-spacing:-.01em}
+.pv-brand span{font-family:var(--sm-font-body);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--sm-ink-mute);margin-top:2px}
+.pv-nav{margin-left:auto;display:flex;gap:26px}
+.pv-nav a{font-family:var(--sm-font-body);font-size:15px;color:var(--sm-ink-soft);text-decoration:none}
+.pv-nav a:hover,.pv-nav a.is-active{color:var(--sm-teal)}
+.pv-actions{display:flex;gap:10px;align-items:center}
+.pv-actions a{width:38px;height:38px;border-radius:999px;border:1px solid var(--sm-line);display:flex;align-items:center;justify-content:center;color:var(--sm-ink-mute);text-decoration:none;font-size:14px}
+.pv-actions a:hover{border-color:var(--sm-teal);color:var(--sm-teal)}
+.pv-footer{background:#20292f;color:#b9c4c0;font-family:var(--sm-font-body);font-size:14px;padding:48px 24px;text-align:center}
+@media(max-width:860px){.pv-nav{display:none}}
+</style>
+</head>
+<body>
+<header class="pv-header"><div class="pv-header-in">
+<a class="pv-brand" href="#"><b>Cabinet Individual de Psihologie</b><span>Psiholog Simona Marin</span></a>
+<nav class="pv-nav">
+<a href="#" class="is-active">Home</a><a href="#">Articole</a><a href="#">Ateliere</a><a href="#">Servicii</a><a href="#">Tarife</a><a href="#">Despre mine</a><a href="#">Contact</a>
+</nav>
+<div class="pv-actions"><a href="#" aria-label="Facebook">f</a><a href="#" aria-label="WhatsApp">w</a><a href="#" aria-label="Telefon">t</a></div>
+</div></header>
+<div class="homepage-container">
+    <div class="row">
+        <div class="col-md-2 col-xs-1"></div>
+        <div class="col-md-8 col-xs-10 homepage-presentation">
+            <div class="row">
+                <div class="col-md-6 col-xs-12 homepage-description">
+                    <h2 class="homepage-title text2">
+                        Cabinet Individual de Psihologie</h2>
+                    <p class="textP">
+                        Fiecare persoana este unica, fiecare traseu este unic si de fiecare data sunt curioasa sa vad
+                        unde ne va duce povestea fiecaruia dintre cei care lucreaza cu mine.</p>
+
+                    <div class="sm-hero-cta-row"><div id="purple-button" class="homepage-button" href="contact-form">
+                        <div class="button-text">
+                            Contact</div>
+                        <i class="fas fa-angle-right"></i>
+
+                    </div><a href="https://wa.me/40747668204" class="sm-hero-whatsapp" rel="nofollow" aria-label="WhatsApp" title="WhatsApp"><i class="sm-icon"><svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" role="presentation"><g transform="translate(0,448) scale(1,-1)" fill="currentColor"><path d="M381 351Q448 284 448 194Q448 102 382.0 37.0Q316 -28 224 -28Q167 -28 118 -1L0 -32L32 83Q2 134 2 194Q2 286 67.0 351.0Q132 416 224 416Q316 416 381 351ZM224 9Q300 9 355.0 63.5Q410 118 410 194Q411 268 354 324Q300 378 224.0 378.0Q148 378 93.5 324.0Q39 270 39 194Q39 141 68 96L72 89L53 21L123 39L130 35Q173 9 224 9ZM325 148Q335 143 336 141Q339 135 332 114Q329 106 316.5 97.5Q304 89 295 88Q269 84 228 102Q219 106 210.5 111.0Q202 116 194.5 122.0Q187 128 180.0 134.0Q173 140 167.0 146.0Q161 152 156.0 157.5Q151 163 147.0 168.0Q143 173 140.5 176.5Q138 180 136.0 183.0Q134 186 134 186Q111 217 111 243Q111 268 130 290Q137 296 145 296Q153 296 156 296Q165 296 168 287Q185 246 185 246Q188 240 186 236Q182 227 176.0 220.5Q170 214 169.0 213.0Q168 212 170 206Q184 180 200.5 167.0Q217 154 245 140Q253 136 257 141Q270 156 275 163Q279 169 287 166Q295 163 325 148Z"/></g></svg></i></a></div>
+                </div>
+                <div class="col-md-6 col-xs-12 profile-picture-container">
+                    <div class="profile-picture" aria-label="Psiholog Simona Marin"
+                        style="background-image: url(&quot;http://simonamarin.local/wp-content/uploads/2021/10/Simona-Marin.webp&quot;);">
+                        <div class="message-header-top">
+                            <h3 class="signature-font">
+                                <div class="row">
+                                    <div class="col-md-12 col-xs-12">
+                                        Simona Marin</div>
+                                    <div class="col-md-12 col-xs-12">
+                                        psiholog</div>
+                                </div>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-9 col-xs-12  servicii-container">
+            <div class="row">
+                <div class="col-md-12 col-xs-12">
+                    <h3 class="text2">
+                        Servicii</h3>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-xs-12">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="profile-picture-container-mobile" aria-label="psiholog"
+                                    style="background-image: url(&quot;http://simonamarin.local/wp-content/uploads/2021/10/Simona-Marin-2.webp&quot;);">
+                                    <div class="message-header-bottom">
+                                        <h3 class="signature-font">
+                                            <div class="row">
+                                                <div class="col-md-12 col-xs-12">
+                                                    Simona Marin</div>
+                                                <div class="col-md-12 col-xs-12">
+                                                    Psiholog</div>
+                                            </div>
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 servicii-cards">
+                                <div class="row">
+                                    <div class="col-md-12 col-xs-12">
+                                        <h2 class="textP servicii-sub-title">
+                                            Psihologie clinica &amp; Psihoterapie &amp; Consiliere &amp; Corporate</h2>
+                                    </div>
+                                    <div class="col-md-3 col-xs-12 servicii-box">
+                                        <h3 class="textTS">
+                                            Psihoterapie / consiliere</h3>
+                                        <p class="textS">
+                                            Adulti</p>
+                                        <p class="textS">
+                                            Adolescenti</p>
+                                        <p class="textS">
+                                            Copii</p>
+                                        <a href="http://simonamarin.local/servicii-psihologice/" class="textP  servicii-detalii">
+                                            Detalii
+                                        </a>
+                                        <a href="https://wa.me/40747668204" class="textP  servicii-detalii">
+                                            Contact
+                                        </a>
+
+                                    </div>
+                                    <div class="col-md-3 col-xs-12 servicii-box">
+                                        <h3 class="textTS">
+                                            Psihoterapie / consiliere</h3>
+                                        <p class="textS">
+                                            Cuplu</p>
+                                        <p class="textS">
+                                            Familie</p>
+                                        <a href="http://simonamarin.local/servicii-psihologice/" class="textP  servicii-detalii">
+                                            Detalii
+                                        </a>
+                                        <a href="https://wa.me/40747668204" class="textP  servicii-detalii">
+                                            Contact
+                                        </a>
+
+                                    </div>
+                                    <div class="col-md-3 col-xs-12 servicii-box">
+                                        <h3 class="textTS">
+                                            Psihologie clinica</h3>
+                                        <p class="textS">
+                                            Evaluare psihologica adult</p>
+                                        <p class="textS">
+                                            Evaluare psihologica copil</p>
+                                        <a href="http://simonamarin.local/servicii-psihologice/" class="textP  servicii-detalii">
+                                            Detalii
+                                        </a>
+                                        <a href="https://wa.me/40747668204" class="textP  servicii-detalii">
+                                            Contact
+                                        </a>
+
+                                    </div>
+                                    <div class="col-md-3 col-xs-12 servicii-box">
+                                        <h3 class="textTS">
+                                            Ședință de psihonutritie</h3>
+                                        <h3 class="textTS">
+                                            Terapia prin mișcări oculare de desensibilizare și reprocesare (EMDR)</h3>
+                                        <a href="http://simonamarin.local/servicii-psihologice/" class="textP  servicii-detalii">
+                                            Detalii
+                                        </a>
+                                        <a href="https://wa.me/40747668204" class="textP  servicii-detalii">
+                                            Contact
+                                        </a>
+
+                                    </div>
+                                    <div class="col-md-3 col-xs-12 servicii-box">
+                                        <h3 class="textTS">
+                                            Grupuri</h3>
+                                        <p class="textS">
+                                            De suport / terapie</p>
+                                        <a href="http://simonamarin.local/servicii-psihologice/" class="textP  servicii-detalii">
+                                            Detalii
+                                        </a>
+                                        <a href="https://wa.me/40747668204" class="textP  servicii-detalii">
+                                            Contact
+                                        </a>
+
+                                    </div>
+                                    <div class="col-md-3 col-xs-12 servicii-box">
+                                        <h3 class="textTS">
+                                            Servicii corporate</h3>
+                                        <p class="textS">
+                                            Programe și grupuri de dezvoltare personală și intercunoaștere</p>
+                                        <p class="textS">
+                                            Programe de training</p>
+                                        <a href="http://simonamarin.local/servicii-psihologice/" class="textP  servicii-detalii">
+                                            Detalii
+                                        </a>
+                                        <a href="https://wa.me/40747668204" class="textP  servicii-detalii">
+                                            Contact
+                                        </a>
+
+                                    </div>
+                                    <div class="col-md-3 col-xs-12 servicii-box">
+                                        <h3 class="textTS">
+                                            Orientare in cariera</h3>
+                                        <p class="textS">
+                                            Adulti</p>
+                                        <p class="textS">
+                                            Adolescenti</p>
+                                        <a href="http://simonamarin.local/servicii-psihologice/" class="textP  servicii-detalii">
+                                            Detalii
+                                        </a>
+                                        <a href="https://wa.me/40747668204" class="textP  servicii-detalii">
+                                            Contact
+                                        </a>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-xs-12 homepage-about-me"
+           >
+            <div class="col-md-3"></div>
+            <div class="col-md-6 col-xs-12  home-page-about-me-container">
+                <h3 class="text4">
+                    Cabinet Individual de Psihologie</h3>
+                <div class="signature-font home-page-about-me-title">
+                    <div class="row">
+                        <div class="col-md-12 col-xs-12">
+                            Simona Marin</div>
+                        <div class="col-md-12 col-xs-12">
+                            psiholog</div>
+                    </div>
+                </div>
+                <p class="textP">
+                    Practic aceasta profesie cu drag si implicare din 2012, cand am absolvit Facultatea de Psihologie si
+                    Stiintele Educatiei. Curiozitatea legata de mintea umana, de ceea ce ne motiveaza si ceea ce ne face
+                    sa renuntam, de felul in care ajungem sa interactionam unii cu ceilalti, modul in care facem
+                    alegeri, toate acestea mi-au pastrat vie pasiunea pentru psihologie si dorinta de a fi alaturi de
+                    cei care cauta si au nevoie de sprijin, vor sa se cunoasca, sa se auto-depaseasca, sa fie mai
+                    aproape de ei insisi, sa isi gaseasca linistea emotionala sau sa depaseasca evenimente mai putin
+                    placute pentru a o lua de la capat.</p>
+
+                <div class="button-text text8 about-me-box">
+                    <a href="http://simonamarin.local/despre-mine/" class="textP  about-me-button-detalii">
+                        Despre mine
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1 col-xs-2"></div>
+        <div class="col-md-9 col-xs-12 homepage-contact">
+            <h3 class="text4">
+                Parteneri</h3>
+            <div class="col-md-2 col-xs-4 servicii-box parteneri-box">
+                <a href="https://www.osteomedicare.ro" target="_blank" rel="noopener">
+                    <div class="img" role="img" alt="Cabinet Individual de Psihologie"
+                        style="background-image: url('http://simonamarin.local/wp-content/uploads/2022/08/Osteomedicare.webp')">
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="pv-footer">Cabinet Individual de Psihologie &middot; Simona Marin</footer>
+<script>window.smCtaFix={contactUrl:'/contact/'};</script>
+<script src="wp-content/themes/sydney-child/assets/js/cta-fix.js"></script>
+</body>
+</html>
