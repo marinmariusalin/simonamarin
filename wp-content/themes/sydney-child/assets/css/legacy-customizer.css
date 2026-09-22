@@ -200,10 +200,6 @@ html {
 }
 
 
-.homepage-description{
-	padding-left: 40px;
-}
-
 <!-- header top day 1  -->
 
 <!-- homepage  -->
@@ -231,7 +227,7 @@ html {
     margin: 0 16px;
 }
 
-.homepage-container .homepage-presentation, .about-me-page .about-me-presentation{
+.about-me-page .about-me-presentation{
 	background-color: #f7f7f7f0;
 	top: 100px;
     height: 600px;
@@ -243,10 +239,7 @@ html {
 	margin-top: 70px;
 	margin-left: 40px;
 }
-.profile-picture-container{
-	margin-top: 100px
-}
-.profile-picture{
+.profile-picture.about-me{
 background-repeat: no-repeat;
     background-position: top;
     background-size: cover;
@@ -267,7 +260,7 @@ background-repeat: no-repeat;
 		margin-bottom: 100px;
 }
 
-.servicii-container, .home-page-about-me-container{
+.about-me-page.servicii-container{
 	background-color: #fff;
     z-index: 2;
     position: relative;
@@ -299,90 +292,12 @@ font-family: 'Sacramento', cursive;
 	display: block;
 }
 
-.homepage-button{
-	box-shadow: 0px 6px 16px -8px rgb(149 86 58 / 45%);
-    color: #fff;
-    font-family: 'Taviraj', serif;
-    font-weight: 600;
-    height: 50px;
-    width: 175px;
-    margin-left: 10px;
-    background-color: #95563A;
-    text-align: center;
-    padding: 15px;
-    font-size: 16px;
-    cursor: pointer;
-    text-align: center;
-    display: inline-flex;
-    position: relative;
-}
-
-.homepage-button .button-text{
-	margin: 0 15px;
-}
-
-a.homepage-button:hover{
-	color: #fff;
-}
-
-a.homepage-button{
-	color: #fff;
-}
-
-.homepage-button .fa-angle-right{
-		font-size: 20px;
-    line-height: 20px;
-    position: absolute;
-    right: 64px;
-    top: 13px;
-}
-
 .about-me-button{
 	width: 190px;
 	margin-bottom: 10px;
 }
 .home-page-about-me-container .about-me-button{
 	margin-left: 0;
-}
-
-.message-header-top{
-background-color: #fff;
-    width: 350px;
-    height: 80px;
-    bottom: -30px;
-    z-index: 4;
-    right: 0;
-    position: absolute;
-    box-shadow: 0px 12px 40px -6px rgb(131 146 167 / 30%);
-}
-
-.message-header-bottom{
-		background-color: #fff;
-    width: 100%;
-		height: 80px;
-    bottom: -65px;
-    z-index: 4;
-    right: 0;
-    position: absolute;
-    box-shadow: 0px 12px 40px -6px rgb(131 146 167 / 30%);
-}
-
-.homepage-about-me{
-    margin-top: 120px;
-    background-repeat: no-repeat;
-    background-position: top;
-    background-size: cover;
-}
-
-.home-page-about-me-container{
-    top: -20px;
-    padding: 55px 45px 77px 54px;
-    min-height: 610px;
-}
-
-.home-page-about-me-title{
-	margin-bottom: 25px;
-	text-align: right;
 }
 
 .home-page-about-me-sub.text3{
@@ -413,11 +328,6 @@ background-color: #fff;
 .textTarifePrie, .textTarifeT{
 	font-size: 20px;
 }
-.homepage-title.text2{
-	font-size: 40px;
-	margin-top: 90px;
-}
-
 .textP{
 	text-align: justify;
 }
@@ -801,17 +711,11 @@ input[type="submit"]:hover{
 	height: 60px;
 }
 
-.servicii-cards .col-md-3{
-	margin: 0 20px;
-	margin-bottom: 60px;
-}
-
-.servicii-box, .tarife-box{
+.tarife-box{
 	background-color: rgba(0,0,0,0.03);
 	min-height: 271px;
 }
 
-.servicii-box .servicii-detalii,
 .tarife-box .tarife-detalii{
 background-color: #fff;
     width: 50%;
@@ -827,36 +731,9 @@ background-color: #fff;
 		color: #3D6F65;
 }
 
-.about-me-button-detalii{
-	background-color: #fff;
-    z-index: 4;
-    right: 20px;
-    position: absolute;
-    box-shadow: 0px 12px 40px -6px rgb(131 146 167 / 30%);
-    color: #3D6F65;
-    height: 50px;
-    text-align: center;
-    padding: 13px;
-    margin-top: 20px;
-    width: 250px;
-}
-
-
 .tarife-box .tarife-detalii{
 	width: 100%;
 	cursor: pointer;
-}
-
-.servicii-box .servicii-detalii:last-child{
-	left:0;
-	right: auto;
-}
-.servicii-box .servicii-detalii:hover{
-	color: #2C524A;
-}
-
-.servicii-box .textS:last-child(-1){
-	border-bottom: none;
 }
 
 @media (max-width: 980px){
@@ -889,10 +766,6 @@ background-color: #fff;
 .one-element{
 	padding-top: 150px;
 	text-align: center;
-}
-
-.servicii-sub-title{
-	margin-left: -30px;
 }
 
 .tarife-box{
@@ -931,9 +804,6 @@ background-color: #fff;
 		padding: 25px;	
 	}
 	
-	.servicii-sub-title{
-			margin: 0;
-	}
 	.about-me-presentation{
 		padding: 0 15px;
 	}
@@ -995,13 +865,6 @@ background-color: #fff;
 	z-index: 1000;
 }
 
-.parteneri-box{
-		height: 150px;
-		width: 150px;
-    margin: 0;
-    padding: 0;
-}
-
 .parteneri-logo{
 	background-repeat: no-repeat;
     background-position: top;
@@ -1012,7 +875,7 @@ background-color: #fff;
     position: absolute;
 }
 
-.info-Box, .single-article-container, .articole-box, .about-me-overlay, .homepage-contact, .homepage-container .homepage-presentation, .about-me-page, .span-tag, .footer-data, .about-me-presentation{
+.info-Box, .single-article-container, .articole-box, .about-me-overlay, .homepage-contact, .about-me-page, .span-tag, .footer-data, .about-me-presentation{
 	  background-color: #f7f7f7f0;
 }
 
@@ -1063,56 +926,35 @@ mai sus au prea multe variatii de spatiere ca sa fie sigur de potrivit prin
 text; un bloc separat e usor de revizuit sau de sters daca nu place.
 */
 
-.homepage-container .homepage-presentation,
 .about-me-page .about-me-presentation {
 	background-color: #DCE7E3 !important;
 	box-shadow: 0 24px 60px -20px rgba(44, 82, 74, 0.28) !important;
 	border-radius: 20px !important;
 }
 
-.profile-picture,
 .profile-picture-container-mobile,
 .profile-picture.about-me {
 	border-radius: 20px !important;
 }
 
-.homepage-title.text2 {
-	font-size: 46px !important;
-	position: relative;
-}
-
 /* Accent subliniat sub titlul principal - un singur element, culoarea
    accentului din paleta (D2), ca sa nu concureze cu butonul de CTA. */
-.homepage-title.text2::after {
-	content: "";
-	display: block;
-	width: 90px;
-	height: 4px;
-	margin-top: 16px;
-	background-color: #95563A;
-	border-radius: 2px;
-}
-
-.servicii-container,
-.home-page-about-me-container {
+.about-me-page.servicii-container {
 	box-shadow: 0 20px 50px -22px rgba(36, 48, 44, 0.22) !important;
 	border-radius: 20px !important;
 }
 
-.servicii-box,
 .tarife-box {
 	border-radius: 14px !important;
 	box-shadow: 0 10px 28px -14px rgba(36, 48, 44, 0.15);
 	transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.servicii-box:hover,
 .tarife-box:hover {
 	transform: translateY(-4px);
 	box-shadow: 0 16px 38px -16px rgba(36, 48, 44, 0.22);
 }
 
-.homepage-button,
 .homepage-contact .wpcf7-form-control.wpcf7-submit,
 input[type="submit"] {
 	border-radius: 999px !important;
@@ -1229,47 +1071,16 @@ Vezi explicatia din scriptul care a scris acest bloc (scratch-coherence-fix.php,
 pastrat local, nu in git - schimbarea traieste in baza de date).
 */
 
-.servicii-container,
-.home-page-about-me-container {
+.about-me-page.servicii-container {
 	background-color: #DCE7E3 !important;
 }
 
-.servicii-box,
 .tarife-box {
 	overflow: hidden;
 }
 
-.servicii-box, .tarife-box { background-color: #FAF8F5 !important; }
+.tarife-box { background-color: #FAF8F5 !important; }
 
-
-.sm-hero-cta-row {
-	display: flex;
-	align-items: center;
-	gap: 14px;
-}
-
-.sm-hero-whatsapp {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 50px;
-	height: 50px;
-	border-radius: 999px;
-	background-color: #3D6F65;
-	color: #fff !important;
-	transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-.sm-hero-whatsapp:hover,
-.sm-hero-whatsapp:focus {
-	background-color: #2C524A;
-	transform: translateY(-2px);
-}
-
-.sm-hero-whatsapp .sm-icon svg {
-	width: 22px;
-	height: 22px;
-}
 
 /*
 Grila de carduri de pe Home (.servicii-cards) foloseste col-md-3 (25%
@@ -1279,21 +1090,6 @@ ultimul rand, cu spatiu gol langa el. Inlocuita cu CSS Grid, scopat DOAR la
 aceasta grila (verificat: apare doar pe Home) - nu afecteaza Servicii,
 Tarife sau Ateliere, care folosesc alt marcaj.
 */
-.servicii-cards > .row {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-	gap: 24px;
-}
-
-.servicii-cards > .row > [class*="col-"] {
-	float: none;
-	width: auto;
-	margin: 0;
-}
-
-.servicii-cards > .row > .col-md-12 { grid-column: 1 / -1; }
-
-
 /*
 ==============================================================================
 CORECTII DIN FEEDBACK DIRECT (21.09.2026, dupa verificare la 1440/1920px)
@@ -1305,17 +1101,6 @@ CORECTII DIN FEEDBACK DIRECT (21.09.2026, dupa verificare la 1440/1920px)
    (inlocuita cu SVG-uri proprii, vezi inc/icons.php) - textul "Contact"
    ramanea singur, mic, intr-un buton mult prea lat. Latime automata,
    text centrat. */
-.homepage-button {
-	width: auto !important;
-	min-width: 0 !important;
-	padding: 0 28px !important;
-	justify-content: center;
-	align-items: center;
-}
-.homepage-button .button-text {
-	margin: 0 !important;
-	font-size: 17px;
-}
 .homepage-button .fa-angle-right,
 .about-me-button-detalii .fa-angle-right,
 .servicii-box .servicii-detalii .fa-angle-right {
@@ -1323,10 +1108,6 @@ CORECTII DIN FEEDBACK DIRECT (21.09.2026, dupa verificare la 1440/1920px)
 }
 
 /* Alinierea butonului Contact cu iconita WhatsApp de langa el. */
-.sm-hero-cta-row {
-	align-items: center;
-}
-
 /* Sidebar-ul din subsol (Categorii/Arhive/Comentarii recente) - decizie
    luata explicit (D1 si chestionarul de design): fara comentarii, fara
    sidebar, nicaieri pe site. */
