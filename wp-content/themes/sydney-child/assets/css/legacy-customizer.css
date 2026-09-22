@@ -33,9 +33,6 @@
 .img-fluid{
 	height: auto !important;
 }
-.about-me-overlay{
-	min-height: 350px;
-}
 .about-me-img-container{
 	height: auto;
 }
@@ -45,10 +42,6 @@
 }
 
 @media (min-width: 980px) {
-  .single-article-container {
-  clear: both; /* Ensures the container sits below any floated elements above it */
-  padding-top: 100px;
-}
 }
 
 @media (max-width: 980px) {
@@ -65,20 +58,10 @@ body.home,
 }
 
 /* 2. Fix Contact Form 7 input text and background contrast */
-.wpcf7-form-control {
-    color: #222222 !important;
-    background-color: #ffffff !important; 
-    border: 1px solid #666666 !important; 
-}
-
 /* 3. Fix form placeholder text (often the hidden cause of input contrast failures) */
 .wpcf7-form-control::placeholder {
     color: #595959 !important;
     opacity: 1 !important; /* Firefox lowers opacity by default */
-}
-a,i{
-	min-height: 24px !important;
-	min-width: 24px !important;
 }
 @font-face {
   font-display: swap;
@@ -227,29 +210,10 @@ html {
     margin: 0 16px;
 }
 
-.about-me-page .about-me-presentation{
-	background-color: #f7f7f7f0;
-	top: 100px;
-    height: 600px;
-    box-shadow: 0px 35px 105px 8px rgb(25 22 58 / 62%);
-	
-}
-
 .homepage-d-container{
 	margin-top: 70px;
 	margin-left: 40px;
 }
-.profile-picture.about-me{
-background-repeat: no-repeat;
-    background-position: top;
-    background-size: cover;
-    display: block;
-    width: 350px;
-    height: 450px;
-    position: absolute;
-    right: 20px;
-}
-
 .profile-picture-container-mobile{
 		background-repeat: no-repeat;
     background-position: top;
@@ -260,13 +224,6 @@ background-repeat: no-repeat;
 		margin-bottom: 100px;
 }
 
-.about-me-page.servicii-container{
-	background-color: #fff;
-    z-index: 2;
-    position: relative;
-    box-shadow: 0px 40px 110px 0px rgb(46 37 50 / 50%);
-    padding: 40px;
-}
  
 
 .hompage-description{
@@ -332,15 +289,6 @@ font-family: 'Sacramento', cursive;
 	text-align: justify;
 }
 <!-- Contact homepage -->
-.homepage-contact{
-	  background-color: #f2f2f2;
-    z-index: 2;
-    position: relative;
-    box-shadow: 0px 40px 110px 0px rgb(46 37 50 / 50%);
-    padding: 40px;
-		margin-top: 120px;
-}
-
 .homepage-contact .wpcf7-form-control.wpcf7-submit, input[type="submit"]{
 	box-shadow: 0px 6px 16px -8px rgb(149 86 58 / 45%);
     color: #fff;
@@ -383,44 +331,6 @@ input[type="submit"]:hover{
 	padding-top: 5px;
 }
 
-.contact-info{
-	  z-index: 2;
-    position: relative;
-    box-shadow: 0px 40px 110px 0px rgb(46 37 50 / 50%);
-    top: -80px;
-    padding: 40px;
-		padding-top: 100px;
-    width: 350px;
-    height: 800px;
-	  right:60px;
-    background-color: rgb(255 255 255 / 21%);
-}
-
-
-.contact-info-row{
-	margin-top: 60px;
-}
-
-.contact-info .label-contact{
-	color:#a4a4a4;
-	font-size: 25px;
-	line-height: 25px;
-	margin-bottom:10px
-}
-
-.contact-info {
-	color: #000;
-	font-size: 23x;
-	line-height: 30px;
-	margin-bottom:25;
-	font-family: 'Poppins', cursive;
-	font-size: 20px;
-	margin-top: 5px;
-}
-
-.contact-info a{
-	color: #000 !important;
-}
 <!-- End of contact homepage->
 
 <!-- About me -->
@@ -428,46 +338,6 @@ input[type="submit"]:hover{
 	height: 370px;
 	margin: 0;
   position: absolute;
-}
-
-.about-me-overlay{
-    background-color: #f7f7f785;
-    top: 100px;
-    height: 250px;
-    padding-top: 80px;
-    padding-left: 60px;
-    box-shadow: 0px 35px 105px 8px rgb(25 22 58 / 62%);
-}
-
-.text3{
-		padding: 0;
-    margin: 0;
-    text-align: left;
-    padding-left: 50px;
-}
-
-.about-me-page .about-me-presentation{
-	height: 100%;
-	margin-top: -10px;
-	padding: 25px;
-	margin-bottom: 100px;
-}
-
-.profile-picture.about-me{
-		position: relative;
-	  display: block;
-    right: 0;
-    top: 0;
-    float: left;
-    margin-right: 20px;
-	  margin-bottom: 10px;
-}
-
-.textP,  .list-group-item{
-	font-size: 17px;
-	color: #000;
-	line-height: 25px;
-	text-indent: 50px;
 }
 
 .list-group-item{
@@ -485,10 +355,6 @@ input[type="submit"]:hover{
 	font-size: 21px;
 	font-weight: 650;
 	color: #000;
-}
-
-.contact-info-about-me{
-	margin-top: 70px;
 }
 
 	.about-me-img-container.homepage-img-max{
@@ -529,73 +395,12 @@ input[type="submit"]:hover{
 
 <!-- Articole List-->
 
-.articles-container{
-    margin: 30px 40px;
-		padding-top: 30px;
-    margin-top: 8px;
-    width: auto;
-    display: block;
-    position: relative;
-}
-
-.articole-box{
-		margin: 10px 30px;
-    background-color: #f7f7f7;
-    box-shadow: 0px 0px 79px 3px rgb(25 22 58 / 12%);
-    padding: 20px;
-    display: block;
-    float: left;
-		cursor: pointer;
-	  min-height: 450px;
-}
-
-.articole-box img{
-		width: 250px;
-    max-height: 250px;
-}
-
-.card-content .article-img-content{
-	max-width: 250px;
-    max-height: 350px;
-    padding: 30px;
-    float: left;
-}
-
 <!-- End of Articole List-->
 
 <!-- Singe Article container -->
-.single-article-container {
-    background-color: #f7f7f7f0;
-    margin-top: 8px;
-    box-shadow: -2px 38px 129px -8px rgb(25 22 58 / 42%);
-    height: auto;
-    width: auto;
-    display: block;
-    position: relative;
-		padding: 30px;
-}
-
 .article-img{
 	float: left;
 	margin: 20px;
-}
-.single-article-container .list-group{
-	padding-left: 70px;
-	clear: both;
-}
-
-.single-article-container .text4{
-	padding-left: 45px;
-}
-
-.single-article-container img{
-	max-width: 300px;
-  max-height: 420px;
-}
-.single-article-container .img-groups{
-	max-width: 1024px;
-  max-height: 720px;
-	float: right;
 }
 .article-groups .list-group{
 	clear: none;
@@ -655,13 +460,7 @@ input[type="submit"]:hover{
 	.text1{
 		font-size: 20px;
 	}
-		.about-me-page .about-me-presentation{
-		margin-top: 0;
-	}
 	
-			.servicii-container .about-me-presentation{
-		margin-top: -31px;
-	}
 }
 
 
@@ -711,31 +510,6 @@ input[type="submit"]:hover{
 	height: 60px;
 }
 
-.tarife-box{
-	background-color: rgba(0,0,0,0.03);
-	min-height: 271px;
-}
-
-.tarife-box .tarife-detalii{
-background-color: #fff;
-    width: 50%;
-    height: 50px;
-    bottom: -2px;
-    z-index: 4;
-    right: 0;
-    position: absolute;
-    text-align: center;
-    padding-right: 50px;
-    box-shadow: 0px 12px 40px -6px rgb(131 146 167 / 30%);
-    padding-top: 9px;
-		color: #3D6F65;
-}
-
-.tarife-box .tarife-detalii{
-	width: 100%;
-	cursor: pointer;
-}
-
 @media (max-width: 980px){
 	.servicii-cards .col-xs-12{
 	margin: 0;
@@ -768,19 +542,11 @@ background-color: #fff;
 	text-align: center;
 }
 
-.tarife-box{
-	margin: 20px 15px;
-  padding: 20px;
-}
-
 @media (max-width: 980px){
 	.contact-info{
 		top: 0;
 		width: auto;
 		right:0;
-	}
-	.text2{
-		font-size: 25px !important;
 	}
 	.homepage-container .homepage-img, .about-me-page .about-me-img-container{
 		margin: 0;
@@ -796,52 +562,13 @@ background-color: #fff;
     margin-bottom: 25px;
     text-align: center;
 	}
-	.articles-container{
-		margin: 0 !important;
-	}
 	
-	.servicii-container .about-me-overlay{
-		padding: 25px;	
-	}
 	
-	.about-me-presentation{
-		padding: 0 15px;
-	}
 	
-	.about-me-presentation .text7, .about-me-presentation .text6{
-		padding-left:0;
-		font-weight: 500;
-	}
-	.about-me-presentation .list-group{
-	padding-left:20px;	
-}
-	.signature-font{
-		font-size: 20px;
-    line-height: 24px;
-    padding: 0;
-    font-family: Dancing Script;
-	}
-	.signature-font.text3{
-		font-size: 20px;
-		padding-left: 0;
-	}
-	.single-article-container img{
-		width: auto;
-		height: auto;
-				max-height: 200px;
-		max-width: 250px;
-	}
 	.single .hentry .title-post{
 		font-size: 25px;
 	}
 	
-	.single-article-container .text4{
-		padding-left:0;
-		font-size: 25px;
-	}
-	 .single-article-container .list-group{
-		padding-left:15px;
-	}
 }
 
 .signature-font-all-App{
@@ -875,7 +602,7 @@ background-color: #fff;
     position: absolute;
 }
 
-.info-Box, .single-article-container, .articole-box, .about-me-overlay, .homepage-contact, .about-me-page, .span-tag, .footer-data, .about-me-presentation{
+.info-Box, .span-tag, .footer-data{
 	  background-color: #f7f7f7f0;
 }
 
@@ -926,12 +653,6 @@ mai sus au prea multe variatii de spatiere ca sa fie sigur de potrivit prin
 text; un bloc separat e usor de revizuit sau de sters daca nu place.
 */
 
-.about-me-page .about-me-presentation {
-	background-color: #DCE7E3 !important;
-	box-shadow: 0 24px 60px -20px rgba(44, 82, 74, 0.28) !important;
-	border-radius: 20px !important;
-}
-
 .profile-picture-container-mobile,
 .profile-picture.about-me {
 	border-radius: 20px !important;
@@ -939,22 +660,6 @@ text; un bloc separat e usor de revizuit sau de sters daca nu place.
 
 /* Accent subliniat sub titlul principal - un singur element, culoarea
    accentului din paleta (D2), ca sa nu concureze cu butonul de CTA. */
-.about-me-page.servicii-container {
-	box-shadow: 0 20px 50px -22px rgba(36, 48, 44, 0.22) !important;
-	border-radius: 20px !important;
-}
-
-.tarife-box {
-	border-radius: 14px !important;
-	box-shadow: 0 10px 28px -14px rgba(36, 48, 44, 0.15);
-	transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.tarife-box:hover {
-	transform: translateY(-4px);
-	box-shadow: 0 16px 38px -16px rgba(36, 48, 44, 0.22);
-}
-
 .homepage-contact .wpcf7-form-control.wpcf7-submit,
 input[type="submit"] {
 	border-radius: 999px !important;
@@ -968,25 +673,6 @@ Vezi explicatia de mai sus (in scriptul care a scris acest bloc). Scopat la
 body.page-id-186, ca sa nu ating Tarife/Ateliere, unde acelasi CSS generic
 functioneaza corect.
 */
-body.page-id-186 .contact-info {
-	position: static !important;
-	top: 0 !important;
-	right: 0 !important;
-	width: 100% !important;
-	height: auto !important;
-	margin-top: 30px;
-}
-
-body.page-id-186 .homepage-contact {
-	margin-top: 40px !important;
-}
-
-body.page-id-186 .about-me-overlay {
-	position: relative !important;
-	top: 0 !important;
-	margin-bottom: 20px;
-}
-
 /*
 ==============================================================================
 WHATSAPP CA CANAL PRINCIPAL PE /contact/, FORMULAR SECUNDAR (21.09.2026)
@@ -997,41 +683,6 @@ al paginii - de-aia primeste culoarea accentului (D2, folosita altfel o
 singura data pe pagina). Formularul ramane functional neschimbat, doar
 stilizat vizual mai discret (mai mic, contur in loc de fundal plin).
 */
-
-.sm-whatsapp-cta {
-	text-align: center;
-	margin-bottom: 36px;
-}
-
-.sm-whatsapp-cta-link {
-	display: inline-flex;
-	align-items: center;
-	gap: 14px;
-	background-color: #95563A;
-	color: #fff !important;
-	padding: 18px 40px;
-	border-radius: 999px;
-	font-size: 20px;
-	font-weight: 600;
-	box-shadow: 0 10px 28px -10px rgba(149, 86, 58, 0.45);
-	transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.sm-whatsapp-cta-link:hover,
-.sm-whatsapp-cta-link:focus {
-	color: #fff !important;
-	transform: translateY(-2px);
-	box-shadow: 0 14px 34px -10px rgba(149, 86, 58, 0.55);
-}
-
-.sm-whatsapp-cta-link .sm-icon {
-	display: inline-flex;
-}
-
-.sm-whatsapp-cta-link .sm-icon svg {
-	width: 26px;
-	height: 26px;
-}
 
 /* Formularul devine optiunea a doua: mai mic, fara fundal plin pe buton,
    separat printr-o linie subtire, fara text nou adaugat. */
@@ -1070,17 +721,6 @@ COERENTA VIZUALA - fundal continuu, colturi care nu mai ies din card (21.09.2026
 Vezi explicatia din scriptul care a scris acest bloc (scratch-coherence-fix.php,
 pastrat local, nu in git - schimbarea traieste in baza de date).
 */
-
-.about-me-page.servicii-container {
-	background-color: #DCE7E3 !important;
-}
-
-.tarife-box {
-	overflow: hidden;
-}
-
-.tarife-box { background-color: #FAF8F5 !important; }
-
 
 /*
 Grila de carduri de pe Home (.servicii-cards) foloseste col-md-3 (25%
@@ -1142,10 +782,3 @@ pentru card-uri (.homepage-presentation pe Home, .about-me-overlay si
 verde pe altele. Acelasi fundal, aceleasi colturi, aceeasi umbra, peste tot -
 nu se schimba inaltimile/marginile mostenite, doar aspectul de suprafata.
 */
-.about-me-overlay,
-.about-me-page .about-me-presentation,
-.about-me-presentation {
-	background-color: #DCE7E3 !important;
-	box-shadow: 0 24px 60px -20px rgba(44, 82, 74, 0.28) !important;
-	border-radius: 20px !important;
-}
