@@ -1,0 +1,890 @@
+/**
+ * Sistem de design — cabinet Simona Marin
+ * ============================================================================
+ *
+ * Scris ca sa se aplice PESTE marcajul existent din baza de date, fara sa
+ * schimbe un singur cuvant din el. Toti selectorii de mai jos tintesc clase
+ * care exista deja in continutul paginilor (`.homepage-container`,
+ * `.servicii-box`, `.textP` etc.), tocmai ca sa nu fie nevoie de editari in
+ * `post_content`.
+ *
+ * Culorile nu sunt inventate: sunt exact cele deja folosite in CSS-ul din
+ * Customizer (#3d6f65, #95563a, #dce7e3, #faf8f5, #20292f). Ce se schimba e
+ * *rolul* fiecareia — pana acum erau folosite la intamplare.
+ *
+ * Ordinea sectiunilor:
+ *   1. Jetoane           5. Erou (Home)
+ *   2. Reparatii de baza 6. Servicii
+ *   3. Tipografie        7. Despre mine
+ *   4. Butoane si focus  8. Parteneri
+ *                        9. Responsive
+ */
+
+/* ===========================================================================
+   1. JETOANE DE DESIGN
+   Un singur loc de unde se schimba tot. Pana acum fiecare culoare era scrisa
+   de mana in zeci de reguli, deci o ajustare insemna zeci de editari.
+   =========================================================================== */
+
+:root {
+	/* Culori — rolurile, nu doar valorile */
+	--sm-ink:        #1f2a27; /* titluri */
+	--sm-ink-soft:   #4d5b56; /* text curent — contrast 7.4:1 pe alb */
+	--sm-ink-mute:   #6b7975; /* text secundar */
+	--sm-teal:       #3d6f65; /* actiune principala */
+	--sm-teal-dark:  #2c524a; /* hover */
+	--sm-teal-tint:  #eef4f2; /* fundal de sectiune */
+	--sm-mint:       #dce7e3; /* accent de suprafata */
+	--sm-terracotta: #95563a; /* accent rar, doar ca semn grafic */
+	--sm-sand:       #faf8f5; /* fundalul paginii */
+	--sm-surface:    #ffffff; /* carduri */
+	--sm-line:       #e4e1db; /* chenare */
+
+	/* Tipografie */
+	--sm-font-display: 'Taviraj', Georgia, 'Times New Roman', serif;
+	--sm-font-body:    'Poppins', system-ui, -apple-system, sans-serif;
+	--sm-font-script:  'Sacramento', cursive;
+
+	/* Scara tipografica, raport 1.25, baza 18px */
+	--sm-text-xs:   0.875rem; /* 14 */
+	--sm-text-sm:   1rem;     /* 16 */
+	--sm-text-base: 1.125rem; /* 18 */
+	--sm-text-lg:   1.25rem;  /* 20 */
+	--sm-text-xl:   1.375rem; /* 22 */
+	--sm-text-2xl:  1.75rem;  /* 28 */
+	--sm-text-3xl:  2.125rem; /* 34 */
+	--sm-text-4xl:  2.5rem;   /* 40 */
+
+	/* Spatiere — o singura scara, in loc de valori la intamplare */
+	--sm-space-1: 0.25rem;
+	--sm-space-2: 0.5rem;
+	--sm-space-3: 0.75rem;
+	--sm-space-4: 1rem;
+	--sm-space-6: 1.5rem;
+	--sm-space-8: 2rem;
+	--sm-space-12: 3rem;
+	--sm-space-16: 4rem;
+	--sm-space-24: 6rem;
+
+	/* Forma */
+	--sm-radius:      10px;
+	--sm-radius-pill: 999px;
+	--sm-shadow: 0 1px 2px rgba(31, 42, 39, 0.04),
+	             0 12px 32px -18px rgba(31, 42, 39, 0.28);
+
+	--sm-container: 1180px;
+	--sm-measure:   66ch; /* lungimea de rand peste care ochiul pierde randul */
+}
+
+/* ===========================================================================
+   2. REPARATII DE BAZA
+   Trei reguli mostenite care fac rau activ. Se anuleaza primele.
+   =========================================================================== */
+
+/**
+ * `user-select: none` era pus pe `body`. Impiedica pe oricine sa selecteze si
+ * sa copieze text — inclusiv numarul de telefon sau adresa cabinetului. Pe un
+ * site unde omul vrea sa salveze un contact, e o bariera, nu o protectie.
+ */
+body,
+body * {
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
+	user-select: text;
+}
+
+/**
+ * `body { line-height: 1em }` lipea randurile unul de altul. Pentru texte
+ * lungi citite de cineva anxios sau obosit, spatiul dintre randuri e ce tine
+ * ochiul pe rand.
+ */
+body {
+	background-color: var(--sm-sand);
+	color: var(--sm-ink-soft);
+	font-family: var(--sm-font-body);
+	font-size: var(--sm-text-base);
+	line-height: 1.65;
+	-webkit-font-smoothing: antialiased;
+}
+
+/**
+ * Marcajul paginilor foloseste grila Bootstrap (`col-md-*`) ca sa obtina
+ * coloane. E fragila si depinde de tema. Layout-ul il preiau pe containerele
+ * semantice, cu CSS Grid, si neutralizez coloanele — asa designul supravietuieste
+ * unei schimbari de tema, iar marcajul din baza de date ramane exact cum e.
+ */
+.homepage-container [class*="col-md-"],
+.homepage-container [class*="col-xs-"] {
+	float: none;
+	width: auto;
+	max-width: none;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.homepage-container .row {
+	display: block;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+/**
+ * Bootstrap 3 curata float-urile din `.row` cu doua pseudo-elemente:
+ *
+ *   .row:before, .row:after { content: " "; display: table; }
+ *
+ * Intr-un container `float`, ele sunt invizibile si fac exact ce trebuie. In
+ * momentul in care acelasi `.row` devine `grid` sau `flex`, pseudo-elementele
+ * devin ELEMENTE ale grilei, ca orice copil - iar `::before` apuca prima
+ * celula. Rezultatul, verificat in browser pe eroul de pe Home: textul ajungea
+ * in coloana 2, fotografia pe randul 2 coloana 1, iar sectiunea urmatoare
+ * intra peste ea. Arata ca o eroare de plasare; era un element in plus, pe
+ * care nu il vezi in marcaj pentru ca nu e in marcaj.
+ *
+ * Se anuleaza pe orice `.row` pe care il transformam mai jos. Nu se pierde
+ * nimic: nu mai exista float-uri de curatat, tocmai pentru ca le-am scos.
+ */
+.homepage-container .row::before,
+.homepage-container .row::after {
+	display: none;
+}
+
+/* Coloanele goale folosite ca distantiere nu mai au rost intr-o grila reala. */
+.homepage-container .col-md-1:empty,
+.homepage-container .col-md-2:empty,
+.homepage-container .col-md-3:empty {
+	display: none;
+}
+
+ /**
+ * Benzile de sectiune ies din coloana de continut si ocupa toata latimea
+ * ferestrei. Marginea negativa se calculeaza fata de containerul propriu
+ * (`50% - 50vw`), deci nu depinde de nicio latime scrisa de mana si ramane
+ * corecta la orice dimensiune de ecran. Continutul dinauntru ramane centrat,
+ * pentru ca are `max-width` si margini automate.
+ */
+.homepage-container > .row:first-child,
+.homepage-container .homepage-about-me {
+	margin-left: calc(50% - 50vw);
+	margin-right: calc(50% - 50vw);
+}
+
+/**
+ * `100vw` include si latimea barei de derulare, deci o banda de latimea
+ * ferestrei depaseste cu cativa pixeli zona vizibila si apare o bara de
+ * derulare orizontala. Se taie de pe invelisul paginii, care are exact
+ * latimea corecta. Scopat la prima pagina: `.page-wrap` e o clasa Sydney
+ * folosita pe tot site-ul, iar `clip` pe restul paginilor nu are ce cauta.
+ */
+body.home .page-wrap {
+	overflow-x: clip;
+}
+
+/* ===========================================================================
+   3. TIPOGRAFIE
+   Doua voci, nu trei. Taviraj pentru titluri, Poppins pentru text. Sacramento
+   apare o singura data pe ecran, pe semnatura — daca apare peste tot, nu mai
+   e o semnatura, e un font.
+   =========================================================================== */
+
+.homepage-container h1,
+.homepage-container h2,
+.homepage-container h3,
+.homepage-container .text2,
+.homepage-container .text4,
+.homepage-container .textTS {
+	font-family: var(--sm-font-display);
+	color: var(--sm-ink);
+	font-weight: 500;
+	line-height: 1.2;
+	letter-spacing: -0.01em;
+}
+
+/**
+ * Textul justificat fara despartire in silabe face „rauri" albe verticale —
+ * se vede cu ochiul liber in paragraful din erou. Aliniat la stanga, fiecare
+ * rand porneste din acelasi loc si spatiile dintre cuvinte raman egale.
+ * Cuvintele raman neatinse; se schimba doar alinierea.
+ */
+.homepage-container .textP,
+.homepage-container p {
+	text-align: left;
+	hyphens: none;
+}
+
+/**
+ * `text-indent: 50px` venea din regula veche `.textP`. Indentarea de prima
+ * linie e o conventie de carte tiparita: acolo marcheaza paragraful pentru ca
+ * nu exista spatiu intre paragrafe. Pe web exista, deci indentarea ramane doar
+ * ca un rand care porneste aiurea.
+ */
+.homepage-container .textP {
+	max-width: var(--sm-measure);
+	text-indent: 0;
+}
+
+/* ===========================================================================
+   4. BUTOANE SI FOCUS
+   Pana acum „butoanele" erau: o pastila, un cerc cu pictograma si doua linkuri
+   text taiate de marginea cardului. Trei forme pentru acelasi tip de actiune.
+   =========================================================================== */
+
+.homepage-container .homepage-button,
+.homepage-container .about-me-button-detalii {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--sm-space-2);
+	min-height: 52px;
+	padding: 0 var(--sm-space-8);
+	border-radius: var(--sm-radius-pill);
+	font-family: var(--sm-font-body);
+	font-size: var(--sm-text-sm);
+	font-weight: 500;
+	letter-spacing: 0.01em;
+	text-decoration: none;
+	cursor: pointer;
+	transition: background-color 0.18s ease, color 0.18s ease,
+	            border-color 0.18s ease, transform 0.18s ease;
+}
+
+/* Actiunea principala: una singura pe ecran, plina, in verde. */
+.homepage-container .homepage-button {
+	background-color: var(--sm-teal);
+	color: #fff;
+	border: 1px solid var(--sm-teal);
+}
+
+.homepage-container .homepage-button:hover,
+.homepage-container .homepage-button:focus-visible {
+	background-color: var(--sm-teal-dark);
+	border-color: var(--sm-teal-dark);
+	color: #fff;
+}
+
+.homepage-container .homepage-button .button-text {
+	color: inherit;
+	font: inherit;
+}
+
+/* Actiunea secundara: acelasi gabarit, doar conturata. */
+.homepage-container .about-me-button-detalii {
+	position: static; /* era `absolute`, iesea din bloc */
+	width: auto;
+	height: auto;
+	margin: 0;
+	background-color: transparent;
+	color: var(--sm-teal);
+	border: 1px solid var(--sm-teal);
+	box-shadow: none;
+}
+
+.homepage-container .about-me-button-detalii:hover,
+.homepage-container .about-me-button-detalii:focus-visible {
+	background-color: var(--sm-teal);
+	color: #fff;
+}
+
+/**
+ * Orice element interactiv trebuie sa se vada cand ajungi pe el din tastatura.
+ * Acum nu se vede niciunul.
+ */
+.homepage-container a:focus-visible,
+.homepage-container [role="link"]:focus-visible,
+.homepage-container button:focus-visible {
+	outline: 2px solid var(--sm-teal);
+	outline-offset: 3px;
+	border-radius: 4px;
+}
+
+/* ===========================================================================
+   5. EROU
+   Ce era: un card mentă rotunjit, plutind in alb, cu titlu cat un subtitlu,
+   poza mica si o caseta alba care fugea peste sectiunea urmatoare.
+   Ce devine: o banda pe toata latimea, doua coloane, titlu la scara reala.
+   =========================================================================== */
+
+.homepage-container .homepage-presentation {
+	max-width: var(--sm-container);
+	margin: 0 auto;
+	padding: var(--sm-space-24) var(--sm-space-6);
+}
+
+/**
+ * Grila se pune pe `.row`-ul dinauntru, nu pe `.homepage-presentation`:
+ * marcajul are un rand intermediar intre container si cele doua coloane, iar
+ * grila trebuie sa fie parintele direct al coloanelor ca sa le aseze.
+ */
+.homepage-container .homepage-presentation > .row {
+	display: grid;
+	grid-template-columns: 1.05fr 0.95fr;
+	align-items: center;
+	gap: var(--sm-space-16);
+}
+
+/* Banda de fundal iese pe toata latimea ferestrei, fara container lipit. */
+.homepage-container > .row:first-child {
+	position: relative;
+	background: linear-gradient(170deg, var(--sm-teal-tint) 0%, var(--sm-sand) 78%);
+}
+
+.homepage-container .homepage-description {
+	min-width: 0;
+}
+
+.homepage-container .homepage-title.text2 {
+	font-size: clamp(2.25rem, 1.3rem + 3.4vw, 3.5rem);
+	line-height: 1.08;
+	margin: 0 0 var(--sm-space-6);
+	max-width: 14ch; /* titlul se rupe controlat, nu oriunde */
+}
+
+/* Semnul grafic de sub titlu — singurul loc unde teracota apare pe Home. */
+.homepage-container .homepage-title.text2::after {
+	content: "";
+	display: block;
+	width: 68px;
+	height: 3px;
+	margin-top: var(--sm-space-6);
+	background-color: var(--sm-terracotta);
+	border-radius: 2px;
+}
+
+.homepage-container .homepage-description .textP {
+	font-size: var(--sm-text-lg);
+	line-height: 1.7;
+	color: var(--sm-ink-soft);
+	max-width: 46ch;
+	margin: 0;
+}
+
+.homepage-container .sm-hero-cta-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--sm-space-4);
+	margin-top: var(--sm-space-12);
+}
+
+/* WhatsApp: aceeasi inaltime ca butonul principal, dar conturat — se citeste
+   ca a doua optiune, nu ca a doua actiune concurenta. */
+.homepage-container .sm-hero-whatsapp {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 52px;
+	height: 52px;
+	border-radius: var(--sm-radius-pill);
+	border: 1px solid var(--sm-teal);
+	color: var(--sm-teal);
+	background-color: transparent;
+	transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+.homepage-container .sm-hero-whatsapp:hover,
+.homepage-container .sm-hero-whatsapp:focus-visible {
+	background-color: var(--sm-teal);
+	color: #fff;
+}
+
+.homepage-container .sm-hero-whatsapp .sm-icon svg {
+	width: 22px;
+	height: 22px;
+	display: block;
+}
+
+/* --- Fotografia ---------------------------------------------------------- */
+
+.homepage-container .profile-picture-container {
+	position: relative;
+	min-width: 0;
+}
+
+/* Rama decalata din spatele pozei — ideea luata din Life Coach, in paleta ta. */
+.homepage-container .profile-picture-container::before {
+	content: "";
+	position: absolute;
+	inset: var(--sm-space-8) calc(-1 * var(--sm-space-6))
+	       calc(-1 * var(--sm-space-8)) var(--sm-space-8);
+	background-color: var(--sm-mint);
+	border-radius: var(--sm-radius);
+	z-index: 0;
+}
+
+.homepage-container .profile-picture {
+	position: relative;
+	z-index: 1;
+	display: block;
+	width: 100%;
+	aspect-ratio: 4 / 5;
+	height: auto;
+	min-height: 0;
+	background-size: cover;
+	background-position: center top;
+	background-repeat: no-repeat;
+	border-radius: var(--sm-radius);
+	box-shadow: var(--sm-shadow);
+	overflow: hidden;
+}
+
+/**
+ * Caseta cu semnatura statea peste sectiunea urmatoare. O aduc inauntrul
+ * fotografiei, ancorata jos-stanga: ramane lizibila si nu mai loveste nimic.
+ */
+.homepage-container .profile-picture .message-header-top {
+	position: absolute;
+	left: 0;
+	right: auto;
+	bottom: 0;
+	width: auto;
+	min-width: 62%;
+	background-color: rgba(255, 255, 255, 0.94);
+	backdrop-filter: blur(4px);
+	border-radius: 0 var(--sm-radius) 0 var(--sm-radius);
+	padding: var(--sm-space-4) var(--sm-space-8) var(--sm-space-3);
+}
+
+.homepage-container .message-header-top .signature-font,
+.homepage-container .message-header-bottom .signature-font {
+	font-family: var(--sm-font-script);
+	font-size: var(--sm-text-2xl);
+	line-height: 1.15;
+	color: var(--sm-teal);
+	text-align: left;
+	margin: 0;
+}
+
+/* A doua linie a semnaturii („psiholog") e titulatura, nu semnatura. */
+/**
+ * `:last-of-type`, nu `:last-child`. Marcajul din baza de date are un `</p>`
+ * nepereche dupa cele doua coloane, iar parserul HTML il transforma intr-un
+ * `<p>` gol care devine ultimul copil - deci `:last-child` nu prindea nimic si
+ * titulatura ramanea scrisa cu fontul de semnatura. `:last-of-type` numara
+ * doar `<div>`-urile, care sunt exact cele doua randuri reale.
+ */
+.homepage-container .message-header-top .signature-font .col-md-12:last-of-type,
+.homepage-container .message-header-bottom .signature-font .col-md-12:last-of-type {
+	font-family: var(--sm-font-body);
+	font-size: var(--sm-text-xs);
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--sm-ink-mute);
+	margin-top: var(--sm-space-1);
+}
+
+/* ===========================================================================
+   6. SERVICII
+   Ce era: 7 carduri inegale, cu inaltime fixa de 271px, in care butoanele
+   „Detalii" si „Contact" erau pozitionate absolut la `bottom: -2px` si ieseau
+   taiate pe jumatate de litera. Doua actiuni de greutate egala pe fiecare card
+   inseamna 14 decizii identice pe prima pagina.
+   =========================================================================== */
+
+.homepage-container .servicii-container {
+	max-width: var(--sm-container);
+	margin: 0 auto;
+	padding: var(--sm-space-24) var(--sm-space-6);
+	background: none;
+}
+
+.homepage-container .servicii-container > .row > .col-md-12:first-child {
+	text-align: center;
+}
+
+.homepage-container .servicii-container .text2 {
+	font-size: var(--sm-text-4xl);
+	margin: 0 0 var(--sm-space-3);
+}
+
+.homepage-container .servicii-sub-title {
+	font-family: var(--sm-font-body) !important;
+	font-size: var(--sm-text-sm);
+	font-weight: 400;
+	line-height: 1.6;
+	color: var(--sm-ink-mute);
+	letter-spacing: 0.02em;
+	text-align: center;
+	max-width: 52ch;
+	margin: 0 auto var(--sm-space-16);
+}
+
+/**
+ * Poza din interiorul sectiunii de servicii e a doua aparitie a aceleiasi
+ * persoane la 600px distanta de prima. O ascund: fotografia din erou o
+ * acopera pe toate latimile. Marcajul ramane in pagina, neatins.
+ */
+.homepage-container .profile-picture-container-mobile {
+	display: none;
+}
+
+/**
+ * Flex, nu grid, tocmai din cauza numarului de carduri: sunt 7, iar intr-o
+ * grila de 3 coloane ultimul ramane singur, lipit la stanga, si sectiunea pare
+ * neterminata. Cu `flex-wrap` + `justify-content: center`, randul incomplet se
+ * centreaza si arata intentionat. Inaltimile raman egale pe fiecare rand,
+ * pentru ca `align-items` e implicit `stretch`.
+ */
+.homepage-container .servicii-cards .row {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: var(--sm-space-6);
+}
+
+/* Titlul si subtitlul sectiunii ocupa tot randul. */
+.homepage-container .servicii-cards .row > .col-md-12 {
+	flex: 1 0 100%;
+}
+
+.homepage-container .servicii-box {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	/* Trei pe rand la latime mare; `1 1` le lasa sa se stranga inainte de a rupe randul. */
+	flex: 0 1 calc((100% - 2 * var(--sm-space-6)) / 3);
+	max-width: calc((100% - 2 * var(--sm-space-6)) / 3);
+	min-height: 0; /* era 271px fix — de aici veneau cardurile inegale */
+	margin: 0;
+	padding: var(--sm-space-8) var(--sm-space-8) 60px;
+	background-color: var(--sm-surface);
+	border: 1px solid var(--sm-line);
+	border-radius: var(--sm-radius);
+	box-shadow: none;
+	transition: border-color 0.18s ease, box-shadow 0.18s ease,
+	            transform 0.18s ease;
+}
+
+.homepage-container .servicii-box:hover {
+	border-color: var(--sm-mint);
+	box-shadow: var(--sm-shadow);
+	transform: translateY(-2px);
+}
+
+.homepage-container .servicii-box .textTS {
+	font-size: var(--sm-text-xl);
+	line-height: 1.3;
+	margin: 0 0 var(--sm-space-4);
+}
+
+/* Cardul cu doua titluri si fara continut: al doilea titlu devine element de
+   lista, ca sa nu para doua carduri lipite. */
+.homepage-container .servicii-box .textTS ~ .textTS {
+	font-size: var(--sm-text-base);
+	color: var(--sm-ink-soft);
+	font-weight: 400;
+	padding-top: var(--sm-space-3);
+	border-top: 1px solid var(--sm-line);
+}
+
+.homepage-container .servicii-box .textS {
+	font-size: var(--sm-text-sm);
+	font-weight: 400; /* era 500 din regula veche - ingrosa o lista de enumerare */
+	line-height: 1.55;
+	color: var(--sm-ink-soft);
+	margin: 0;
+	padding: var(--sm-space-3) 0;
+	border-bottom: 1px solid var(--sm-line);
+}
+
+.homepage-container .servicii-box .textS:last-of-type {
+	border-bottom: none;
+}
+
+/* --- Bara de actiuni a cardului ------------------------------------------ */
+
+/**
+ * Raman pozitionate absolut, pentru ca asa sunt gandite — o bara pe latimea
+ * cardului. Diferenta e ca acum cardul rezerva 60px pentru ele
+ * (`padding-bottom`), asa ca nu mai sunt taiate. „Detalii" trece in stanga,
+ * in ordinea in care apare si in marcaj, ca cititorul de ecran si ochiul sa
+ * primeasca aceeasi ordine.
+ */
+/**
+ * Linkurile din card sunt scrise in continut ca `<a><br>Detalii<br></a>`.
+ * Intr-un `<a>` devenit `flex`, fiecare `<br>` este un element de sine
+ * statator care rupe randul, asa ca textul si sageata ajungeau pe randuri
+ * diferite. Se ascund aici; textul nu se atinge.
+ */
+.homepage-container .servicii-box .servicii-detalii br {
+	display: none;
+}
+
+.homepage-container .servicii-box .servicii-detalii {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: auto;
+	width: 50%;
+	height: 52px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--sm-space-2);
+	padding: 0;
+	margin: 0;
+	background-color: transparent;
+	border-top: 1px solid var(--sm-line);
+	box-shadow: none;
+	font-size: var(--sm-text-sm);
+	font-weight: 500;
+	color: var(--sm-teal);
+	text-decoration: none;
+	transition: background-color 0.18s ease, color 0.18s ease;
+}
+
+/* Sageata arata ca „Detalii" duce mai departe, nu ca deschide altceva. */
+.homepage-container .servicii-box .servicii-detalii::after {
+	content: "›";
+	font-size: 1.15em;
+	line-height: 1;
+	transform: translateY(-1px);
+	transition: transform 0.18s ease;
+}
+
+.homepage-container .servicii-box .servicii-detalii:hover::after {
+	transform: translate(3px, -1px);
+}
+
+/* A doua actiune („Contact") ramane disponibila, dar mai discreta — ca sa
+   existe o singura actiune principala pe card, nu doua egale. */
+.homepage-container .servicii-box .servicii-detalii:last-child {
+	left: auto;
+	right: 0;
+	border-left: 1px solid var(--sm-line);
+	color: var(--sm-ink-mute);
+	font-weight: 400;
+}
+
+.homepage-container .servicii-box .servicii-detalii:last-child::after {
+	content: none;
+}
+
+.homepage-container .servicii-box .servicii-detalii:hover {
+	background-color: var(--sm-teal-tint);
+	color: var(--sm-teal-dark);
+}
+
+/* ===========================================================================
+   7. DESPRE MINE
+   O banda linistita, o singura coloana, latime de rand controlata. Aici omul
+   citeste, nu alege — deci nimic nu trebuie sa concureze cu textul.
+   =========================================================================== */
+
+.homepage-container .homepage-about-me {
+	background-color: var(--sm-teal-tint);
+	padding: var(--sm-space-24) var(--sm-space-6);
+	/* Doar pe verticala: marginile laterale sunt cele negative care scot banda
+	   pe toata latimea ferestrei (sectiunea 2). */
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.homepage-container .home-page-about-me-container {
+	max-width: 760px;
+	margin: 0 auto;
+	text-align: center;
+	background: none;
+	padding: 0;
+}
+
+.homepage-container .home-page-about-me-container .text4 {
+	font-size: var(--sm-text-3xl);
+	margin: 0 0 var(--sm-space-2);
+}
+
+.homepage-container .home-page-about-me-title.signature-font {
+	font-family: var(--sm-font-script);
+	font-size: var(--sm-text-2xl);
+	line-height: 1.2;
+	color: var(--sm-teal);
+	margin: 0 0 var(--sm-space-8);
+}
+
+.homepage-container .home-page-about-me-title .col-md-12:last-of-type {
+	font-family: var(--sm-font-body);
+	font-size: var(--sm-text-xs);
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--sm-ink-mute);
+	margin-top: var(--sm-space-1);
+}
+
+.homepage-container .home-page-about-me-container .textP {
+	font-size: var(--sm-text-base);
+	line-height: 1.75;
+	color: var(--sm-ink-soft);
+	max-width: var(--sm-measure);
+	margin: 0 auto;
+	text-align: left;
+}
+
+.homepage-container .about-me-box {
+	margin-top: var(--sm-space-12);
+	text-align: center;
+}
+
+/* ===========================================================================
+   8. PARTENERI
+   Un logo intr-o caseta de card de serviciu arata ca un serviciu. Il scot din
+   forma de card si il pun intr-o placa neutra.
+   =========================================================================== */
+
+.homepage-container .homepage-contact {
+	background-color: var(--sm-sand);
+	max-width: var(--sm-container);
+	margin: 0 auto;
+	padding: var(--sm-space-16) var(--sm-space-6) var(--sm-space-24);
+	text-align: center;
+}
+
+.homepage-container .homepage-contact .text4 {
+	font-family: var(--sm-font-body);
+	font-size: var(--sm-text-xs);
+	font-weight: 500;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: var(--sm-ink-mute);
+	margin: 0 0 var(--sm-space-8);
+}
+
+.homepage-container .parteneri-box {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 220px;
+	min-height: 96px;
+	padding: var(--sm-space-4) var(--sm-space-6);
+	background-color: var(--sm-surface);
+	border: 1px solid var(--sm-line);
+	border-radius: var(--sm-radius);
+}
+
+/**
+ * Logoul e infasurat intr-un `<a>`, iar acela devine element flex si se
+ * stramteaza la latimea continutului. Continutul lui, `.img`, isi ia latimea
+ * din parinte (`100%`) — deci amandoua ajung la zero si logoul dispare, desi
+ * fisierul se incarca. De asta ancora primeste latime explicita.
+ */
+.homepage-container .parteneri-box > a {
+	display: block;
+	width: 100%;
+}
+
+/**
+ * Fara `grayscale()`: logoul partenerului e deja deschis la culoare (turcoaz
+ * pe alb), iar desaturat pe o placa alba devine aproape invizibil. Retinerea o
+ * dau prin dimensiune si prin chenar, nu prin stergerea culorii.
+ */
+.homepage-container .parteneri-box .img {
+	width: 100%;
+	height: 72px;
+	background-size: contain;
+	background-position: center;
+	background-repeat: no-repeat;
+	opacity: 0.9;
+	transition: opacity 0.18s ease;
+}
+
+.homepage-container .parteneri-box:hover .img {
+	opacity: 1;
+}
+
+/* ===========================================================================
+   9. RESPONSIVE
+   Punctele de rupere sunt alese dupa continut, nu dupa nume de dispozitive.
+   =========================================================================== */
+
+@media (max-width: 1024px) {
+	.homepage-container .homepage-presentation {
+		padding: var(--sm-space-16) var(--sm-space-6);
+	}
+
+	.homepage-container .homepage-presentation > .row {
+		gap: var(--sm-space-12);
+	}
+
+	.homepage-container .servicii-container,
+	.homepage-container .homepage-about-me {
+		padding-top: var(--sm-space-16);
+		padding-bottom: var(--sm-space-16);
+	}
+}
+
+@media (max-width: 860px) {
+	/* Eroul trece pe o coloana: intai cine esti si ce oferi, apoi chipul. */
+	.homepage-container .homepage-presentation {
+		padding: var(--sm-space-12) var(--sm-space-4);
+	}
+
+	.homepage-container .homepage-presentation > .row {
+		grid-template-columns: 1fr;
+		gap: var(--sm-space-12);
+	}
+
+	.homepage-container .homepage-title.text2 {
+		max-width: none;
+	}
+
+	/* Patrat, nu 3/2: la 3/2 caseta cu semnatura acopera o treime din chip. */
+	.homepage-container .profile-picture {
+		aspect-ratio: 1 / 1;
+		background-position: center 18%;
+	}
+
+	.homepage-container .profile-picture-container::before {
+		inset: var(--sm-space-4) calc(-1 * var(--sm-space-3))
+		       calc(-1 * var(--sm-space-4)) var(--sm-space-4);
+	}
+
+	.homepage-container .servicii-container,
+	.homepage-container .homepage-about-me,
+	.homepage-container .homepage-contact {
+		padding-left: var(--sm-space-4);
+		padding-right: var(--sm-space-4);
+	}
+
+	.homepage-container .servicii-container .text2 {
+		font-size: var(--sm-text-2xl);
+	}
+
+	.homepage-container .servicii-sub-title {
+		margin-bottom: var(--sm-space-12);
+	}
+
+	/* Doua carduri pe rand: sub 860px, trei devin prea inguste ca sa se citeasca. */
+	.homepage-container .servicii-box {
+		flex-basis: calc((100% - var(--sm-space-6)) / 2);
+		max-width: calc((100% - var(--sm-space-6)) / 2);
+	}
+}
+
+@media (max-width: 560px) {
+	.homepage-container .servicii-box {
+		flex-basis: 100%;
+		max-width: 100%;
+	}
+
+	/* Sub 560px butoanele alaturate devin prea inguste pentru degete. */
+	.homepage-container .sm-hero-cta-row {
+		gap: var(--sm-space-3);
+	}
+
+	.homepage-container .homepage-button {
+		flex: 1 1 auto;
+	}
+
+	/* 20px la 390px latime da randuri de ~28 de caractere — prea scurte,
+	   ochiul sare des. La 18px randul ajunge la o lungime lizibila. */
+	.homepage-container .homepage-description .textP {
+		font-size: var(--sm-text-base);
+	}
+}
+
+/* Cine a cerut mai putina miscare nu primeste niciuna. */
+@media (prefers-reduced-motion: reduce) {
+	.homepage-container * {
+		transition-duration: 0.01ms !important;
+		animation-duration: 0.01ms !important;
+	}
+}

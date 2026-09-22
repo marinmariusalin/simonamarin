@@ -145,6 +145,16 @@ require_once get_stylesheet_directory() . '/inc/articles-list.php';
  */
 require_once get_stylesheet_directory() . '/inc/meta-enhancements.php';
 
+/**
+ * Sistemul de design (redesign 2026).
+ *
+ * Incarca, in ordine explicita prin dependente: fonturile gazduite local,
+ * CSS-ul istoric mutat din Customizer si foaia noua de design. Motivatia
+ * ordinii - si de ce nu se mai obtine din prioritati de hook - e in antetul
+ * fisierului.
+ */
+require_once get_stylesheet_directory() . '/inc/design-system.php';
+
 /*
  * ============================================================================
  * MIGRAREA LA SYDNEY 2.71 - CE A RAMAS
