@@ -154,3 +154,30 @@ function simonamarin_add_contact_links_to_menu( $items, $args ) {
 	return $items . '<li class="menu-item sm-contact-group">' . $out . '</li>';
 }
 add_filter( 'wp_nav_menu_items', 'simonamarin_add_contact_links_to_menu', 10, 2 );
+
+/**
+ * Buton WhatsApp flotant, doar pe mobil (SEC-13/D3, gasit lipsa 21.09.2026).
+ *
+ * `.whatsapp-footer` exista de multa vreme in CSS-ul aditional (Customizer),
+ * cu regulile complete - verde WhatsApp, 80px, fix in coltul din dreapta jos,
+ * doar sub 980px - dar niciun element din site nu foloseste clasa asta.
+ * Verificat in toata baza de date: apare doar in CSS, niciodata in marcaj.
+ * Probabil un element care exista in header.php-ul vechi, pierdut la
+ * migrarea la Sydney 2.71 (acelasi tipar ca legaturile din antet, MIG-01).
+ *
+ * Adaugat prin `wp_footer`, nu prin sablon copiat: singurul cost e un hook
+ * de nucleu, care nu depinde de structura vreunei versiuni de tema.
+ */
+function simonamarin_floating_whatsapp_button() {
+	if ( ! function_exists( 'simonamarin_icon' ) ) {
+		return;
+	}
+
+	printf(
+		'<a class="whatsapp-footer" href="%1$s" rel="nofollow" aria-label="%2$s" title="%2$s">%3$s</a>',
+		esc_url( 'https://wa.me/40747668204' ),
+		esc_attr__( 'WhatsApp', 'sydney-child' ),
+		simonamarin_icon( 'whatsapp' )
+	);
+}
+add_action( 'wp_footer', 'simonamarin_floating_whatsapp_button' );

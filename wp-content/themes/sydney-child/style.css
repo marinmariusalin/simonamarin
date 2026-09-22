@@ -281,6 +281,19 @@ p {
 	margin-bottom: 26px;
 }
 
+/*
+Cateva pagini (Despre mine, cel putin) au comentarii HTML lasate direct in
+editor drept note interne ("<!-- Main Content Section... -->"), pe randuri
+proprii. wpautop le infasoara automat in <p>, fara text vizibil inauntru -
+p:empty ignora nodurile de comentariu, deci le identifica exact pe acestea.
+Fara regula asta, fiecare devine un gol vizibil de 26px (margin-bottom de
+mai sus), vizibil ca spatiu gol nejustificat pe pagina. Nu atinge text: doar
+ascunde un paragraf care oricum nu are niciunul.
+*/
+p:empty {
+	display: none;
+}
+
 h1, h2, h3, h4, h5, h6 {
 	/*
 	 * Sydney da acelasi ritm (10px sus, 24px jos) oricarui nivel de titlu.

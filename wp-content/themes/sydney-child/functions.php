@@ -138,6 +138,13 @@ require_once get_stylesheet_directory() . '/inc/contact-links.php';
  */
 require_once get_stylesheet_directory() . '/inc/articles-list.php';
 
+/**
+ * Completari mici migrate din auditul initial (theme-color, aria-label pe
+ * navigare, alt-text implicit pe imaginea reprezentativa, noindex pe cautari
+ * fara rezultate). Detaliile "de ce" sunt langa fiecare functie in fisier.
+ */
+require_once get_stylesheet_directory() . '/inc/meta-enhancements.php';
+
 /*
  * ============================================================================
  * MIGRAREA LA SYDNEY 2.71 - CE A RAMAS
