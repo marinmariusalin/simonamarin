@@ -150,6 +150,35 @@ function simonamarin_footer_area() {
 						?>
 					</div>
 				<?php endif; ?>
+
+				<?php
+				/*
+				 * Partenerii, mutati de pe prima pagina la cererea utilizatorului
+				 * (23.09.2026): acolo ocupau o sectiune intreaga pentru un singur
+				 * logo. Sectiunea de pe prima pagina e ascunsa din CSS
+				 * (redesign-chrome.css), nu stearsa din continut - reapare daca
+				 * blocul de aici se scoate.
+				 *
+				 * <img> real, nu fundal CSS ca pe prima pagina: are text alternativ
+				 * adevarat (acolo era „Cabinet Individual de Psihologie") si nu mai
+				 * depinde de incarcarea lenesa a fundalurilor.
+				 */
+				$partners = array(
+					array(
+						'name' => 'Osteomedicare',
+						'url'  => 'https://www.osteomedicare.ro',
+						'img'  => '/wp-content/uploads/2022/08/Osteomedicare-230x163.webp',
+					),
+				);
+				?>
+				<div class="sm-footer-partners">
+					<span class="sm-footer-partners-label">Parteneri</span>
+					<?php foreach ( $partners as $partner ) : ?>
+						<a href="<?php echo esc_url( $partner['url'] ); ?>" target="_blank" rel="noopener">
+							<img src="<?php echo esc_url( home_url( $partner['img'] ) ); ?>" alt="<?php echo esc_attr( $partner['name'] ); ?>" width="85" height="60" decoding="async">
+						</a>
+					<?php endforeach; ?>
+				</div>
 			</div>
 
 			<div class="site-info">

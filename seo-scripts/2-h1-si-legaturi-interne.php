@@ -42,7 +42,9 @@ $bak = array(
 foreach ( $ids as $id ) {
 	$bak['posts'][ $id ] = get_post_field( 'post_content', $id, 'raw' );
 }
-file_put_contents( 'E:/simonamarin/_backup-seo-2026-09-23-continut.json', json_encode( $bak, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE ) );
+// Copia se scrie doar la prima rulare: o a doua rulare ar salva continutul deja
+// modificat peste original.
+file_exists( 'E:/simonamarin/_backup-seo-2026-09-23-continut.json' ) || file_put_contents( 'E:/simonamarin/_backup-seo-2026-09-23-continut.json', json_encode( $bak, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE ) );
 
 $words = function ( $h ) {
 	return trim( preg_replace( '/\s+/u', ' ', html_entity_decode( strip_tags( $h ), ENT_QUOTES, 'UTF-8' ) ) );
@@ -53,7 +55,7 @@ $edits = array(
 	array( 186, '/<h2 class="text2" itemprop="headline">Contact<\/h2>/', '<h1 class="text2" itemprop="headline">Contact</h1>' ),
 	array( 2095, '/<h1 class="text4">(Cum implementezi o schimbare\?)<\/h1>/', '<h2 class="text4">$1</h2>' ),
 	array( 1512, '/(Odata cu schimbarea stilului de viata\. )(psihoterapia online)/', '$1<a href="' . get_permalink( 2197 ) . '">$2</a>' ),
-	array( 2197, '/(?<![>\w])(Terapia online)( a cunoscut o creștere rapidă)/u', '<a href="' . get_permalink( 1512 ) . '">$1</a>$2' ),
+	array( 2197, '/(<p class="textP">)(Terapia online)( a cunoscut o creștere rapidă)/u', '$1<a href="' . get_permalink( 1512 ) . '">$2</a>$3' ),
 	array( 108, '/(În cadrul )(cuplurilor)/u', '$1<a href="' . get_permalink( 1716 ) . '">$2</a>' ),
 );
 

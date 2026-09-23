@@ -8,6 +8,10 @@
  *    isi pierd valoarea in loc sa fie redirectionate unde trebuie.
  * 2. Redirectionari 301 explicite pentru cele doua URL-uri vechi care apar in
  *    Search Console: /servicii/ si /terms-and-conditions-terms/.
+ * 3. /despre-mine/ -> /consilier-psihologic/. Butonul „Despre mine" de pe prima
+ *    pagina duce la /despre-mine/, care nu exista; pana acum fallback-ul il
+ *    trimitea inapoi pe prima pagina. Fara redirectionarea asta, oprirea
+ *    fallback-ului l-ar transforma intr-un 404 vizibil.
  *
  * Rulare (din radacina site-ului):
  *   php -d extension=php_mysqli.dll -d mysqli.default_port=10005 seo-scripts/1-redirectionari-si-404.php
@@ -32,7 +36,7 @@ update_option( 'rank-math-options-general', $g );
 echo "fallback=default\n";
 
 $home = home_url( '/' );
-foreach ( array( array( 'servicii', 'servicii-psihologice/' ), array( 'terms-and-conditions-terms', 'termeni-si-conditii/' ) ) as list( $from, $to ) ) {
+foreach ( array( array( 'servicii', 'servicii-psihologice/' ), array( 'terms-and-conditions-terms', 'termeni-si-conditii/' ), array( 'despre-mine', 'consilier-psihologic/' ) ) as list( $from, $to ) ) {
 	$r = \RankMath\Redirections\Redirection::from(
 		array(
 			'sources'     => array( array( 'pattern' => $from, 'comparison' => 'exact' ) ),
