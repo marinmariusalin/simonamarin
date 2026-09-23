@@ -1,0 +1,133 @@
+/* ===========================================================================
+   ARTICOLE CONEXE — la finalul articolului (inc/related-posts.php)
+
+   Trei carduri mici: imagine, titlu. Aceleasi materiale ca cardurile de pe
+   /articole/ (suprafata, linie, raza, umbra la hover), la scara unei
+   recomandari: sectiunea incheie lectura, nu incepe una noua.
+
+   Sta in .entry-content, deci in latimea de lectura (740px). Trei coloane
+   incap; pe telefon se asaza una sub alta, cu imaginea in stanga, ca trei
+   randuri de lista si nu trei postere de cate un ecran.
+   =========================================================================== */
+
+.sm-related {
+	margin: var(--sm-space-16) 0 0;
+	padding-top: var(--sm-space-8);
+	border-top: 1px solid var(--sm-line);
+}
+
+body.single .entry-content .sm-related__heading {
+	margin: 0 0 var(--sm-space-6);
+	font-family: var(--sm-font-display);
+	font-size: var(--sm-text-xl);
+	line-height: 1.3;
+	color: var(--sm-ink);
+}
+
+.sm-related__list {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: var(--sm-space-6);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.sm-related__list > li {
+	margin: 0;
+	padding: 0;
+}
+
+.sm-related__list > li::before {
+	content: none;
+}
+
+/*
+ * Specificitatea e aceeasi ca a regulii pentru legaturi din text
+ * (`body:not(.home) .entry-content a:not(...)`), care altfel ar colora si
+ * sublinia tot cardul.
+ */
+body:not(.home) .entry-content a.sm-related__link {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	overflow: hidden;
+	background-color: var(--sm-surface);
+	border: 1px solid var(--sm-line);
+	border-radius: var(--sm-radius);
+	color: var(--sm-ink);
+	text-decoration: none;
+	transition: border-color 0.18s ease, box-shadow 0.18s ease,
+	            transform 0.18s ease;
+}
+
+body:not(.home) .entry-content a.sm-related__link:hover {
+	border-color: var(--sm-mint);
+	box-shadow: var(--sm-shadow);
+	transform: translateY(-2px);
+	color: var(--sm-ink);
+}
+
+/*
+ * Imaginea iese din curs si umple cutia. Cu `height: 100%` in curs normal nu
+ * merge: inaltimea cutiei vine din `aspect-ratio`, nu e declarata, iar
+ * procentul nu se rezolva - imaginea ramanea la ~120px intr-o cutie de 142px
+ * si lasa o banda goala deasupra titlului.
+ */
+.sm-related__img {
+	position: relative;
+	display: block;
+	aspect-ratio: 3 / 2;
+	overflow: hidden;
+	background-color: var(--sm-sand);
+}
+
+body.single .entry-content .sm-related__img img {
+	position: absolute;
+	inset: 0;
+	display: block;
+	width: 100%;
+	height: 100%;
+	max-width: none;
+	margin: 0;
+	object-fit: cover;
+	border-radius: 0;
+}
+
+.sm-related__title {
+	display: block;
+	padding: var(--sm-space-4);
+	font-family: var(--sm-font-body);
+	font-size: var(--sm-text-sm);
+	font-weight: 500;
+	line-height: 1.45;
+}
+
+body:not(.home) .entry-content a.sm-related__link:hover .sm-related__title {
+	color: var(--sm-teal-dark);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	body:not(.home) .entry-content a.sm-related__link,
+	body:not(.home) .entry-content a.sm-related__link:hover {
+		transition: none;
+		transform: none;
+	}
+}
+
+@media (max-width: 600px) {
+	.sm-related__list {
+		grid-template-columns: 1fr;
+		gap: var(--sm-space-3);
+	}
+
+	body:not(.home) .entry-content a.sm-related__link {
+		flex-direction: row;
+		align-items: center;
+	}
+
+	.sm-related__img {
+		flex: 0 0 96px;
+		aspect-ratio: 1;
+	}
+}

@@ -183,6 +183,12 @@ require_once get_stylesheet_directory() . '/inc/structured-data.php';
  */
 require_once get_stylesheet_directory() . '/inc/post-meta.php';
 
+/**
+ * Trei articole conexe la finalul fiecarui articol, alese din categoria cea mai
+ * specifica. Fara text nou: titlul sectiunii e numele categoriei.
+ */
+require_once get_stylesheet_directory() . '/inc/related-posts.php';
+
 /*
  * ============================================================================
  * MIGRAREA LA SYDNEY 2.71 - CE A RAMAS
