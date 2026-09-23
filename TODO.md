@@ -558,6 +558,14 @@ producție (toate: 19.08.2026, Contact: 05.02.2025, Articole: 08.01.2025)
 `dateModified` pe site-ul local. Ajunge în producție cu baza de date, la deploy.
 „Despre mine" (ID 28) păstrează data nouă: acolo s-au adăugat atestatele.
 
+### 20. Text ascuns pe „Despre mine"
+
+În conținutul paginii 28 există un `<div style="display:none">` cu comentariul
+„Invisible helper words to pass the word count", care repetă propoziția din
+erou doar pentru numărătoarea de cuvinte a unui plugin SEO. Textul ascuns
+vizitatorilor e explicit în politicile anti-spam Google. E conținut, deci nu
+l-am scos fără acord (găsit 23.09.2026) — de decis cu utilizatorul.
+
 ---
 
 ## Făcut — nu relua
