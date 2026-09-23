@@ -163,48 +163,25 @@ require_once get_stylesheet_directory() . '/inc/design-system.php';
  */
 require_once get_stylesheet_directory() . '/inc/images.php';
 
+/**
+ * Subsolul site-ului (MIG-03): legaturi sitewide spre servicii si paginile
+ * cabinetului, iconitele de contact si copyright cu an dinamic, fara creditul
+ * temei. Doar texte care exista deja pe site; motivatia in antetul fisierului.
+ */
+require_once get_stylesheet_directory() . '/inc/footer.php';
+
+/**
+ * Completari la graful JSON-LD al lui Rank Math: zona deservita, autorul real
+ * al articolelor, Service pe paginile de servicii. Prin filtru, nu bloc propriu,
+ * ca sa nu apara o a doua entitate pentru acelasi cabinet.
+ */
+require_once get_stylesheet_directory() . '/inc/structured-data.php';
+
 /*
  * ============================================================================
  * MIGRAREA LA SYDNEY 2.71 - CE A RAMAS
  * ============================================================================
  *
- * Lista completa si prioritizata este in TODO.md din radacina proiectului.
- * Aici raman doar punctele care privesc direct fisierele acestei teme.
- *
- * REZOLVAT, ca sa nu fie reluat:
- *   - Culorile antetului, readuse la valorile masurate pe productie prin
- *     optiunile proprii ale temei. In 2.71 fiecare culoare are doua setari,
- *     una `global_*` care o leaga de paleta globala si una cu valoarea
- *     proprie; cat timp `global_*` are valoare, ea castiga, deci ambele
- *     trebuie scrise.
- *   - Iconitele de contact din antet (era MIG-01), refacute prin filtrul de
- *     nucleu `wp_nav_menu_items` - vezi inc/contact-links.php.
- *   - Componenta de cautare scoasa din antet; nu exista in design-ul original.
- *   - FontAwesome inlocuit cu SVG inline - vezi inc/icons.php.
- *
- * TODO [MIG-03][HIGH]: Subsolul personalizat (contact, retele sociale, lista
- *   de servicii) se afiseaza acum in varianta implicita Sydney. Se
- *   reconstruieste prin widgeturi sau prin hook-urile `sydney_before_footer` /
- *   `sydney_footer`, NU printr-un footer.php copiat in aceasta tema.
- *   Motivul e acelasi pentru care MIG-01 a fost facut prin filtru: un sablon
- *   copiat este scris pentru markup-ul unei anumite versiuni si se rupe tacut
- *   la urmatoarea. Datele de contact exista deja structurate in
- *   inc/contact-links.php, in simonamarin_contact_links().
- *
- * TODO [MIG-04][MEDIUM]: Semnatura "Psiholog Simona Marin" de sub titlul
- *   articolelor statea in content-single.php. Se reface prin hook-ul
- *   `sydney_before_single_entry` sau `sydney_inside_top_post`.
- *
- * TODO [MIG-05][MEDIUM]: De reverificat tipografia pe toate paginile. Fonturile
- *   sunt setate (Poppins), dar pe unele titluri apare alt font decat pe
- *   productie. Cauza probabila nu este in aceasta tema, ci in CSS-ul aditional
- *   al site-ului (optiunea custom_css_post_id, ID 171), care tinteste clase din
- *   Sydney 1.x ce nu mai exista.
- *
- * TODO [MIG-06][LOW]: Pozitia iconitelor de contact este acum la capatul
- *   meniului, in dreapta; in design-ul vechi stateau langa titlu, in stanga.
- *   Este consecinta directa a faptului ca devin elemente de meniu, si a fost
- *   asumata. Daca pozitia din stanga este ceruta, singura varianta curata este
- *   pornirea modulului header builder, care cere insa reconstruirea intregului
- *   antet - inclusiv a culorilor abia readuse la design-ul original.
+ * Toate sarcinile active si rezolvate sunt centralizate exclusiv in TODO.md din radacina proiectului.
  */
+

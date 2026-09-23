@@ -303,6 +303,67 @@
 	color: inherit;
 }
 
+/**
+ * Legaturile din subsol (MIG-03, inc/footer.php). Doua liste si iconitele de
+ * contact, pe un rand pe desktop si stivuite pe mobil. Tintele au minimum 44px
+ * inaltime, ca restul legaturilor de pe site (D3).
+ */
+.sm-footer-nav {
+	max-width: var(--sm-container);
+	margin: 0 auto;
+	padding: var(--sm-space-12) var(--sm-space-6) 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--sm-space-6) var(--sm-space-12);
+	justify-content: center;
+	align-items: flex-start;
+}
+
+.sm-footer-nav ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	column-gap: var(--sm-space-6);
+}
+
+.sm-footer-nav li {
+	margin: 0;
+}
+
+.sm-footer-nav nav a,
+.sm-footer-contact a {
+	display: inline-flex;
+	align-items: center;
+	min-height: 44px;
+	font-size: var(--sm-text-xs);
+}
+
+.sm-footer-contact {
+	display: flex;
+	flex-basis: 100%;
+	justify-content: center;
+	gap: var(--sm-space-2);
+}
+
+.sm-footer-contact a {
+	justify-content: center;
+	min-width: 44px;
+}
+
+.sm-footer-contact .sm-icon svg {
+	width: 20px;
+	height: 20px;
+	display: block;
+}
+
+/* Legaturile stau deasupra; copyright-ul nu mai are nevoie de spatiul intreg sus. */
+.sm-footer-nav + .site-info {
+	padding-top: var(--sm-space-6);
+}
+
 .site-footer a {
 	color: #dce7e3;
 	text-decoration-color: rgba(220, 231, 227, 0.4);
