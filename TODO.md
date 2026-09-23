@@ -592,6 +592,20 @@ acum `noindex, follow` (Rank Math), deci a ieșit și din sitemap. Atelierele di
 spre /ateliere/, devenită noindex); ținta e salvată ca URL absolut local în
 Rank Math, deci de verificat după deploy că Duplicator a înlocuit domeniul.
 
+### 22. Titulatura în slogan, titluri Google și poze — 23.09.2026
+
+Aprobate de utilizator, în baza de date (backup în `E:/simonamarin/_backup-slogan-descriere-*` și `_backup-titluri-poze-*`):
+sloganul = „Psihoterapeut · Psiholog Clinician · Consilier Psihologic";
+titlul Google Home = „Simona Marin - Psihoterapeut · Psiholog Clinician · Consilier Psihologic";
+titlul Google Despre mine = „Simona Marin | Psihoterapeut · …"; descrierea Despre mine
+cu cele trei titulaturi; alt-ul pozelor 2336, 2341 și al pozei din Despre mine +
+legenda 2336 = „Simona Marin, Psihoterapeut · Psiholog Clinician · Consilier Psihologic".
+Slugul `/consilier-psihologic/` rămâne (indexat de ani).
+
+**Rămase:** pe Home, imaginea de fundal a Simonei are `aria-label="psiholog"`;
+descrierea Google a Home menționează **EMDR**, care nu apare în RUP (de
+verificat la sursă, vezi CLAUDE.md).
+
 ---
 
 ## Făcut — nu relua
