@@ -237,6 +237,26 @@ function simonamarin_json_ld( $data ) {
 			$snippet['name']     = $title;
 		}
 
+		/*
+		 * 3b. Categoriile articolului, ca `articleSection`.
+		 *
+		 * Categoriile nu se vad nicaieri pe site (widgetul din subsol e ascuns
+		 * prin CSS, sub titlu au fost scoase), arhivele lor sunt `noindex` si
+		 * lipsesc din sitemap. Singurul loc prin care Google afla subiectul
+		 * tematic al unui articol este aici. „Uncategorized" nu e un subiect.
+		 */
+		if ( is_singular( 'post' ) ) {
+			$sections = array();
+			foreach ( get_the_category() as $category ) {
+				if ( 'uncategorized' !== $category->slug ) {
+					$sections[] = html_entity_decode( $category->name, ENT_QUOTES, 'UTF-8' );
+				}
+			}
+			if ( $sections ) {
+				$snippet['articleSection'] = 1 === count( $sections ) ? $sections[0] : $sections;
+			}
+		}
+
 		unset( $snippet );
 	}
 
