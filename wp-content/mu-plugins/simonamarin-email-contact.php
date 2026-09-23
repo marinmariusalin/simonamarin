@@ -164,3 +164,63 @@ add_action(
 		);
 	}
 );
+
+/*
+ * SEC-13 - Acordul si informarea GDPR din formularul de contact.
+ *
+ * Ce scrie un vizitator unui psihoterapeut este aproape mereu o data despre
+ * sanatate (GDPR art. 9). Pentru prelucrarea ei, temeiul cel mai sigur este
+ * consimtamantul EXPLICIT, adica o actiune activa - o casuta bifata, nu doar un
+ * text afisat. Formularul nu avea nici casuta, nici vreo informare.
+ *
+ * Textul a fost cerut de utilizator pe 23.09.2026 si spune doar lucruri
+ * adevarate si verificate pe site:
+ * - operatorul: numele cabinetului, cum apare in datele site-ului;
+ * - „nu este pastrat pe site": Contact Form 7 nu salveaza mesajele (Flamingo nu
+ *   e instalat), iar jurnalul Post SMTP le goleste (mai sus in acest fisier);
+ * - adresa pentru drepturi: e cea publica de pe pagina Contact;
+ * - reCAPTCHA: formularul trimite date catre Google, deci trebuie spus.
+ * Nu se promite un termen de pastrare in inboxul cabinetului - nu a fost
+ * stabilit. DACA SE SCHIMBA CEVA DIN CELE DE MAI SUS, SE SCHIMBA SI TEXTUL.
+ *
+ * DE CE PRIN FILTRU SI NU EDITAND FORMULARUL DIN ADMIN
+ * Formularul e salvat in baza de date; un filtru pe proprietatile lui adauga
+ * casuta la afisare si la validare (Contact Form 7 citeste tag-urile din
+ * aceeasi proprietate), deci casuta e si obligatorie pe server, nu doar in
+ * browser. Supravietuieste editarii sau inlocuirii formularului. In admin nu se
+ * aplica, ca editorul sa nu o salveze in formular a doua oara.
+ */
+add_filter(
+	'wpcf7_contact_form_properties',
+	function ( $properties ) {
+		if ( is_admin() && ! wp_doing_ajax() ) {
+			return $properties;
+		}
+		if ( empty( $properties['form'] ) || false !== strpos( $properties['form'], '[acceptance' ) ) {
+			return $properties;
+		}
+		$pos = strpos( $properties['form'], '[submit' );
+		if ( false === $pos ) {
+			return $properties;
+		}
+
+		$privacy = get_privacy_policy_url();
+		if ( ! $privacy ) {
+			$privacy = home_url( '/politica-de-confidentialitate/' );
+		}
+
+		$block = '<div class="sm-gdpr">'
+			. '[acceptance acord-date] Sunt de acord ca datele din acest mesaj, inclusiv informațiile despre sănătatea mea pe care aleg să le împărtășesc, să fie folosite de Cabinetul Individual de Psihologie Simona Marin pentru a-mi răspunde. [/acceptance]'
+			. '<p class="sm-gdpr__info">Mesajul tău este confidențial. Ajunge direct în căsuța de email a cabinetului, nu este păstrat pe site și este folosit doar pentru a-ți răspunde. Poți cere oricând accesul la datele tale sau ștergerea lor, la <a href="mailto:' . esc_attr( SIMONAMARIN_CONTACT_RECIPIENT ) . '">' . esc_html( SIMONAMARIN_CONTACT_RECIPIENT ) . '</a>. Detalii în <a href="' . esc_url( $privacy ) . '">Politica de confidențialitate</a>. Formularul este protejat de Google reCAPTCHA.</p>'
+			. '</div>' . "\n";
+
+		$properties['form'] = substr_replace( $properties['form'], $block, $pos, 0 );
+
+		// Mesajul implicit vorbeste de „termeni si conditii", care nu exista aici.
+		if ( isset( $properties['messages'] ) && is_array( $properties['messages'] ) ) {
+			$properties['messages']['accept_terms'] = 'Bifează acordul de mai sus ca să poți trimite mesajul.';
+		}
+
+		return $properties;
+	}
+);
