@@ -588,8 +588,9 @@ mine, Servicii, Tarife, Articole și Contact scrie acum „Psihoterapeut ·
 Psiholog Clinician · Consilier Psihologic" (în loc de „psiholog"). Ateliere
 (1279) nu mai are titulatura schimbată: pagina a fost scoasă de pe site și are
 acum `noindex, follow` (Rank Math), deci a ieșit și din sitemap. Atelierele din
-2018 (794, 989) încă redirecționează 301 spre /ateliere/ — o pagină acum
-noindex; de mutat ținta pe o pagină activă dacă se dorește.
+2018 (794, 989) redirecționează acum 301 spre /servicii-psihologice/ (înainte
+spre /ateliere/, devenită noindex); ținta e salvată ca URL absolut local în
+Rank Math, deci de verificat după deploy că Duplicator a înlocuit domeniul.
 
 ---
 
