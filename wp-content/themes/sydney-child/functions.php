@@ -177,6 +177,12 @@ require_once get_stylesheet_directory() . '/inc/footer.php';
  */
 require_once get_stylesheet_directory() . '/inc/structured-data.php';
 
+/**
+ * Fara autor, data si categorie sub titlul articolelor, prin filtrul Sydney.
+ * Motivatia in antetul fisierului.
+ */
+require_once get_stylesheet_directory() . '/inc/post-meta.php';
+
 /*
  * ============================================================================
  * MIGRAREA LA SYDNEY 2.71 - CE A RAMAS
