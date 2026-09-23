@@ -383,14 +383,45 @@ schimba si aici.
 	margin: 0;
 }
 
-.sm-gdpr .wpcf7-list-item {
+/*
+ * Contact Form 7 da casutei de acord aceeasi clasa ca unui camp de text
+ * (`wpcf7-form-control`). Regula campurilor din assets/css/redesign-pages.css
+ * (chenar, fundal alb, min-height 50px, padding) ajungea astfel pe un <span>
+ * inline, iar fundalul alb acoperea doar o bucata din text. Aici se anuleaza,
+ * cu aceeasi specificitate plus clasa blocului, ca sa castige fara !important.
+ */
+body .entry-content .sm-gdpr .wpcf7-form-control-wrap,
+body:not(.home) .entry-content .sm-gdpr .wpcf7-form-control.wpcf7-acceptance {
+	display: block;
+	width: auto;
+	min-height: 0;
+	padding: 0;
+	background: none;
+	border: 0;
+	border-radius: 0;
+	box-shadow: none;
+	font-size: inherit;
+	color: inherit;
+}
+
+body .entry-content .sm-gdpr .wpcf7-list-item {
+	display: block;
 	margin: 0;
 }
 
-.sm-gdpr .wpcf7-list-item label {
+/* Tot din redesign-pages.css: etichetele campurilor sunt block, 500, 16px. */
+body:not(.home) .entry-content .wpcf7-form .sm-gdpr label,
+body .entry-content .sm-gdpr .wpcf7-list-item label {
 	display: flex;
 	gap: 0.6rem;
 	align-items: flex-start;
+	margin: 0;
+	/* 16px, ca etichetele campurilor: altfel regula de text a paginii
+	   (`.about-me-overlay div`) il urca la 18px. */
+	font-size: var(--sm-text-sm, 1rem);
+	line-height: 1.55;
+	font-weight: 400;
+	color: var(--sm-ink-soft, #4d5b56);
 	cursor: pointer;
 }
 
