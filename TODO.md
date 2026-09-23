@@ -558,13 +558,28 @@ producție (toate: 19.08.2026, Contact: 05.02.2025, Articole: 08.01.2025)
 `dateModified` pe site-ul local. Ajunge în producție cu baza de date, la deploy.
 „Despre mine" (ID 28) păstrează data nouă: acolo s-au adăugat atestatele.
 
-### 20. Text ascuns pe „Despre mine"
+### 20. Text ascuns (politicile anti-spam Google) — rezolvat 23.09.2026
 
-În conținutul paginii 28 există un `<div style="display:none">` cu comentariul
-„Invisible helper words to pass the word count", care repetă propoziția din
-erou doar pentru numărătoarea de cuvinte a unui plugin SEO. Textul ascuns
-vizitatorilor e explicit în politicile anti-spam Google. E conținut, deci nu
-l-am scos fără acord (găsit 23.09.2026) — de decis cu utilizatorul.
+Scos cu acordul utilizatorului (backup: `E:/simonamarin/_backup-text-ascuns-2026-09-23.json`,
+plus reviziile WordPress):
+- „Despre mine": `<div style="display:none">` cu propoziția din erou, pus
+  „to pass the word count"; comentariile „SEO" din sursă; al doilea
+  „Despre mine" (un `<h1>` din conținut, dublura titlului temei).
+- 7 articole (1589, 1620, 1742, 1870, 1993, 2076, 2197): câte un `<h1
+  style="display:none">` cu un titlu alternativ bogat în cuvinte-cheie.
+- Servicii (192), Tarife (215): o imagine ascunsă cu `alt` „Simona Marin,
+  psiholog".
+La articole și la Servicii/Tarife data „modificat" a rămas cea veche (nimic
+vizibil nu s-a schimbat).
+
+Verificat curat: fără cloaking în cod, fără redirecturi JS/meta refresh,
+fără text alb/minuscul/în afara ecranului, fără marcaj Review/AggregateRating,
+fără îndesare de cuvinte-cheie sau `alt`-uri îndesate.
+
+**Rămas, risc mic:** pe prima pagină, CSS-ul vechi ascunde trei elemente
+scurte din conținut („Parteneri", „Simona Marin", „Psiholog") — resturi de
+design, nu text pentru motoare. De scos din conținut când se lucrează la
+prima pagină.
 
 ---
 
