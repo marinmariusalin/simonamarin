@@ -95,6 +95,50 @@ function simonamarin_area_served() {
 }
 
 /**
+ * Tarifele, ca oferte in datele structurate ale serviciului.
+ *
+ * Copiate exact de pe /tarife-servicii-psihologice/ (pagina 215): aceleasi
+ * denumiri, aceleasi preturi. Confirmate de utilizator pe 23.09.2026 ca fiind
+ * cele corecte. Rank Math avea in Local SEO un interval vechi (200-350), pe
+ * care nu il emitea oricum.
+ *
+ * Scrise aici, nu citite din pagina: marcajul paginii nu e structurat (titlu
+ * si pret in blocuri separate, trecute prin wpautop), iar o extragere din el
+ * s-ar rupe tacut la prima editare. DACA SE SCHIMBA UN TARIF PE PAGINA, SE
+ * SCHIMBA SI AICI - altfel Google afiseaza alt pret decat site-ul.
+ *
+ * @return array
+ */
+function simonamarin_offer_catalog() {
+	$tarife = array(
+		'Ședință individuală consiliere / psihoterapie (50 min)'         => 350,
+		'Ședință cuplu / familie consiliere / psihoterapie (75 min)'     => 450,
+		'Ședință de psihonutritie (50 min)'                              => 350,
+		'Ședință individuală consiliere / psihoterapie ONLINE (50 min)'  => 350,
+		'Ședință cuplu / familie consiliere / psihoterapie ONLINE (75 min)' => 450,
+		'Parenting și educație parentală ONLINE (75 min)'                => 450,
+	);
+
+	$offers = array();
+	foreach ( $tarife as $name => $price ) {
+		$offers[] = array(
+			'@type'         => 'Offer',
+			'name'          => $name,
+			'price'         => (string) $price,
+			'priceCurrency' => 'RON',
+			'url'           => get_permalink( 215 ),
+		);
+	}
+
+	return array(
+		'@type'           => 'OfferCatalog',
+		'name'            => wp_strip_all_tags( html_entity_decode( get_the_title( 215 ), ENT_QUOTES, 'UTF-8' ) ),
+		'url'             => get_permalink( 215 ),
+		'itemListElement' => $offers,
+	);
+}
+
+/**
  * Modifica graful Rank Math.
  *
  * Prioritatea 99: dupa toate modulele Rank Math (Local SEO ruleaza pe 9,
@@ -204,7 +248,8 @@ function simonamarin_json_ld( $data ) {
 		if ( isset( $snippet['isPartOf'] ) ) {
 			$service['mainEntityOfPage'] = $snippet['isPartOf'];
 		}
-		$data['richSnippet'] = $service;
+		$service['hasOfferCatalog'] = simonamarin_offer_catalog();
+		$data['richSnippet']        = $service;
 	}
 
 	return $data;
