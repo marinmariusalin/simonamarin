@@ -553,9 +553,9 @@ Pe 23.09.2026, curățarea datelor structurate din conținut (microdata vechi
 `wp_update_post`, care a mutat `post_modified` pe 23.09.2026 la 18 pagini al
 căror text nu s-a schimbat. Google vede `dateModified` de azi pe ele — un
 semnal de actualizare fals. Refacerea din `lastmod`-ul sitemap-ului de
-producție (toate: 19.08.2026, Contact: 05.02.2025, Articole: 08.01.2025) a
-fost blocată de permisiuni și **nu s-a aplicat**. De făcut înainte de deploy
-(UPDATE pe `post_modified`/`post_modified_gmt`, `wpez_posts`), sau acceptat.
+producție (toate: 19.08.2026, Contact: 05.02.2025, Articole: 08.01.2025)
+**s-a aplicat pe 23.09.2026**, cu acordul utilizatorului, și e verificată în
+`dateModified` pe site-ul local. Ajunge în producție cu baza de date, la deploy.
 „Despre mine" (ID 28) păstrează data nouă: acolo s-au adăugat atestatele.
 
 ---
