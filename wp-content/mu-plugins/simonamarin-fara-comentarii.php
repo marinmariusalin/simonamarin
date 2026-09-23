@@ -69,6 +69,12 @@ add_filter( 'pings_open', '__return_false', 20 );
  * `get_comments_number` trebuie filtrat separat, altfel raman titlurile de
  * forma "2 comentarii" deasupra unei liste goale.
  *
+ * Numarul se intoarce ca sirul '0', nu ca intregul 0: asa il da nucleul (vine
+ * din coloana comment_count), iar Sydney compara strict,
+ * `'0' !== get_comments_number()`, ca sa decida daca incarca
+ * comments.min.css. Cu __return_zero, 0 !== '0' era adevarat si foaia de stil
+ * a comentariilor se incarca pe fiecare pagina, pe un site fara comentarii.
+ *
  * @param array $comments Comentariile gasite pentru articolul curent.
  * @return array Lista goala.
  */
@@ -76,7 +82,10 @@ function simonamarin_hide_existing_comments( $comments ) {
 	return array();
 }
 add_filter( 'comments_array', 'simonamarin_hide_existing_comments', 20 );
-add_filter( 'get_comments_number', '__return_zero', 20 );
+function simonamarin_zero_comments_number() {
+	return '0';
+}
+add_filter( 'get_comments_number', 'simonamarin_zero_comments_number', 20 );
 
 /**
  * Scoate suportul pentru comentarii de la toate tipurile de continut.

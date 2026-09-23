@@ -364,6 +364,40 @@ preîncărcarea portretului din hero — e refăcut în `sydney-child/inc/images
 e inactiv și inutil: SSL-ul e dat de Cloudflare (certificat Google Trust
 Services, reînnoit automat, redirect http→https, HSTS, fără conținut mixt).
 
+### 2b. Minificare CSS/JS și reCAPTCHA — făcut local (23.09.2026)
+
+**Minificarea nu rula nicăieri, nici în producție.** LiteSpeed Cache avea
+minify/combine pornite, dar la *Page Optimization → Tuning → URI Excludes*
+stătea `/$`, pus probabil din bara de admin („fără optimizare pe această
+pagină", apăsat pe Home). Pentru LiteSpeed, `$` la final înseamnă „se termină
+cu" (`utility.cls.php`, `str_hit_array`), deci `/$` excludea **orice URL
+terminat în `/`** — tot site-ul. Pentru „doar pagina de start" forma corectă
+e `^/$`.
+
+Acum: excluderea golită; **pornite doar** CSS minify și JS minify. Oprite
+deliberat combinarea CSS/JS, JS defer și CSS asincron: CSS asincron fără CSS
+critic generat dă o clipă de pagină nestilizată, iar combinarea și amânarea
+JS sunt cele care strică de obicei formulare și bannere de cookie-uri.
+Valorile vechi: `E:\simonamarin\_backup-litespeed-2026-09-23.json`.
+CSS+JS propriu: Home 74 → 48 KB, Contact 86 → 60 KB.
+
+**reCAPTCHA doar lângă formular** (`mu-plugins/simonamarin-recaptcha.php`):
+CF7 îl încărca pe toate paginile — ~350 KB de la Google și date de vizită
+trimise fără consimțământ. Acum se încarcă doar unde se randează un formular
+(Contact, Despre mine, Tarife).
+
+**`comments.min.css`** se încărca pe pagini deși site-ul nu are comentarii:
+filtrul din `simonamarin-fara-comentarii.php` întorcea `0` (int), iar Sydney
+compară strict cu `'0'` (string). Acum întoarce `'0'`.
+
+**Verificat:** capturi pixel cu pixel optimizat vs. `?LSCWP_CTRL=before_optm`,
+desktop 1366 și mobil emulat 390×844, pe Home, Contact, Servicii, Despre mine,
+Articole, un articol, Tarife — identice sau diferențe subpixel în cardul de
+contact (≤0,4%), plus badge-ul reCAPTCHA prins în alt moment al încărcării.
+Zero erori JS; formularele CF7 ajung în starea `init`, `grecaptcha` e încărcat
+doar pe paginile cu formular. **Pe producție:** după deploy, LiteSpeed → Golește
+tot, apoi o trimitere de test din formularul de contact.
+
 ### 3. MIG-03 — subsolul personalizat
 
 **Rămâne deschis după Faza 4.** Faza 4 a rezolvat doar *prezentarea* subsolului
@@ -470,13 +504,12 @@ din `.htaccess`, nu prin cod de temă.
 
 ### 13. robots.txt, vizibilitate în motoarele de căutare și sitemap dublu
 
-Trei verificări de configurare, nu de cod: (a) conținutul real al
-`robots.txt` (îl generează un plugin, nu a fost verificat ce conține); (b)
-Setări → Citire → „Descurajează motoarele de căutare" — trebuie să fie
-debifat pe producție, altfel tot site-ul e cu `noindex`; (c) pe site rulează
-simultan cel puțin două generatoare de sitemap (Rank Math și încă unul) —
-de păstrat unul singur, ca linia `Sitemap:` din robots.txt să nu trimită spre
-un fișier concurent sau învechit.
+**Verificat local, 23.09.2026 — nimic de reparat:** (a) `robots.txt` blochează
+doar `/wp-admin/` (cu `admin-ajax.php` permis) și indică
+`sitemap_index.xml`; (b) `blog_public` = 1, deci site-ul nu e `noindex`, iar
+paginile au `index, follow`; (c) un singur sitemap: `wp-sitemap.xml` al
+nucleului face 301 spre `sitemap_index.xml` al Rank Math. Rămâne de privit
+(b) o dată pe producție după deploy.
 
 ### 14. Search Console — verificare de proprietate
 
