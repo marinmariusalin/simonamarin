@@ -20,9 +20,11 @@
  * ---------------------------------------------------------------------------
  * - Adresa stradala: cabinetul nu o publica. Adresa din Rank Math contine doar
  *   localitatea, judetul si tara.
- * - Specializari, titulaturi, calificari (de ex. EMDR): se verifica la sursa
- *   inainte de publicare, vezi CLAUDE.md. Serviciile de mai jos poarta exact
- *   titlul paginii pe care il publica deja site-ul, nimic in plus.
+ * - Specializari, titulaturi, calificari care nu apar in Registrul Unic al
+ *   Psihologilor (de ex. EMDR): se verifica la sursa inainte de publicare, vezi
+ *   CLAUDE.md. Atestatele din registru sunt in simonamarin_credentials().
+ *   Serviciile de mai jos poarta exact titlul paginii pe care il publica deja
+ *   site-ul, nimic in plus.
  *
  * @package sydney-child
  */
@@ -139,6 +141,54 @@ function simonamarin_offer_catalog() {
 }
 
 /**
+ * Titulatura si atestatele Simonei Marin.
+ *
+ * Site-ul o prezinta peste tot doar ca „psiholog", desi e atestata si ca
+ * psihoterapeut. Pe un subiect de sanatate (YMYL), Google cantareste cine
+ * scrie; fara aceste date, nimic din site nu ii spune ca autorul articolelor
+ * despre psihoterapie este psihoterapeut atestat.
+ *
+ * SURSA: Registrul Unic al Psihologilor cu drept de libera practica (Colegiul
+ * Psihologilor din Romania), cele trei atestate ale „Marin Simona", toate la
+ * Comisia de psihologie clinica si psihoterapie, transmise de utilizator pe
+ * 23.09.2026. Denumirile sunt copiate exact din registru. Treapta de
+ * specializare (practicant in supervizare / autonom / specialist) nu a fost
+ * transmisa, deci NU se afirma - titlurile de mai jos sunt cele generice
+ * conferite de fiecare atestat. DACA SE ADAUGA UN ATESTAT IN REGISTRU, SE
+ * ADAUGA SI AICI.
+ *
+ * Doar in datele structurate: textul paginilor nu se modifica.
+ *
+ * @return array Cheile `jobTitle` si `hasCredential`, gata de pus pe un nod Person.
+ */
+function simonamarin_credentials() {
+	$atestate = array(
+		'Psihoterapie experiențială și a unificării centrată pe adult-copil-cuplu-familie',
+		'Psihologie clinică',
+		'Consiliere psihologică - evaluarea și consilierea experiențială a copilului, adultului, cuplului și familiei',
+	);
+
+	$credentials = array();
+	foreach ( $atestate as $name ) {
+		$credentials[] = array(
+			'@type'              => 'EducationalOccupationalCredential',
+			'name'               => $name,
+			'credentialCategory' => 'Atestat de liberă practică',
+			'recognizedBy'       => array(
+				'@type' => 'Organization',
+				'name'  => 'Colegiul Psihologilor din România',
+				'url'   => 'https://www.copsi.ro/',
+			),
+		);
+	}
+
+	return array(
+		'jobTitle'      => array( 'Psihoterapeut', 'Psiholog clinician', 'Consilier psihologic' ),
+		'hasCredential' => $credentials,
+	);
+}
+
+/**
  * Modifica graful Rank Math.
  *
  * Prioritatea 99: dupa toate modulele Rank Math (Local SEO ruleaza pe 9,
@@ -181,6 +231,10 @@ function simonamarin_json_ld( $data ) {
 			$same_as[] = $gbp_url;
 		}
 		$data['publisher']['sameAs'] = array_values( $same_as );
+
+		// Entitatea e declarata si Person (cabinet individual = Simona Marin),
+		// deci titulatura ei sta aici, pe fiecare pagina.
+		$data['publisher'] = array_merge( $data['publisher'], simonamarin_credentials() );
 
 		// Programul, exact cel afisat pe pagina Tarife (confirmat de utilizator pe
 		// 23.09.2026; Rank Math avea unul vechi, 9-17 / 9-12). Sta pe un
@@ -229,6 +283,9 @@ function simonamarin_json_ld( $data ) {
 		if ( $entity_id ) {
 			$data['ProfilePage']['worksFor'] = array( '@id' => $entity_id );
 		}
+		// Autorul fiecarui articol, cu atestatele lui: semnalul de expertiza
+		// conteaza exact pe nodul pe care Google il leaga de articol.
+		$data['ProfilePage'] = array_merge( $data['ProfilePage'], simonamarin_credentials() );
 	}
 
 	if ( isset( $data['richSnippet'] ) && is_array( $data['richSnippet'] ) ) {
