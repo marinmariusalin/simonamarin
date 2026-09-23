@@ -112,17 +112,8 @@ function simonamarin_area_served() {
  * @return array
  */
 function simonamarin_offer_catalog() {
-	$tarife = array(
-		'Ședință individuală consiliere / psihoterapie (50 min)'         => 350,
-		'Ședință cuplu / familie consiliere / psihoterapie (75 min)'     => 450,
-		'Ședință de psihonutritie (50 min)'                              => 350,
-		'Ședință individuală consiliere / psihoterapie ONLINE (50 min)'  => 350,
-		'Ședință cuplu / familie consiliere / psihoterapie ONLINE (75 min)' => 450,
-		'Parenting și educație parentală ONLINE (75 min)'                => 450,
-	);
-
 	$offers = array();
-	foreach ( $tarife as $name => $price ) {
+	foreach ( simonamarin_tarife() as $name => $price ) {
 		$offers[] = array(
 			'@type'         => 'Offer',
 			'name'          => $name,
@@ -137,6 +128,33 @@ function simonamarin_offer_catalog() {
 		'name'            => wp_strip_all_tags( html_entity_decode( get_the_title( 215 ), ENT_QUOTES, 'UTF-8' ) ),
 		'url'             => get_permalink( 215 ),
 		'itemListElement' => $offers,
+	);
+}
+
+/**
+ * Intervalul de pret al cabinetului („350-450 RON"), pentru priceRange.
+ *
+ * @return string
+ */
+function simonamarin_price_range() {
+	$prices = array_values( simonamarin_tarife() );
+	return min( $prices ) . '-' . max( $prices ) . ' RON';
+}
+
+/**
+ * Tarifele de pe pagina Tarife: denumire => pret in RON.
+ * Citite de ofertele din Servicii si de priceRange-ul entitatii.
+ *
+ * @return int[]
+ */
+function simonamarin_tarife() {
+	return array(
+		'Ședință individuală consiliere / psihoterapie (50 min)'         => 350,
+		'Ședință cuplu / familie consiliere / psihoterapie (75 min)'     => 450,
+		'Ședință de psihonutritie (50 min)'                              => 350,
+		'Ședință individuală consiliere / psihoterapie ONLINE (50 min)'  => 350,
+		'Ședință cuplu / familie consiliere / psihoterapie ONLINE (75 min)' => 450,
+		'Parenting și educație parentală ONLINE (75 min)'                => 450,
 	);
 }
 
@@ -263,30 +281,48 @@ function simonamarin_json_ld( $data ) {
 		// deci titulatura ei sta aici, pe fiecare pagina.
 		$data['publisher'] = array_merge( $data['publisher'], simonamarin_credentials() );
 
+		// MIG-02: tipul MedicalBusiness in locul lui Organization (MedicalBusiness
+		// e un Organization, deci nu se pierde nimic). Rank Math are deja
+		// MedicalBusiness setat in Local SEO, dar il emite doar pentru tipul
+		// „companie" - care ar sterge Person si, cu el, titulatura de pe entitate.
+		// Asa entitatea ramane cabinetul SI Simona, iar proprietatile de
+		// LocalBusiness de mai jos (priceRange, openingHoursSpecification) devin
+		// valide pe ea.
+		$types = isset( $data['publisher']['@type'] ) ? (array) $data['publisher']['@type'] : array();
+		$types = array_diff( $types, array( 'Organization' ) );
+		array_unshift( $types, 'MedicalBusiness' );
+		$data['publisher']['@type'] = array_values( array_unique( $types ) );
+
+		// Intervalul de pret, calculat din aceleasi tarife ca ofertele de pe
+		// pagina Servicii: o singura sursa, ca cele doua sa nu se contrazica.
+		$data['publisher']['priceRange'] = simonamarin_price_range();
+
 		// Programul, exact cel afisat pe pagina Tarife (confirmat de utilizator pe
-		// 23.09.2026; Rank Math avea unul vechi, 9-17 / 9-12). Sta pe un
-		// ContactPoint, nu direct pe entitate: openingHoursSpecification e valid
-		// doar pe LocalBusiness/Place, iar entitatea e Organization + Person.
+		// 23.09.2026; Rank Math avea unul vechi, 9-17 / 9-12). Direct pe entitate,
+		// acum ca e MedicalBusiness, si pe ContactPoint-ul telefonului.
 		// DACA SE SCHIMBA PROGRAMUL PE SITE, SE SCHIMBA SI AICI.
-		$data['publisher']['contactPoint'] = array(
+		$hours = array(
+			array(
+				'@type'     => 'OpeningHoursSpecification',
+				'dayOfWeek' => array( 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday' ),
+				'opens'     => '10:00',
+				'closes'    => '19:00',
+			),
+			array(
+				'@type'     => 'OpeningHoursSpecification',
+				'dayOfWeek' => 'Saturday',
+				'opens'     => '10:00',
+				'closes'    => '15:00',
+			),
+		);
+
+		$data['publisher']['openingHoursSpecification'] = $hours;
+		$data['publisher']['contactPoint']              = array(
 			'@type'             => 'ContactPoint',
 			'contactType'       => 'customer service',
 			'telephone'         => '+40747668204',
 			'availableLanguage' => 'ro',
-			'hoursAvailable'    => array(
-				array(
-					'@type'     => 'OpeningHoursSpecification',
-					'dayOfWeek' => array( 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday' ),
-					'opens'     => '10:00',
-					'closes'    => '19:00',
-				),
-				array(
-					'@type'     => 'OpeningHoursSpecification',
-					'dayOfWeek' => 'Saturday',
-					'opens'     => '10:00',
-					'closes'    => '15:00',
-				),
-			),
+			'hoursAvailable'    => $hours,
 		);
 	}
 
