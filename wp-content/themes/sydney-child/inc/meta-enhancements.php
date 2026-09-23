@@ -113,3 +113,39 @@ function simonamarin_noindex_empty_search( $robots ) {
 	return $robots;
 }
 add_filter( 'wp_robots', 'simonamarin_noindex_empty_search' );
+
+/**
+ * Un singur H1 pe articol sau pagina.
+ *
+ * Sydney tipareste deja titlul articolului ca `<h1 class="title-post">`. 15
+ * articole mai au un `<h1>` si in corpul lor (de obicei primul subtitlu, cu
+ * clasa `text4`), deci Google vede doua titluri principale concurente pe
+ * aceeasi pagina. Aici `<h1>` din corp devine `<h2 data-sm-h1>` - acelasi
+ * text, aceleasi clase. Stilul vine aproape tot din clasa (`.entry-content
+ * .text4` in redesign-pages.css); singura diferenta, marginea de sus pe care
+ * Sydney o da lui h2 (1.2em fata de 1em), e anulata in style.css prin
+ * atributul `data-sm-h1`. Verificat pixel cu pixel: pagina arata identic.
+ *
+ * De ce filtru si nu modificare in baza de date: continutul ramane neatins,
+ * data „ultimei actualizari" a articolelor nu se schimba doar pentru marcaj,
+ * iar regula prinde si articolele scrise de acum inainte.
+ *
+ * @param string $content Continutul articolului.
+ * @return string
+ */
+function simonamarin_single_h1_in_posts( $content ) {
+	if ( ! is_singular() || ! in_the_loop() || ! is_main_query() ) {
+		return $content;
+	}
+
+	// Paginile pe sablonul page_front-page (Home, Contact, Servicii, Tarife)
+	// NU tiparesc titlul Sydney: acolo H1-ul din continut e singurul si ramane.
+	// Pe celelalte pagini, Sydney tipareste titlul - acelasi caz ca la articole
+	// (de ex. „Despre mine", cu doua H1 identice).
+	if ( is_page() && 'page-templates/page_front-page.php' === get_page_template_slug( get_queried_object_id() ) ) {
+		return $content;
+	}
+
+	return preg_replace( array( '/<h1(\s|>)/i', '/<\/h1>/i' ), array( '<h2 data-sm-h1$1', '</h2>' ), $content );
+}
+add_filter( 'the_content', 'simonamarin_single_h1_in_posts', 20 );

@@ -104,6 +104,25 @@ function simonamarin_analytics_script() {
 			gtag('event', 'contact');
 		}
 	});
+
+	// Clicurile pe WhatsApp, telefon si email. WhatsApp e canalul principal de
+	// contact de la redesign, iar formularul - singurul masurat pana acum - e
+	// secundar, deci fara asta GA nu vede aproape niciun client care scrie.
+	// Se trimite doar canalul si pagina de pe care s-a facut clicul: niciun
+	// numar, nicio adresa (parametrul link_url e scos explicit, pentru ca
+	// gtag l-ar completa singur cu numarul de telefon).
+	document.addEventListener('click', function (e) {
+		if (!loaded || window['ga-disable-' + ID] || !e.target.closest) { return; }
+		var a = e.target.closest('a[href]');
+		if (!a) { return; }
+		var href = a.getAttribute('href');
+		var method = /^(https?:)?\/\/(wa\.me|api\.whatsapp\.com)\//i.test(href) ? 'whatsapp'
+			: /^tel:/i.test(href) ? 'telefon'
+			: /^mailto:/i.test(href) ? 'email' : '';
+		if (method) {
+			gtag('event', 'contact', { method: method, link_url: undefined });
+		}
+	}, true);
 })();
 </script>
 	<?php

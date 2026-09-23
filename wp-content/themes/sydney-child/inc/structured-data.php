@@ -115,6 +115,14 @@ function simonamarin_json_ld( $data ) {
 	if ( isset( $data['publisher'] ) && is_array( $data['publisher'] ) ) {
 		$data['publisher']['areaServed'] = simonamarin_area_served();
 		$entity_id                       = isset( $data['publisher']['@id'] ) ? $data['publisher']['@id'] : null;
+
+		// Telefonul: Rank Math il are in Local SEO, dar il emite doar pentru tipul
+		// „companie", iar entitatea e setata ca persoana. E acelasi numar care e
+		// deja public in antetul fiecarei pagini (tel:0747668204, vezi
+		// inc/contact-links.php) - nimic nou nu devine public.
+		if ( empty( $data['publisher']['telephone'] ) ) {
+			$data['publisher']['telephone'] = '+40747668204';
+		}
 	}
 
 	/*

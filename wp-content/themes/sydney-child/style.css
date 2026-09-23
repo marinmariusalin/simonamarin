@@ -337,3 +337,31 @@ acestui site.
 .entry-content > ol {
 	margin-bottom: 28px;
 }
+
+/*
+Titlurile care erau <h1> in corpul articolelor si devin <h2> (vezi
+simonamarin_single_h1_in_posts in inc/meta-enhancements.php). Sydney da lui h2
+din continut margin-top 1.2em, lui h1 1em; fara regula asta, schimbarea de
+marcaj ar muta pagina cu cativa pixeli. Selectorul repeta lantul :not() al
+regulii Sydney ca sa aiba specificitate mai mare decat ea.
+*/
+body:not(.elementor-page):not(.panel-layout):not(.page-template-page_front-page) .entry-content h2[data-sm-h1] {
+	margin-top: 1em;
+}
+
+/*
+Acelasi motiv, pentru titlurile fara clasa .text4 (subtitlul „Rezumat" din
+doua articole): ca h1, marimea le venea din tipografia Sydney pentru h1
+(Customizer, aceleasi trei praguri), nu dintr-o clasa. Valorile repeta exact
+CSS-ul generat de Sydney; daca se schimba marimea h1 din Customizer, se
+schimba si aici.
+*/
+@media (min-width: 992px) {
+	body:not(.home) .entry-content h2[data-sm-h1]:not(.text4) { font-size: 48px; }
+}
+@media (min-width: 576px) and (max-width: 991px) {
+	body:not(.home) .entry-content h2[data-sm-h1]:not(.text4) { font-size: 42px; }
+}
+@media (max-width: 575px) {
+	body:not(.home) .entry-content h2[data-sm-h1]:not(.text4) { font-size: 32px; }
+}
