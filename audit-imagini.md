@@ -232,9 +232,9 @@ Controale trecute:
 - capturi de ecran pe desktop și mobil, verificate vizual pe *Home*,
   *Articole*, *Ateliere*, *Despre mine* și două articole.
 
-### Două greșeli făcute pe parcurs, prinse și reparate
+### Trei greșeli făcute pe parcurs, prinse și reparate
 
-Le notez pentru că amândouă sunt capcane care se pot repeta.
+Le notez pentru că toate trei sunt capcane care se pot repeta.
 
 **webp-uploads a deturnat regenerarea.** Plugin-ul are
 `perflab_modern_image_format = webp` și se leagă de
@@ -250,6 +250,18 @@ siguranță, reluat cu plugin-ul neutralizat prin filtru.
 chiar originalul tocmai păstrat. Restaurat din copia de siguranță; scriptul are
 acum normalizare și o plasă de siguranță care refuză să șteargă ceva pe baza
 unei metadate goale.
+
+**O a treia, prinsă abia a doua zi: `wp_update_post()` din linia de comandă
+filtrează HTML-ul.** Fără utilizator autentificat nu există `unfiltered_html`,
+deci kses a curățat pagina *Despre mine* (ID 28) la salvarea textului
+alternativ: a scos eticheta `<script type="application/ld+json">`, iar datele
+structurate Person au rămas afișate ca text pe pagină; a scos și
+`itemprop="jobTitle"`. Nicio altă pagină salvată atunci nu a pierdut etichete
+(verificat față de revizia anterioară a fiecăreia). Refăcute pe 2026-09-23
+direct în baza de date, doar cele două elemente, cu textul paginii verificat
+identic; copia dinainte: `E:/simonamarin/_backup-despre-mine-2026-09-23.html`.
+**Regula:** conținutul se scrie din CLI cu `$wpdb->update()`, nu cu
+`wp_update_post()` — sau cu `kses_remove_filters()` înainte.
 
 ---
 
