@@ -168,13 +168,9 @@ function simonamarin_security_headers( $headers ) {
 	unset( $headers['X-Pingback'] );
 
 	/*
-	 * Content-Security-Policy (SEC-11): nu este emis aici, si nu este o omisiune.
-	 * Pe acest site ruleaza pluginuri care injecteaza scripturi inline (cache, formulare,
-	 * SEO, Google Tag Manager), iar o politica aplicata direct ar rupe pagini in productie
-	 * fara avertisment. Ordinea corecta, intr-o sesiune dedicata: intai
-	 * `Content-Security-Policy-Report-Only` cu raportare, cateva zile pe trafic real, si
-	 * abia apoi politica aplicata. Pasul Report-Only nu blocheaza nimic.
-	 * Urmarire centralizata in TODO.md.
+	 * Content-Security-Policy (SEC-11): emisa, deocamdata doar ca Report-Only, din
+	 * mu-plugins/simonamarin-csp.php - acolo sunt politica, endpointul de raportare
+	 * si motivele. Separat, pentru ca are propriul endpoint si propria pagina in admin.
 	 */
 
 	return $headers;
@@ -278,9 +274,8 @@ function simonamarin_generic_login_error() {
 add_filter( 'login_errors', 'simonamarin_generic_login_error' );
 
 /*
- * Formularul de contact si datele de sanatate (SEC-13): formularul transmite date
- * de sanatate, care intra sub articolul 9 din GDPR. De verificat in afara codului:
- * transportul (exista post-smtp instalat - de confirmat ca foloseste TLS), cat timp
- * raman mesajele in baza de date, si daca exista un temei legal si o informare afisata
- * langa formular. Urmarire centralizata in TODO.md.
+ * Formularul de contact si datele de sanatate (SEC-13): transportul (TLS implicit,
+ * portul 465) si pastrarea mesajelor in jurnalul Post SMTP sunt tratate in
+ * mu-plugins/simonamarin-email-contact.php. Informarea de langa formular este text,
+ * deci decizia utilizatorului. Urmarire centralizata in TODO.md.
  */
