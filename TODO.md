@@ -581,6 +581,16 @@ scurte din conținut („Parteneri", „Simona Marin", „Psiholog") — resturi
 design, nu text pentru motoare. De scos din conținut când se lucrează la
 prima pagină.
 
+### 21. Titulatura din eroul paginilor și Ateliere scoasă din index — 23.09.2026
+
+În baza de date (ajung în producție la deploy): sub „Simona Marin", pe Despre
+mine, Servicii, Tarife, Articole și Contact scrie acum „Psihoterapeut ·
+Psiholog Clinician · Consilier Psihologic" (în loc de „psiholog"). Ateliere
+(1279) nu mai are titulatura schimbată: pagina a fost scoasă de pe site și are
+acum `noindex, follow` (Rank Math), deci a ieșit și din sitemap. Atelierele din
+2018 (794, 989) încă redirecționează 301 spre /ateliere/ — o pagină acum
+noindex; de mutat ținta pe o pagină activă dacă se dorește.
+
 ---
 
 ## Făcut — nu relua
