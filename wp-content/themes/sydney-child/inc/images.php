@@ -161,3 +161,39 @@ function simonamarin_image_sizes_attr( $attr, $attachment, $size ) {
 	return $attr;
 }
 add_filter( 'wp_get_attachment_image_attributes', 'simonamarin_image_sizes_attr', 10, 3 );
+
+/**
+ * Preincarcarea portretului din hero-ul paginii de start.
+ *
+ * Portretul este `background-image` intr-un stil inline din continutul paginii,
+ * deci browserul il descopera abia dupa ce a construit arborele de stiluri; ca
+ * `<img>` l-ar fi gasit din primul pas. Este cel mai mare element vizibil la
+ * incarcare (LCP), asa ca intarzierea se vede direct in viteza perceputa.
+ *
+ * Pana la 23.09.2026 preincarcarea o punea Optimization Detective + Image
+ * Prioritizer, pluginuri beta scoase atunci pentru ca adunau date de la
+ * vizitatori ca sa ajunga la aceeasi concluzie. Adresa se citeste din
+ * continutul paginii, nu e scrisa aici: daca se schimba poza din editor,
+ * preincarcarea o urmeaza singura, iar daca dispare, nu se mai emite nimic.
+ */
+function simonamarin_preload_hero_portrait() {
+	if ( ! is_front_page() ) {
+		return;
+	}
+
+	$post = get_queried_object();
+	if ( ! $post instanceof WP_Post ) {
+		return;
+	}
+
+	// Primul `background-image` din blocul `.profile-picture`; ghilimelele pot fi codificate ca &quot;.
+	if ( ! preg_match( '/class="profile-picture"[^>]*background-image:\s*url\((?:&quot;|["\'])?([^"\')&]+)/', $post->post_content, $m ) ) {
+		return;
+	}
+
+	printf(
+		'<link rel="preload" as="image" href="%s" fetchpriority="high">' . "\n",
+		esc_url( $m[1] )
+	);
+}
+add_action( 'wp_head', 'simonamarin_preload_hero_portrait', 2 );
