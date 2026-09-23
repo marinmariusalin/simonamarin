@@ -168,6 +168,20 @@ function simonamarin_json_ld( $data ) {
 			$data['publisher']['telephone'] = '+40747668204';
 		}
 
+		// Profilul Google Business al cabinetului, in sameAs langa retelele
+		// sociale din Rank Math: legatura site -> profil trebuie sa existe in
+		// ambele sensuri (profilul trimite deja spre site), ca Google sa le
+		// trateze ca aceeasi entitate. Se foloseste ID-ul din Knowledge Graph
+		// (/g/11f7bzp814), la care duce linkul de distribuire dat de utilizator
+		// pe 23.09.2026 - share.google e doar un redirector, ID-ul e stabil.
+		// Adresa NU se adauga: cabinetul e declarat online (decizia utilizatorului).
+		$gbp_url = 'https://www.google.com/search?kgmid=/g/11f7bzp814';
+		$same_as = isset( $data['publisher']['sameAs'] ) ? (array) $data['publisher']['sameAs'] : array();
+		if ( ! in_array( $gbp_url, $same_as, true ) ) {
+			$same_as[] = $gbp_url;
+		}
+		$data['publisher']['sameAs'] = array_values( $same_as );
+
 		// Programul, exact cel afisat pe pagina Tarife (confirmat de utilizator pe
 		// 23.09.2026; Rank Math avea unul vechi, 9-17 / 9-12). Sta pe un
 		// ContactPoint, nu direct pe entitate: openingHoursSpecification e valid
