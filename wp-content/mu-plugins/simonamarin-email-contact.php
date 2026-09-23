@@ -105,3 +105,62 @@ add_filter(
 	10,
 	3
 );
+
+/*
+ * SEC-13 - Jurnalul Post SMTP nu mai pastreaza continutul mesajelor din formular.
+ *
+ * GASIT PE 23.09.2026: Post SMTP salveaza in tabelul `post_smtp_logs` fiecare
+ * mail INTEGRAL - subiectul, textul, headerele, adresa de raspuns. Pentru
+ * mesajele din formular inseamna ca tot ce a scris un om care cere ajutor
+ * (date de sanatate, GDPR art. 9) ramane in baza de date a site-ului, fara
+ * termen, si pleaca odata cu ea in fiecare copie de siguranta si pachet
+ * Duplicator. Mesajul ajunge oricum in inboxul cabinetului; copia din site nu
+ * foloseste la nimic.
+ *
+ * Jurnalul in sine ramane pornit: el a aratat ca mailurile esuau din 2025
+ * ("Connection timed out"). Pentru un mesaj din formular se pastreaza doar ce
+ * trebuie ca sa se vada daca livrarea a reusit - data, starea, eroarea,
+ * destinatarul cabinetului - si se golesc subiectul (e scris de vizitator),
+ * textul, headerele, adresa de raspuns si transcrierea SMTP.
+ *
+ * Mesajul din formular se recunoaste prin momentul trimiterii, nu dupa
+ * continut: Contact Form 7 anunta inceputul (`wpcf7_before_send_mail`) si
+ * sfarsitul (`wpcf7_mail_sent` / `wpcf7_mail_failed`), iar orice mail salvat
+ * in jurnal intre ele este al formularului.
+ */
+function simonamarin_cf7_sending( $set = null ) {
+	static $sending = false;
+	if ( null !== $set ) {
+		$sending = (bool) $set;
+	}
+	return $sending;
+}
+add_action( 'wpcf7_before_send_mail', static function () { simonamarin_cf7_sending( true ); }, 1 );
+add_action( 'wpcf7_mail_sent', static function () { simonamarin_cf7_sending( false ); } );
+add_action( 'wpcf7_mail_failed', static function () { simonamarin_cf7_sending( false ); } );
+
+add_action(
+	'post_smtp_after_email_log_saved',
+	function ( $log_id ) {
+		global $wpdb;
+
+		if ( ! simonamarin_cf7_sending() || ! $log_id ) {
+			return;
+		}
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery -- tabelul propriu al Post SMTP, fara API de actualizare.
+		$wpdb->update(
+			$wpdb->prefix . 'post_smtp_logs',
+			array(
+				'original_subject'   => 'Mesaj din formularul de contact (continut nesalvat)',
+				'original_message'   => '',
+				'original_headers'   => '',
+				'reply_to_header'    => '',
+				'session_transcript' => '',
+			),
+			array( 'id' => (int) $log_id ),
+			'%s',
+			'%d'
+		);
+	}
+);

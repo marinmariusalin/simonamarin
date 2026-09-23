@@ -421,15 +421,17 @@ copiat în copil — altfel se rupe la următorul update, exact ca prima dată.
 Datele de contact există deja structurate în
 `sydney-child/inc/contact-links.php`, funcția `simonamarin_contact_links()`.
 
-### 4. MIG-02 — telefon și tarife în datele structurate
+### 4. MIG-02 — date structurate: MedicalBusiness, telefon, tarife, program — REZOLVAT (23.09.2026)
 
-Rank Math emite deja schema (Organization, Person, WebSite, WebPage). Lipsesc
-față de blocul vechi: `telephone`, `priceRange`, programul de lucru și tipul
-`MedicalBusiness`.
-
-Se completează în **Rank Math → Titles & Meta → Local SEO**, nu în cod. Un bloc
-JSON-LD scris de mână ar crea a doua entitate concurentă pentru aceeași
-afacere, ceea ce e mai rău decât lipsa datelor.
+Rank Math avea totul completat în Local SEO (tip `MedicalBusiness`, telefon,
+`350-450 RON`, program), dar entitatea e setată ca **persoană**, iar Rank Math
+emite acele câmpuri doar pentru tipul „companie" — care ar fi șters Person și
+titulatura de pe entitate. Acum, prin filtrul existent din
+`sydney-child/inc/structured-data.php`: entitatea e `["MedicalBusiness",
+"Person"]`, cu `telephone`, `priceRange` (calculat din aceleași tarife ca
+ofertele de pe Servicii) și `openingHoursSpecification` (L–V 10–19, S 10–15),
+toate verificate cu ce afișează site-ul. Verificat pe Home, Servicii, un
+articol, Terapia online.
 
 ### 5. MIG-05 — tipografia pe paginile interioare
 
@@ -452,12 +454,28 @@ Faza 6 din `plan-redesign-lifecoach.md`.
 
 ### 7. SEC-13 — formularul de contact și GDPR
 
-Formularul transmite date de sănătate, care intră sub articolul 9 GDPR. De
-verificat, în afara codului: transportul (există post-smtp — de confirmat TLS),
-cât timp rămân mesajele în baza de date, dacă există temei legal și o informare
-afișată lângă formular.
+**Făcut (23.09.2026):**
 
-Nu se rezolvă din cod, dar cântărește mai mult decât orice header.
+- **Transport:** Post SMTP trimite prin `hv112.c-f.ro:465`, TLS implicit (vezi
+  `mu-plugins/simonamarin-email-contact.php`).
+- **Mesajele nu mai rămân în baza de date.** Jurnalul Post SMTP păstra fiecare
+  mail integral, inclusiv tot ce scria vizitatorul. Acum, pentru mesajele din
+  formular se păstrează doar data, starea livrării și destinatarul; subiectul,
+  textul, headerele, adresa de răspuns și transcrierea se golesc. Mailurile
+  obișnuite (notificări WordPress) rămân neatinse. Testat local.
+- Formularul folosit pe site e „Formular de contact 2" (ID 2182). „Formular de
+  contact 1" (ID 182) nu e afișat nicăieri; conține un tag `[wpgdprc]` al unui
+  plugin care nu mai e instalat.
+
+**Rămas — decizia utilizatorului:**
+
+- **Mesajele deja stocate:** 17 mesaje din formular (03.2024 – 10.2025) în
+  `wpez_post_smtp_logs` și 22 în formatul vechi (`postman_sent_mail`,
+  2022–2023), cu tot conținutul. De golit sau de șters — nu s-a atins nimic.
+- **Informarea de lângă formular** (temei legal, ce se întâmplă cu datele):
+  lipsește. E text nou, deci formularea o dă Simona. Politica de
+  confidențialitate e din 2018 și nu pomenește formularul.
+- Temeiul legal pentru date de sănătate (art. 9) — decizie juridică, nu de cod.
 
 ### 8. PSY-04 — informații pentru situații de criză
 
@@ -467,15 +485,22 @@ cabinet de psihoterapie asta e o lipsă de fond.
 **Nu se inventează și nu se aproximează.** Numerele și formulările se verifică
 la sursă înainte de publicare și se decid împreună cu psihoterapeuta.
 
-### 9. SEC-11 — Content-Security-Policy
+### 9. SEC-11 — Content-Security-Policy — Report-Only pornit (23.09.2026)
 
-Nu e emis, deliberat. Pe site rulează pluginuri care injectează scripturi
-inline (cache, formulare, SEO, GTM), iar o politică aplicată direct ar rupe
-pagini fără avertisment.
+`mu-plugins/simonamarin-csp.php` trimite `Content-Security-Policy-Report-Only`
+(nu blochează nimic) și primește rapoartele la
+`/wp-json/simonamarin/v1/csp-report`. Se văd în **Unelte → Raport CSP**. Din
+rapoarte se păstrează doar directiva, originea resursei și calea paginii —
+niciun IP, user-agent sau query string.
 
-Ordinea corectă: întâi `Content-Security-Policy-Report-Only` cu raportare,
-câteva zile pe trafic real, abia apoi politica aplicată. Pasul Report-Only nu
-blochează nimic.
+Verificat în Chrome pe 9 pagini (inclusiv Contact cu reCAPTCHA și GA4 după
+Accept, 404, căutare): **zero încălcări**. O încălcare provocată intenționat a
+fost raportată și salvată (pe HTTPS; pe `http://` browserul nu trimite
+rapoarte, deci local nu se strâng).
+
+**Pasul următor, după deploy:** câteva zile pe producție, apoi citit raportul.
+Dacă e gol sau conține doar surse explicabile, se aplică politica schimbând
+numele headerului în `Content-Security-Policy`.
 
 ### 10. SEC-14 — `<meta name="generator">` de la pluginuri
 
