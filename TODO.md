@@ -476,14 +476,11 @@ Faza 6 din `plan-redesign-lifecoach.md`.
 
 **Rămas:**
 
-- **Acord și informare GDPR în formular — făcut (23.09.2026):** căsuță de
-  acord explicit (obligatorie și pe server) + informare scurtă: operatorul,
-  scopul, că mesajul nu rămâne pe site, drepturile (acces, ștergere) la
-  adresa publică a cabinetului, link spre Politica de confidențialitate,
-  reCAPTCHA. Text cerut de utilizator; spune doar lucruri verificate. Adăugat
-  prin filtru, nu în formularul din baza de date
-  (`mu-plugins/simonamarin-email-contact.php`). Apare pe Contact, Tarife,
-  Consilier psihologic.
+- **Acord GDPR în formular — făcut (23.09.2026):** căsuță de acord explicit,
+  obligatorie și pe server, adăugată prin filtru
+  (`mu-plugins/simonamarin-email-contact.php`). Paragraful de informare de sub
+  ea a fost scos la cererea utilizatorului — nu se repune. Apare pe Contact,
+  Tarife, Consilier psihologic.
 - **Politica de confidențialitate** e din 2018 și nu pomenește formularul sau
   datele de sănătate — de recitit cu Simona.
 - **Copiile bazei de date conțin încă mesajele integral:**

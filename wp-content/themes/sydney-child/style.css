@@ -402,12 +402,3 @@ schimba si aici.
 	accent-color: var(--sm-teal, #3d6f65);
 }
 
-.sm-gdpr__info {
-	margin: 0.6rem 0 0;
-	color: var(--sm-ink-mute, #6b7975);
-}
-
-.sm-gdpr__info a {
-	color: var(--sm-teal, #3d6f65);
-	text-decoration: underline;
-}
