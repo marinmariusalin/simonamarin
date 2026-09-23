@@ -245,6 +245,7 @@ Planul complet, cu fazele și estimările, e în
 | 5 — paginile interioare | **făcut** |
 | 6 — articolele | **făcut** |
 | 7 — UX polish (cookie banner calm, reCAPTCHA vs WhatsApp, carduri servicii, contact mobil) | **făcut (23.09.2026)** |
+| 8 — Butoane WhatsApp discrete stil homepage pe pagina Servicii + Deindexare ateliere 2018 | **făcut (23.09.2026)** |
 
 Trei lucruri care merită reținute din Fazele 0–3, pentru că niciunul nu se
 vedea din citirea fișierelor:

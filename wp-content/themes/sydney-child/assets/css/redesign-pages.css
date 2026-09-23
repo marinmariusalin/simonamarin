@@ -553,7 +553,7 @@ body:not(.home) .entry-content .servicii-container p.textP:not(:has(+ .list-grou
 
 /* --- Legaturi in text ----------------------------------------------------- */
 
-body:not(.home) .entry-content a:not(.wp-block-button__link):not([class*="btn"]):not(.sm-whatsapp-cta-link):not(.tarife-detalii):not(.articole-box) {
+body:not(.home) .entry-content a:not(.wp-block-button__link):not([class*="btn"]):not(.sm-whatsapp-cta-link):not(.sm-hero-whatsapp):not(.tarife-detalii):not(.articole-box) {
 	color: var(--sm-teal);
 	text-decoration-color: color-mix(in srgb, var(--sm-teal) 35%, transparent);
 	text-underline-offset: 3px;
@@ -823,6 +823,44 @@ body:not(.home) .entry-content .sm-whatsapp-cta-link:focus-visible {
 body:not(.home) .entry-content .sm-whatsapp-cta-link .sm-icon svg {
 	width: 22px;
 	height: 22px;
+	display: block;
+}
+
+/* Buton WhatsApp stil circular / hero (preluat de pe homepage, discret si delicat pentru sectiunile de servicii) */
+body:not(.home) .entry-content .servicii-container .sm-whatsapp-cta {
+	margin: var(--sm-space-2) 0 var(--sm-space-6);
+	text-align: left;
+}
+
+body:not(.home) .entry-content .sm-hero-whatsapp {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	border-radius: var(--sm-radius-pill);
+	border: 1px solid var(--sm-teal);
+	color: var(--sm-teal);
+	background-color: var(--sm-teal-tint);
+	box-shadow: 0 2px 6px -2px rgba(61, 111, 101, 0.15);
+	text-decoration: none;
+	flex-shrink: 0;
+	transition: background-color 0.18s ease, color 0.18s ease,
+	            border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+body:not(.home) .entry-content .sm-hero-whatsapp:hover,
+body:not(.home) .entry-content .sm-hero-whatsapp:focus-visible {
+	background-color: var(--sm-teal);
+	border-color: var(--sm-teal);
+	color: #fff;
+	transform: translateY(-1px);
+	box-shadow: 0 6px 16px -4px rgba(61, 111, 101, 0.35);
+}
+
+body:not(.home) .entry-content .sm-hero-whatsapp .sm-icon svg {
+	width: 20px;
+	height: 20px;
 	display: block;
 }
 
