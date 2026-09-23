@@ -167,6 +167,32 @@ function simonamarin_json_ld( $data ) {
 		if ( empty( $data['publisher']['telephone'] ) ) {
 			$data['publisher']['telephone'] = '+40747668204';
 		}
+
+		// Programul, exact cel afisat pe pagina Tarife (confirmat de utilizator pe
+		// 23.09.2026; Rank Math avea unul vechi, 9-17 / 9-12). Sta pe un
+		// ContactPoint, nu direct pe entitate: openingHoursSpecification e valid
+		// doar pe LocalBusiness/Place, iar entitatea e Organization + Person.
+		// DACA SE SCHIMBA PROGRAMUL PE SITE, SE SCHIMBA SI AICI.
+		$data['publisher']['contactPoint'] = array(
+			'@type'             => 'ContactPoint',
+			'contactType'       => 'customer service',
+			'telephone'         => '+40747668204',
+			'availableLanguage' => 'ro',
+			'hoursAvailable'    => array(
+				array(
+					'@type'     => 'OpeningHoursSpecification',
+					'dayOfWeek' => array( 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday' ),
+					'opens'     => '10:00',
+					'closes'    => '19:00',
+				),
+				array(
+					'@type'     => 'OpeningHoursSpecification',
+					'dayOfWeek' => 'Saturday',
+					'opens'     => '10:00',
+					'closes'    => '15:00',
+				),
+			),
+		);
 	}
 
 	/*
