@@ -23,6 +23,8 @@
  *   1. Antet — asezare      4. Subsol
  *   2. Antet — semnatura    5. Butonul flotant WhatsApp
  *   3. Antet — meniu si pictograme
+ *   6. Banner consimtamant cookie-uri (CookieYes)
+ *   7. Pozitionare reCAPTCHA v3
  */
 
 /* ===========================================================================
@@ -488,3 +490,138 @@
 		bottom: 84px;
 	}
 }
+
+/* ===========================================================================
+   6. BANNERUL DE CONSIMTAMANT COOKIES (CookieYes / Cookie Law Info)
+   Bannerul implicit al pluginului vine cu butoane albastre stridente (#1863DC)
+   si stil rece, corporatist. Il integram in identitatea calda a site-ului
+   (salvie, bej cald, alb), cu colțuri rotunjite, text aerisit si interactiuni calme.
+   =========================================================================== */
+
+.cky-consent-container,
+.cky-box-bottom-left,
+.cky-modal,
+.cky-preference-center {
+	font-family: var(--sm-font-body) !important;
+	max-width: 100vw !important;
+	box-sizing: border-box !important;
+}
+
+/* Cardul plutitor de consimtamant */
+.cky-consent-container .cky-consent-bar {
+	background-color: var(--sm-surface) !important;
+	border: 1px solid var(--sm-line) !important;
+	border-radius: var(--sm-radius) !important;
+	box-shadow: 0 16px 36px -12px rgba(31, 42, 39, 0.18) !important;
+	padding: var(--sm-space-6) !important;
+}
+
+.cky-consent-container .cky-title,
+.cky-preference-center .cky-preference-title {
+	font-family: var(--sm-font-display) !important;
+	font-weight: 500 !important;
+	font-size: var(--sm-text-lg) !important;
+	color: var(--sm-ink) !important;
+}
+
+.cky-consent-container .cky-notice-des,
+.cky-consent-container .cky-notice-des p,
+.cky-consent-container .cky-preference-des,
+.cky-consent-container .cky-preference-des p {
+	font-family: var(--sm-font-body) !important;
+	font-size: var(--sm-text-xs) !important;
+	line-height: 1.6 !important;
+	color: var(--sm-ink-soft) !important;
+}
+
+/* Butoanele de consimtamant */
+.cky-consent-container .cky-btn,
+.cky-modal .cky-btn {
+	font-family: var(--sm-font-body) !important;
+	font-size: var(--sm-text-xs) !important;
+	font-weight: 500 !important;
+	border-radius: var(--sm-radius-pill) !important;
+	padding: 8px 18px !important;
+	min-height: 38px !important;
+	cursor: pointer !important;
+	transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease !important;
+}
+
+/* Accepta: buton primar calm (verde salvie) */
+.cky-consent-container .cky-btn-accept,
+.cky-modal .cky-btn-accept {
+	background-color: var(--sm-teal) !important;
+	border-color: var(--sm-teal) !important;
+	color: #ffffff !important;
+}
+
+.cky-consent-container .cky-btn-accept:hover,
+.cky-consent-container .cky-btn-accept:focus-visible,
+.cky-modal .cky-btn-accept:hover,
+.cky-modal .cky-btn-accept:focus-visible {
+	background-color: var(--sm-teal-dark) !important;
+	border-color: var(--sm-teal-dark) !important;
+	color: #ffffff !important;
+}
+
+/* Refuza / Personalizeaza: butoane secundare discrete */
+.cky-consent-container .cky-btn-reject,
+.cky-consent-container .cky-btn-customize,
+.cky-modal .cky-btn-reject,
+.cky-modal .cky-btn-preferences {
+	background-color: transparent !important;
+	border-color: var(--sm-line) !important;
+	color: var(--sm-ink-soft) !important;
+}
+
+.cky-consent-container .cky-btn-reject:hover,
+.cky-consent-container .cky-btn-customize:hover,
+.cky-modal .cky-btn-reject:hover,
+.cky-modal .cky-btn-preferences:hover {
+	background-color: var(--sm-teal-tint) !important;
+	border-color: var(--sm-teal) !important;
+	color: var(--sm-teal-dark) !important;
+}
+
+/* Modalul detaliat de preferinte */
+.cky-preference-center {
+	background-color: var(--sm-sand) !important;
+	border-radius: var(--sm-radius) !important;
+	font-family: var(--sm-font-body) !important;
+}
+
+.cky-preference-center .cky-accordion-header {
+	border-radius: 8px !important;
+}
+
+.cky-preference-center .cky-switch input[type="checkbox"]:checked + .cky-slider {
+	background-color: var(--sm-teal) !important;
+}
+
+/* Badge-ul de re-vizitare a preferintelor */
+.cky-revisit-consent {
+	background-color: var(--sm-surface) !important;
+	border: 1px solid var(--sm-line) !important;
+	border-radius: var(--sm-radius-pill) !important;
+	color: var(--sm-ink-mute) !important;
+	box-shadow: 0 4px 12px rgba(31, 42, 39, 0.1) !important;
+}
+
+/* ===========================================================================
+   7. GOOGLE RECAPTCHA v3
+   Badge-ul plutitor injectat automat de reCAPTCHA v3 sta implicit in dreapta-jos,
+   unde concureaza sau se suprapune peste butonul de WhatsApp si sageata sus.
+   Il mutam pe stanga-jos, pastrand deplina conformitate legala si functionala.
+   =========================================================================== */
+
+.grecaptcha-badge {
+	left: 16px !important;
+	right: auto !important;
+	bottom: 16px !important;
+	z-index: 85 !important;
+	border-radius: 8px !important;
+	box-shadow: 0 4px 16px rgba(31, 42, 39, 0.14) !important;
+	overflow: hidden !important;
+	transition: left 0.2s ease, opacity 0.2s ease !important;
+}
+

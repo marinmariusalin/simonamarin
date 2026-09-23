@@ -168,13 +168,13 @@ function simonamarin_security_headers( $headers ) {
 	unset( $headers['X-Pingback'] );
 
 	/*
-	 * TODO [SEC-11][MEDIUM]: Content-Security-Policy nu este emis aici, si nu
-	 * este o omisiune. Pe acest site ruleaza pluginuri care injecteaza scripturi
-	 * inline (cache, formulare, SEO, Google Tag Manager), iar o politica
-	 * aplicata direct ar rupe pagini in productie fara avertisment.
-	 * Ordinea corecta, intr-o sesiune dedicata: intai
-	 * `Content-Security-Policy-Report-Only` cu raportare, cateva zile pe trafic
-	 * real, si abia apoi politica aplicata. Pasul Report-Only nu blocheaza nimic.
+	 * Content-Security-Policy (SEC-11): nu este emis aici, si nu este o omisiune.
+	 * Pe acest site ruleaza pluginuri care injecteaza scripturi inline (cache, formulare,
+	 * SEO, Google Tag Manager), iar o politica aplicata direct ar rupe pagini in productie
+	 * fara avertisment. Ordinea corecta, intr-o sesiune dedicata: intai
+	 * `Content-Security-Policy-Report-Only` cu raportare, cateva zile pe trafic real, si
+	 * abia apoi politica aplicata. Pasul Report-Only nu blocheaza nimic.
+	 * Urmarire centralizata in TODO.md.
 	 */
 
 	return $headers;
@@ -193,7 +193,7 @@ remove_action( 'wp_head', 'wp_generator' );
 add_filter( 'the_generator', '__return_empty_string' );
 
 /*
- * TODO [SEC-14][LOW]: Raman in <head> sapte etichete `<meta name="generator">`
+ * Generator tags de la pluginuri (SEC-14): raman in <head> sapte etichete `<meta name="generator">`
  * puse de pluginuri, nu de WordPress: dominant-color-images, webp-uploads,
  * performance-lab, speculation-rules, embed-optimizer, image-prioritizer si
  * Site Kit by Google. Fiecare isi anunta numele SI versiunea exacta, ceea ce
@@ -203,9 +203,7 @@ add_filter( 'the_generator', '__return_empty_string' );
  * propriul nume de functie; un remove_action pentru fiecare s-ar rupe tacut la
  * primul lor update, iar un filtru care curata tot <head> printr-un buffer de
  * iesire este disproportionat fata de castig.
- * Varianta serioasa, daca se doreste: o singura functie care ruleaza pe
- * `wp_head` cu prioritate mare si care sterge etichetele dintr-un buffer,
- * insotita de un test care verifica periodic ca inca functioneaza.
+ * Urmarire centralizata in TODO.md.
  */
 
 /**
@@ -280,10 +278,9 @@ function simonamarin_generic_login_error() {
 add_filter( 'login_errors', 'simonamarin_generic_login_error' );
 
 /*
- * TODO [SEC-13][HIGH]: Formularul de contact transmite date de sanatate, care
- * intra sub articolul 9 din GDPR. De verificat, in afara codului: transportul
- * (exista post-smtp instalat - de confirmat ca foloseste TLS), cat timp raman
- * mesajele in baza de date, si daca exista un temei legal si o informare
- * afisata langa formular. Niciunul nu se rezolva din cod, dar toate cantaresc
- * mai mult decat orice header de mai sus.
+ * Formularul de contact si datele de sanatate (SEC-13): formularul transmite date
+ * de sanatate, care intra sub articolul 9 din GDPR. De verificat in afara codului:
+ * transportul (exista post-smtp instalat - de confirmat ca foloseste TLS), cat timp
+ * raman mesajele in baza de date, si daca exista un temei legal si o informare afisata
+ * langa formular. Urmarire centralizata in TODO.md.
  */

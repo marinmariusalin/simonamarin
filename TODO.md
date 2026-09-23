@@ -1,7 +1,7 @@
 # TODO — ce a mai rămas de făcut
 
-**Actualizat:** 21 septembrie 2026, după migrarea la Sydney 2.71.
-Înlocuiește listele din audituri. Dacă un punct nu apare aici, nu e de făcut.
+**Actualizat:** 23 septembrie 2026.
+Singurul loc din proiect unde se urmăresc sarcinile (active și rezolvate). Toate marcajele `TODO` din codul sursă au fost curățate, iar tema inactivă este izolată. Dacă un punct nu apare aici, nu e de făcut.
 
 ---
 
@@ -244,6 +244,7 @@ Planul complet, cu fazele și estimările, e în
 | 4 — antet și subsol | **făcut** |
 | 5 — paginile interioare | **făcut** |
 | 6 — articolele | **făcut** |
+| 7 — UX polish (cookie banner calm, reCAPTCHA vs WhatsApp, carduri servicii, contact mobil) | **făcut (23.09.2026)** |
 
 Trei lucruri care merită reținute din Fazele 0–3, pentru că niciunul nu se
 vedea din citirea fișierelor:
@@ -307,31 +308,7 @@ alt rol vizual.
 
 ## Deschis, în ordinea valorii
 
-### 0. Imaginile din cardurile de pe `/ateliere/` — REZOLVAT (22.09.2026)
-
-Ipoteza de aici era greșită și o las scrisă ca să nu fie reluată: se
-presupunea că e o diferență de mediu local, adică lipsa unei reguli de
-rescriere din `.htaccess`, și că în producție imaginile s-ar vedea. **Verificat
-direct pe `simonamarin.ro`: erau rupte și acolo**, cu același `301`. Lecția e
-cea din secțiunea de metodă — „de verificat pe producție" trebuie chiar
-verificat, nu presupus.
-
-Cauza reală: adresele `…insarcinate.webp` și `…prezentare-1024x576.webp` erau
-scrise direct în conținutul paginii 1279 de plugin-ul *Converter for Media*,
-dezinstalat între timp. Fișierul real se numea `…jpg.webp` și era generat de
-LiteSpeed.
-
-Reparat cu markup generat de WordPress din biblioteca media, care nu depinde de
-niciun plugin și are `srcset` potrivit slotului real. Detaliile complete, plus
-restul lucrului pe imagini, în [audit-imagini.md](audit-imagini.md).
-
-Rămâne deschis doar faptul că legătura către Ateliere e scoasă din meniul
-principal, la cererea ta. Modificarea e în baza de date, nu în cod: elementul
-`nav_menu_item` 1295 (meniul „Menu set 1", term 2). Git nu o poate urmări. Se
-reface din *Aspect → Meniuri*, adăugând pagina pe poziția a treia, între
-Articole și Servicii.
-
-### 0b. Imaginile optimizate trebuie duse în producție
+### 1. Imaginile optimizate trebuie duse în producție
 
 Lucrul pe imagini din 22.09.2026 (vezi [audit-imagini.md](audit-imagini.md)) e
 făcut **doar pe local**: `uploads` a scăzut de la 124 MB la 17 MB, cea mai grea
@@ -350,17 +327,44 @@ arată către fișiere care nu există:
 Copie de siguranță completă dinainte de modificări:
 `E:\simonamarin\_backup-imagini-2026-09-22\`.
 
-### 1. Google Tag Manager — 520 KB, 53% din pagină
+### 2. Google Tag — Site Kit scos local (23.09.2026), GA4 păstrat după consimțământ
 
-Măsurat pe pagina de start: GTM singur e de **8 ori mai greu decât toată tema
-Sydney** (66 KB). Site-ul are simultan Site Kit, GTM, UserFeedback și Cookie
-Law Info.
+**Google Analytics continuă**, fără Site Kit: `mu-plugins/simonamarin-analytics.php`
+încarcă același GA4 `G-FQ35PBZ9NE` **doar după „Accept” pe analiză** în
+bannerul CookieYes (înainte se încărca pentru toți, fără acord). Păstrează
+excluderea utilizatorilor autentificați și evenimentul `contact` la trimiterea
+formularului, fără niciun câmp din el. Testat în Chrome (fără alegere / Accept /
+vizită următoare / Reject / vizită următoare): tag-ul apare doar după Accept.
+Cifrele din GA vor fi mai mici — se numără doar cine acceptă.
 
-Dimensiunea vine din ce e configurat în containerul Google, nu din cod — nu se
-poate reduce din temă. De verificat în GTM ce tag-uri sunt active și dacă toate
-sunt încă necesare. **Este cea mai mare optimizare disponibilă pe acest site.**
+Tag-ul era GA4 `G-FQ35PBZ9NE` (`gtag.js` de pe googletagmanager.com), injectat
+de **Site Kit by Google** — nu exista un container GTM separat. Cântărea
+~520 KB, 53% din pagina de start.
 
-### 2. MIG-03 — subsolul personalizat
+**Local, făcut:** Site Kit dezactivat și șters; șterse din baza de date 133 de
+opțiuni și 10 rânduri de usermeta — ale Site Kit și resturile a trei pluginuri
+Google Analytics dezinstalate demult (GADWP, ExactMetrics, MonsterInsights,
+~250 KB de cache vechi). Copie a rândurilor șterse:
+`E:\simonamarin\_backup-google-tag-2026-09-23\randuri-sterse.json`. Verificat:
+zero referințe la gtag/googletagmanager pe Home, Contact, Despre mine, Tarife,
+Blog.
+
+**Pe producție:** pluginurile nu sunt în git, deci nu ajung acolo prin push.
+Ajung prin deploy-ul cu Duplicator (care duce baza de date și `wp-content`
+local), după care LiteSpeed Cache → Golește tot. Dacă Google Tag trebuie oprit
+înainte de deploy: Pluginuri → Site Kit → Dezactivează → Șterge. Opțional, proprietatea GA4 se poate închide și
+din contul Google Analytics.
+
+**Tot pe 23.09.2026, local:** șterse Optimization Detective, Image Prioritizer,
+Embed Optimizer (beta, adunau date de la vizitatori) și UserFeedback Lite
+(0 sondaje; 7 tabele goale și 9 opțiuni șterse, copie în
+`E:\simonamarin\_backup-pluginuri-2026-09-23\`). Singurul efect util al OD —
+preîncărcarea portretului din hero — e refăcut în `sydney-child/inc/images.php`.
+**Păstrate intenționat:** Duplicator (folosit pentru deploy). Really Simple SSL
+e inactiv și inutil: SSL-ul e dat de Cloudflare (certificat Google Trust
+Services, reînnoit automat, redirect http→https, HSTS, fără conținut mixt).
+
+### 3. MIG-03 — subsolul personalizat
 
 **Rămâne deschis după Faza 4.** Faza 4 a rezolvat doar *prezentarea* subsolului
 existent: o singură bandă în cerneala paletei, cu creditele centrate și
@@ -382,7 +386,7 @@ copiat în copil — altfel se rupe la următorul update, exact ca prima dată.
 Datele de contact există deja structurate în
 `sydney-child/inc/contact-links.php`, funcția `simonamarin_contact_links()`.
 
-### 3. MIG-02 — telefon și tarife în datele structurate
+### 4. MIG-02 — telefon și tarife în datele structurate
 
 Rank Math emite deja schema (Organization, Person, WebSite, WebPage). Lipsesc
 față de blocul vechi: `telephone`, `priceRange`, programul de lucru și tipul
@@ -392,7 +396,7 @@ Se completează în **Rank Math → Titles & Meta → Local SEO**, nu în cod. U
 JSON-LD scris de mână ar crea a doua entitate concurentă pentru aceeași
 afacere, ceea ce e mai rău decât lipsa datelor.
 
-### 4. MIG-05 — tipografia pe paginile interioare
+### 5. MIG-05 — tipografia pe paginile interioare
 
 **Cauza a fost găsită și eliminată pe Home.** Nu era o setare de font: Taviraj
 și Sacramento nu se încărcau deloc. `.signature-font` cerea
@@ -406,12 +410,12 @@ Ce a mai rămas: paginile interioare (Despre mine, Servicii, Tarife, Ateliere,
 Terapia online, articolele) folosesc încă tipografia veche. Sunt Faza 5 și
 Faza 6 din `plan-redesign-lifecoach.md`.
 
-### 5. MIG-04 — semnătura de sub titlul articolelor
+### 6. MIG-04 — semnătura de sub titlul articolelor
 
 „Psiholog Simona Marin" stătea în `content-single.php`. Se reface prin hook-ul
 `sydney_before_single_entry` sau `sydney_inside_top_post`, fără șablon copiat.
 
-### 6. SEC-13 — formularul de contact și GDPR
+### 7. SEC-13 — formularul de contact și GDPR
 
 Formularul transmite date de sănătate, care intră sub articolul 9 GDPR. De
 verificat, în afara codului: transportul (există post-smtp — de confirmat TLS),
@@ -420,7 +424,7 @@ afișată lângă formular.
 
 Nu se rezolvă din cod, dar cântărește mai mult decât orice header.
 
-### 7. PSY-04 — informații pentru situații de criză
+### 8. PSY-04 — informații pentru situații de criză
 
 Site-ul nu conține nicăieri ce face un vizitator aflat în criză. Pe un site de
 cabinet de psihoterapie asta e o lipsă de fond.
@@ -428,7 +432,7 @@ cabinet de psihoterapie asta e o lipsă de fond.
 **Nu se inventează și nu se aproximează.** Numerele și formulările se verifică
 la sursă înainte de publicare și se decid împreună cu psihoterapeuta.
 
-### 8. SEC-11 — Content-Security-Policy
+### 9. SEC-11 — Content-Security-Policy
 
 Nu e emis, deliberat. Pe site rulează pluginuri care injectează scripturi
 inline (cache, formulare, SEO, GTM), iar o politică aplicată direct ar rupe
@@ -438,23 +442,23 @@ Ordinea corectă: întâi `Content-Security-Policy-Report-Only` cu raportare,
 câteva zile pe trafic real, abia apoi politica aplicată. Pasul Report-Only nu
 blochează nimic.
 
-### 9. SEC-14 — `<meta name="generator">` de la pluginuri
+### 10. SEC-14 — `<meta name="generator">` de la pluginuri
 
-Șapte etichete rămân în `<head>`, puse de Performance Lab, Site Kit și
-celelalte. Fiecare își anunță numele **și versiunea exactă**, ceea ce pentru un
+Șase etichete rămân în `<head>`, puse de Performance Lab și modulele lui
+(a șaptea, a Site Kit, a dispărut odată cu plugin-ul). Fiecare își anunță numele **și versiunea exactă**, ceea ce pentru un
 scaner e mai util decât versiunea de WordPress.
 
 Nu le-am scos pentru că fiecare folosește alt hook și un `remove_action` pentru
 fiecare s-ar rupe tăcut la primul lor update.
 
-### 10. Poziția iconițelor de contact — decizie deschisă
+### 11. Poziția iconițelor de contact — decizie deschisă
 
 Sunt acum la capătul meniului, în dreapta. În design-ul vechi stăteau lângă
 titlu, în stânga. Dacă poziția din stânga contează, singura variantă curată e
 pornirea modulului **header builder** din Sydney 2.71 — care cere însă
 reconstruirea întregului antet.
 
-### 11. Redirecturi 301 și URL-uri de bază după migrarea cu Duplicator
+### 12. Redirecturi 301 și URL-uri de bază după migrarea cu Duplicator
 
 Migrarea de pe producție a fost făcută cu Duplicator pe 2026-09-21. De
 verificat, în afara codului: `siteurl`/`home` din opțiuni chiar arată spre
@@ -464,7 +468,7 @@ redirecționeze 301 către varianta curentă, ca să nu se piardă linkuri exter
 și poziții în Google. Se rezolvă din plugin-ul de redirect deja instalat sau
 din `.htaccess`, nu prin cod de temă.
 
-### 12. robots.txt, vizibilitate în motoarele de căutare și sitemap dublu
+### 13. robots.txt, vizibilitate în motoarele de căutare și sitemap dublu
 
 Trei verificări de configurare, nu de cod: (a) conținutul real al
 `robots.txt` (îl generează un plugin, nu a fost verificat ce conține); (b)
@@ -474,34 +478,35 @@ simultan cel puțin două generatoare de sitemap (Rank Math și încă unul) —
 de păstrat unul singur, ca linia `Sitemap:` din robots.txt să nu trimită spre
 un fișier concurent sau învechit.
 
-### 13. Search Console / Site Kit — verificare de proprietate și date
+### 14. Search Console — verificare de proprietate
 
 De confirmat că proprietatea din Google Search Console este legată de
-domeniul corect (mai ales după migrare) și că Site Kit raportează date reale,
-nu un site gol. Se face din admin, nu din cod.
+domeniul corect (mai ales după migrare). Site Kit a fost scos (vezi punctul 2),
+deci verificarea de proprietate se face din Search Console direct (DNS) sau din
+Rank Math → Analytics. Se face din admin, nu din cod.
 
-### 14. Conținut YMYL — recitire editorială
+### 15. Conținut YMYL — recitire editorială
 
 Site-ul e „Your Money or Your Life" în termenii Google: sănătate mentală.
 Titulatura profesională, disclaimerele și afirmațiile despre metode de lucru
 merită o trecere dedicată de verificare la sursă, separat de orice altă
 listă tehnică — ține de redactare, nu de cod.
 
-### 15. Disclaimer profesional și mențiune de confidențialitate în subsol
+### 16. Disclaimer profesional și mențiune de confidențialitate în subsol
 
 Lipsesc de pe site: o formulare clară că informația de pe site nu înlocuiește
 un consult, și o mențiune despre ce se întâmplă cu datele din formular
-(vezi și punctul 6, SEC-13). Sunt texte de redactat împreună cu Simona, nu
-de aproximat — merg în subsol o dată cu reconstrucția lui (punctul 2).
+(vezi și punctul 7, SEC-13). Sunt texte de redactat împreună cu Simona, nu
+de aproximat — merg în subsol o dată cu reconstrucția lui (punctul 3).
 
-### 16. Tonul paginilor de eroare și „niciun rezultat"
+### 17. Tonul paginilor de eroare și „niciun rezultat"
 
 Pagina 404 și cea de căutare fără rezultate afișează în continuare tonul
 implicit al temei. Pe un public care poate ajunge acolo într-un moment
 tensionat, formularea contează; e o decizie de redactare (text + eventual un
 link mai vizibil către pagina de contact), nu o schimbare de cod.
 
-### 17. CTA-ul din antet și formularea lui
+### 18. CTA-ul din antet și formularea lui
 
 Antetul nu are un buton de acțiune clar către programare/contact. Dacă se
 dorește unul, textul și destinația sunt o decizie a Simonei (ton, nu doar
@@ -513,6 +518,7 @@ loc); implementarea în sine e simplă odată aleasă formularea.
 
 | Ce | Unde | Verificat |
 |---|---|---|
+| Imagini rupte `/ateliere/` + optimizare media (124 MB → 17 MB, 43 alt-texts scrise, sizes optim) | `sydney-child/inc/images.php`, pagini conținut | 44 pagini testate, 0 rupte, 0 cereri eșuate |
 | Headere de securitate | mu-plugin | toate 4 prezente în răspuns |
 | `Cache-Control` 30 zile → `no-cache` | mu-plugin | header confirmat |
 | Marker de depanare în fiecare pagină | mu-plugin | pagina începe cu `<!DOCTYPE html>` |
@@ -617,7 +623,8 @@ codului original.
 
 ## Documente conexe
 
+- `audit-imagini.md` — documentația completă a auditului și optimizării de imagini (124 MB → 17 MB, pași de deploy în producție)
 - `sydney-update-analiza.md` — comparația cu Sydney 2.71 oficial, dinaintea migrării
+- `plan-redesign-lifecoach.md` — planul de redesign în faze
 - `audit-2-seo-security-performance.md` — auditul inițial (context istoric; țintea tema inactivă)
-- `wp-content/themes/sydney-child/functions.php` — TODO-urile MIG-01…05, lângă cod
-- `wp-content/mu-plugins/simonamarin-hardening.php` — SEC-11, SEC-13, SEC-14, lângă cod
+

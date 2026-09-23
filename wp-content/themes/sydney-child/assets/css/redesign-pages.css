@@ -407,6 +407,150 @@ body:not(.home) .entry-content .list-group-item::before {
 	background-color: var(--sm-teal);
 }
 
+/* --- Servicii psihologice — carduri terapeutice calde ---------------------- */
+
+/**
+ * Pe /servicii-psihologice/, titlurile principale h2.text6 si sub-titlurile h3.text7
+ * primesc accentul fin de brand teal in stanga, asigurand o ierarhie vizuala unitara.
+ */
+body:not(.home) .entry-content .servicii-container h2.text6 {
+	font-family: var(--sm-font-display);
+	font-size: var(--sm-text-2xl);
+	color: var(--sm-ink);
+	border-left: 3px solid var(--sm-teal);
+	padding-left: var(--sm-space-4);
+	margin-top: var(--sm-space-12);
+	margin-bottom: var(--sm-space-4);
+	line-height: 1.3;
+}
+
+body:not(.home) .entry-content .servicii-container h3.text7 {
+	font-family: var(--sm-font-display);
+	font-size: var(--sm-text-xl);
+	color: var(--sm-ink);
+	margin-top: var(--sm-space-8);
+	margin-bottom: var(--sm-space-3);
+	padding-left: var(--sm-space-4);
+	border-left: 3px solid var(--sm-teal);
+	line-height: 1.35;
+}
+
+body:not(.home) .entry-content .servicii-container .list-group {
+	list-style: none;
+	margin: 0 0 var(--sm-space-6);
+	padding: var(--sm-space-6) var(--sm-space-8);
+	background-color: var(--sm-surface);
+	border: 1px solid var(--sm-line);
+	border-radius: var(--sm-radius);
+	box-shadow: 0 4px 16px -4px rgba(31, 42, 39, 0.04);
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+body:not(.home) .entry-content .servicii-container .list-group:hover {
+	border-color: var(--sm-mint);
+	box-shadow: 0 8px 24px -6px rgba(31, 42, 39, 0.08);
+}
+
+body:not(.home) .entry-content .servicii-container .list-group-item {
+	position: relative;
+	padding: var(--sm-space-1) 0 var(--sm-space-1) var(--sm-space-6);
+	margin: 0;
+	font-size: var(--sm-text-base);
+	line-height: 1.75;
+	color: var(--sm-ink-soft);
+}
+
+/* Asigura ca fiecare punct/paragraf incepe vizual cu litera mare */
+body:not(.home) .entry-content .servicii-container .list-group-item::first-letter {
+	text-transform: uppercase;
+}
+
+/* Casetele cu un singur element descriptiv nu au bulina */
+body:not(.home) .entry-content .servicii-container .list-group:has(li:only-child) .list-group-item {
+	padding-left: 0;
+}
+
+body:not(.home) .entry-content .servicii-container .list-group:has(li:only-child) .list-group-item::before {
+	display: none !important;
+	content: none !important;
+}
+
+/* Listele cu mai multe elemente primesc bulina discreta teal */
+body:not(.home) .entry-content .servicii-container .list-group:not(:has(li:only-child)) .list-group-item::before {
+	content: "";
+	position: absolute;
+	left: var(--sm-space-1);
+	top: 0.72em;
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background-color: var(--sm-teal);
+	display: block;
+}
+
+/**
+ * Subtitlul / heading-ul dinaintea listelor de servicii (ex: "Programe de training:")
+ * Afisat cu font display semibold si accent de brand, aliniat cu celelalte titluri.
+ */
+body:not(.home) .entry-content .servicii-container p.textP:has(+ .list-group) {
+	font-family: var(--sm-font-display);
+	font-size: var(--sm-text-xl);
+	font-weight: 600 !important;
+	color: var(--sm-ink);
+	margin-top: var(--sm-space-8);
+	margin-bottom: var(--sm-space-4);
+	padding-left: var(--sm-space-4);
+	border-left: 3px solid var(--sm-teal);
+	line-height: 1.35;
+}
+
+/**
+ * Paragrafele de servicii individuale si ateliere care nu sunt liste
+ * (Consiliere pre si post natala, Ateliere dezvoltare, Terapie online etc.)
+ * Carduri compacte, elegante, cu bordura fina teal si distantare aerisita.
+ */
+body:not(.home) .entry-content .servicii-container p.textP:not(:has(+ .list-group)) {
+	display: block;
+	background-color: var(--sm-surface);
+	border: 1px solid var(--sm-line);
+	border-left: 3px solid var(--sm-teal);
+	border-radius: var(--sm-radius);
+	box-shadow: 0 2px 8px -2px rgba(31, 42, 39, 0.04);
+	padding: var(--sm-space-4) var(--sm-space-6);
+	margin: 0 0 var(--sm-space-3);
+	font-family: var(--sm-font-body);
+	font-size: var(--sm-text-base);
+	font-weight: 400;
+	line-height: 1.6;
+	color: var(--sm-ink);
+	transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+body:not(.home) .entry-content .servicii-container p.textP:not(:has(+ .list-group)):hover {
+	border-color: var(--sm-teal);
+	box-shadow: 0 6px 18px -4px rgba(31, 42, 39, 0.08);
+	transform: translateY(-1px);
+}
+
+/**
+ * Cardul de invitatie/Contact primeste o nuanta calda distincta de CTA
+ */
+body:not(.home) .entry-content .servicii-container p.textP:not(:has(+ .list-group)):has(a[href*="contact"]) {
+	background: linear-gradient(135deg, var(--sm-teal-tint) 0%, var(--sm-sand) 100%);
+	border: 1px solid var(--sm-mint);
+	border-left: 4px solid var(--sm-teal);
+	margin-top: var(--sm-space-6);
+	margin-bottom: var(--sm-space-8);
+	padding: var(--sm-space-5) var(--sm-space-6);
+	color: var(--sm-ink);
+}
+
+body:not(.home) .entry-content .servicii-container p.textP:not(:has(+ .list-group)):has(a[href*="contact"]) a {
+	font-weight: 600;
+	color: var(--sm-teal-dark);
+	text-decoration: underline;
+}
+
 /* --- Legaturi in text ----------------------------------------------------- */
 
 body:not(.home) .entry-content a:not(.wp-block-button__link):not([class*="btn"]):not(.sm-whatsapp-cta-link):not(.tarife-detalii):not(.articole-box) {
@@ -663,13 +807,17 @@ body:not(.home) .entry-content .sm-whatsapp-cta-link {
 	font-size: var(--sm-text-sm);
 	font-weight: 500;
 	text-decoration: none;
-	transition: background-color 0.18s ease;
+	box-shadow: 0 4px 14px -3px rgba(61, 111, 101, 0.3);
+	transition: background-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 body:not(.home) .entry-content .sm-whatsapp-cta-link:hover,
 body:not(.home) .entry-content .sm-whatsapp-cta-link:focus-visible {
 	background-color: var(--sm-teal-dark);
+	border-color: var(--sm-teal-dark);
 	color: #fff;
+	transform: translateY(-1px);
+	box-shadow: 0 6px 18px -4px rgba(61, 111, 101, 0.45);
 }
 
 body:not(.home) .entry-content .sm-whatsapp-cta-link .sm-icon svg {
@@ -691,12 +839,11 @@ body:not(.home) .entry-content .wpcf7-form label {
 
 body:not(.home) .entry-content .wpcf7-form-control {
 	width: 100%;
-	min-height: 48px;
+	min-height: 50px;
 	padding: var(--sm-space-3) var(--sm-space-4);
 	background-color: var(--sm-surface);
-	/* Chenarul vechi era #666 — suficient de contrastant, dar dur pe o pagina
-	   asa de calma. `--sm-ink-mute` pastreaza 4.5:1 fata de alb. */
-	border: 1px solid var(--sm-ink-mute);
+	/* Chenar clar, bine definit pe alb (contrast optim WCAG AA) */
+	border: 1px solid #bcc7c3;
 	border-radius: 8px;
 	font-family: var(--sm-font-body);
 	font-size: var(--sm-text-base);
@@ -711,7 +858,7 @@ body:not(.home) .entry-content textarea.wpcf7-form-control {
 
 body:not(.home) .entry-content .wpcf7-form-control:focus {
 	border-color: var(--sm-teal);
-	box-shadow: 0 0 0 3px color-mix(in srgb, var(--sm-teal) 18%, transparent);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--sm-teal) 22%, transparent);
 	outline: none;
 }
 
@@ -727,6 +874,8 @@ body:not(.home) .entry-content input[type="submit"] {
 	font-weight: 500;
 	letter-spacing: 0.02em;
 	cursor: pointer;
+	border-radius: var(--sm-radius-pill);
+	transition: background-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 body:not(.home) .entry-content .wpcf7-form-control.wpcf7-submit:hover,
@@ -734,6 +883,8 @@ body:not(.home) .entry-content input[type="submit"]:hover {
 	background-color: var(--sm-teal-dark);
 	border-color: var(--sm-teal-dark);
 	color: #fff;
+	transform: translateY(-1px);
+	box-shadow: 0 6px 16px -4px rgba(44, 82, 74, 0.35);
 }
 
 /* --- Datele de contact ---------------------------------------------------- */
@@ -749,16 +900,20 @@ body:not(.home) .entry-content .contact-info {
 	background-color: var(--sm-surface);
 	border: 1px solid var(--sm-line);
 	border-radius: var(--sm-radius);
-	box-shadow: none;
+	box-shadow: 0 6px 20px -6px rgba(31, 42, 39, 0.06);
 }
 
 body:not(.home) .entry-content .contact-info-row {
 	display: block;
-	margin: 0 0 var(--sm-space-6);
+	margin: 0 0 var(--sm-space-5);
+	padding-bottom: var(--sm-space-5);
+	border-bottom: 1px solid var(--sm-line);
 }
 
 body:not(.home) .entry-content .contact-info-row:last-of-type {
 	margin-bottom: 0;
+	padding-bottom: 0;
+	border-bottom: none;
 }
 
 body:not(.home) .entry-content .contact-info .label-contact {
@@ -768,13 +923,27 @@ body:not(.home) .entry-content .contact-info .label-contact {
 	letter-spacing: 0.12em;
 	text-transform: uppercase;
 	color: var(--sm-ink-mute);
-	margin-bottom: var(--sm-space-1);
+	margin-bottom: var(--sm-space-2);
 }
 
 body:not(.home) .entry-content .contact-info .messaje {
 	font-size: var(--sm-text-base);
 	line-height: 1.6;
 	color: var(--sm-ink);
+}
+
+body:not(.home) .entry-content .contact-info .nr-telefon a {
+	color: var(--sm-teal);
+	font-weight: 600;
+	font-size: var(--sm-text-lg);
+	text-decoration: none;
+	transition: color 0.18s ease;
+}
+
+body:not(.home) .entry-content .contact-info .nr-telefon a:hover,
+body:not(.home) .entry-content .contact-info .nr-telefon a:focus-visible {
+	color: var(--sm-teal-dark);
+	text-decoration: underline;
 }
 
 /* ===========================================================================
@@ -1064,6 +1233,12 @@ body.page-id-582 .entry-content {
 		grid-template-columns: 1fr;
 		gap: var(--sm-space-8);
 	}
+
+	/* Datele de contact (telefon, locatie, ore) urca deasupra formularului lung
+	   pe mobil, pentru acces direct fara derulare obositoare. */
+	body:not(.home) .entry-content .homepage-contact > .row > .col-md-4 {
+		order: -1;
+	}
 }
 
 @media (max-width: 860px) {
@@ -1089,6 +1264,10 @@ body.page-id-582 .entry-content {
 	body:not(.home) .entry-content .articles-container,
 	body.page-id-1279 .entry-content .articles-container {
 		grid-template-columns: 1fr;
+	}
+
+	body:not(.home) .entry-content .sm-whatsapp-cta-link {
+		width: 100%;
 	}
 
 	body:not(.home) .entry-content .wpcf7-form-control.wpcf7-submit,

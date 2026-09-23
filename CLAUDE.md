@@ -118,6 +118,7 @@ că nu se poate.
 
 ## Documente
 
-- **[TODO.md](TODO.md)** — lista de lucru curentă
+- **[TODO.md](TODO.md)** — lista de lucru curentă și unică sursă de adevăr pentru sarcini (active și rezolvate)
+- `audit-imagini.md` — documentația completă a auditului și optimizării de imagini (124 MB → 17 MB, instrucțiuni de deploy)
 - `sydney-update-analiza.md` — comparația cu Sydney 2.71 oficial
 - `audit-2-seo-security-performance.md` — auditul inițial (context istoric; țintea tema inactivă)
