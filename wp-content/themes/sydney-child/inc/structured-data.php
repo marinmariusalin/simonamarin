@@ -288,6 +288,14 @@ function simonamarin_json_ld( $data ) {
 		$data['ProfilePage'] = array_merge( $data['ProfilePage'], simonamarin_credentials() );
 	}
 
+	// Pagina „Despre mine" (AboutPage) e despre Simona: o spune explicit, ca
+	// Google sa lege atestatele de pagina care le afiseaza. Inainte, legatura o
+	// facea un bloc JSON-LD lipit in continut, cu alta titulatura - scos.
+	if ( is_page( 28 ) && $entity_id && isset( $data['WebPage'] ) && is_array( $data['WebPage'] ) ) {
+		$data['WebPage']['about']      = array( '@id' => $entity_id );
+		$data['WebPage']['mainEntity'] = array( '@id' => $entity_id );
+	}
+
 	if ( isset( $data['richSnippet'] ) && is_array( $data['richSnippet'] ) ) {
 		$snippet = &$data['richSnippet'];
 

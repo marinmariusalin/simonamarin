@@ -546,6 +546,18 @@ Antetul nu are un buton de acțiune clar către programare/contact. Dacă se
 dorește unul, textul și destinația sunt o decizie a Simonei (ton, nu doar
 loc); implementarea în sine e simplă odată aleasă formularea.
 
+### 19. Datele „modificat" ale celor 18 pagini curățate de microdata
+
+Pe 23.09.2026, curățarea datelor structurate din conținut (microdata vechi
+`Article`/`Person` și blocul JSON-LD lipit în „Despre mine") s-a făcut prin
+`wp_update_post`, care a mutat `post_modified` pe 23.09.2026 la 18 pagini al
+căror text nu s-a schimbat. Google vede `dateModified` de azi pe ele — un
+semnal de actualizare fals. Refacerea din `lastmod`-ul sitemap-ului de
+producție (toate: 19.08.2026, Contact: 05.02.2025, Articole: 08.01.2025) a
+fost blocată de permisiuni și **nu s-a aplicat**. De făcut înainte de deploy
+(UPDATE pe `post_modified`/`post_modified_gmt`, `wpez_posts`), sau acceptat.
+„Despre mine" (ID 28) păstrează data nouă: acolo s-au adăugat atestatele.
+
 ---
 
 ## Făcut — nu relua

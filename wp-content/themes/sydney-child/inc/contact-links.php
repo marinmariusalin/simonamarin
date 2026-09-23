@@ -67,35 +67,30 @@ function simonamarin_contact_links() {
 			'url'   => 'https://www.facebook.com/PsihologSimonaMarin',
 			'label' => __( 'Facebook', 'sydney-child' ),
 			'rel'   => 'nofollow',
-			'prop'  => 'sameAs',
 		),
 		array(
 			'icon'  => 'whatsapp',
 			'url'   => 'https://wa.me/40747668204',
 			'label' => __( 'WhatsApp', 'sydney-child' ),
 			'rel'   => 'nofollow',
-			'prop'  => 'sameAs',
 		),
 		array(
 			'icon'  => 'instagram',
 			'url'   => 'https://www.instagram.com/simonamarin.ro/',
 			'label' => __( 'Instagram', 'sydney-child' ),
 			'rel'   => 'nofollow',
-			'prop'  => 'sameAs',
 		),
 		array(
 			'icon'  => 'phone',
 			'url'   => 'tel:0747668204',
 			'label' => __( 'Telefon', 'sydney-child' ),
 			'rel'   => '',
-			'prop'  => 'telephone',
 		),
 		array(
 			'icon'  => 'envelope',
 			'url'   => 'mailto:psihologsimonamarin@gmail.com',
 			'label' => __( 'Email', 'sydney-child' ),
 			'rel'   => '',
-			'prop'  => 'email',
 		),
 	);
 }
@@ -138,14 +133,15 @@ function simonamarin_add_contact_links_to_menu( $items, $args ) {
 	$out = '';
 
 	foreach ( simonamarin_contact_links() as $link ) {
-		$rel  = $link['rel'] ? sprintf( ' rel="%s"', esc_attr( $link['rel'] ) ) : '';
-		$prop = $link['prop'] ? sprintf( ' itemprop="%s"', esc_attr( $link['prop'] ) ) : '';
+		$rel = $link['rel'] ? sprintf( ' rel="%s"', esc_attr( $link['rel'] ) ) : '';
 
+		// Fara itemprop: nu exista niciun itemscope in jurul meniului, deci
+		// proprietatile erau orfane (erori in validatoare). Telefonul, sameAs si
+		// restul sunt declarate o singura data, in JSON-LD (inc/structured-data.php).
 		$out .= sprintf(
-			'<a class="sm-contact-link" href="%1$s"%2$s%3$s aria-label="%4$s" title="%4$s">%5$s</a>',
+			'<a class="sm-contact-link" href="%1$s"%2$s aria-label="%3$s" title="%3$s">%4$s</a>',
 			esc_url( $link['url'] ),
 			$rel,
-			$prop,
 			esc_attr( $link['label'] ),
 			simonamarin_icon( $link['icon'] )
 		);

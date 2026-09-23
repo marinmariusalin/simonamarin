@@ -205,12 +205,16 @@ body:not(.home) .entry-content .about-me-overlay div {
 
 /**
  * A doua linie e titulatura, nu semnatura. Apare in trei forme, dupa pagina:
- * `<span itemprop="jobTitle">` intr-un `<p>` separat (Ateliere, Articole), a
+ * `<span>` intr-un `<p>` separat, imediat dupa semnatura (Articole), a
  * doua coloana dintr-un `.row` (Servicii, Tarife), sau deloc (Contact, unde
  * titulatura e in aceeasi propozitie cu numele). `:last-of-type` si nu
  * `:last-child`, pentru ca `wpautop` lasa un `<p>` gol ca ultim copil.
+ *
+ * Selectorul era `[itemprop="jobTitle"]`; microdata din continut a fost scoasa
+ * (23.09.2026) pentru ca declara o a doua persoana, cu titulatura „Psiholog",
+ * in contradictie cu datele structurate din inc/structured-data.php.
  */
-body:not(.home) .entry-content .about-me-overlay [itemprop="jobTitle"],
+body:not(.home) .entry-content .about-me-overlay .signature-font + p > span,
 body:not(.home) .about-me-overlay .signature-font > span,
 body:not(.home) .about-me-overlay .signature-font .col-md-12:last-of-type,
 body:not(.home) .about-me-overlay > .row .col-md-12:last-of-type {
