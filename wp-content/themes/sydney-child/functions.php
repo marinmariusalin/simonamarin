@@ -189,6 +189,13 @@ require_once get_stylesheet_directory() . '/inc/post-meta.php';
  */
 require_once get_stylesheet_directory() . '/inc/related-posts.php';
 
+/**
+ * Afilierea, atestatele din Registrul Unic al Psihologilor si butonul WhatsApp,
+ * la finalul fiecarei pagini, cu ordinea variata de la o pagina la alta.
+ * Depinde de simonamarin_credential_names() din structured-data.php.
+ */
+require_once get_stylesheet_directory() . '/inc/credentials.php';
+
 /*
  * ============================================================================
  * MIGRAREA LA SYDNEY 2.71 - CE A RAMAS

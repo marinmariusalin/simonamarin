@@ -157,19 +157,15 @@ function simonamarin_offer_catalog() {
  * conferite de fiecare atestat. DACA SE ADAUGA UN ATESTAT IN REGISTRU, SE
  * ADAUGA SI AICI.
  *
- * Doar in datele structurate: textul paginilor nu se modifica.
+ * Aceleasi atestate si aceleasi afilieri sunt afisate pe fiecare pagina de
+ * inc/credentials.php, deci datele descriu exact ce vede vizitatorul.
  *
- * @return array Cheile `jobTitle` si `hasCredential`, gata de pus pe un nod Person.
+ * @return array Cheile `jobTitle`, `hasCredential` si `memberOf`, gata de pus
+ *               pe un nod Person.
  */
 function simonamarin_credentials() {
-	$atestate = array(
-		'Psihoterapie experiențială și a unificării centrată pe adult-copil-cuplu-familie',
-		'Psihologie clinică',
-		'Consiliere psihologică - evaluarea și consilierea experiențială a copilului, adultului, cuplului și familiei',
-	);
-
 	$credentials = array();
-	foreach ( $atestate as $name ) {
+	foreach ( simonamarin_credential_names() as $name ) {
 		$credentials[] = array(
 			'@type'              => 'EducationalOccupationalCredential',
 			'name'               => $name,
@@ -185,6 +181,37 @@ function simonamarin_credentials() {
 	return array(
 		'jobTitle'      => array( 'Psihoterapeut', 'Psiholog clinician', 'Consilier psihologic' ),
 		'hasCredential' => $credentials,
+		// Afilierile, exact cele afisate pe site (Despre mine si blocul de pe
+		// fiecare pagina).
+		'memberOf'      => array(
+			array(
+				'@type' => 'Organization',
+				'name'  => 'Colegiul Psihologilor din România',
+				'url'   => 'https://www.copsi.ro/',
+			),
+			array(
+				'@type' => 'Organization',
+				'name'  => 'Asociația de Psihoterapie Experiențială din România, Institutul SPER',
+				'url'   => 'https://www.sper.ro/',
+			),
+		),
+	);
+}
+
+/**
+ * Denumirile atestatelor, exact ca in Registrul Unic al Psihologilor.
+ *
+ * O singura lista, citita si de datele structurate si de blocul afisat pe
+ * pagini (inc/credentials.php): cele doua nu pot ajunge sa spuna lucruri
+ * diferite.
+ *
+ * @return string[]
+ */
+function simonamarin_credential_names() {
+	return array(
+		'Psihoterapie experiențială și a unificării centrată pe adult-copil-cuplu-familie',
+		'Psihologie clinică',
+		'Consiliere psihologică - evaluarea și consilierea experiențială a copilului, adultului, cuplului și familiei',
 	);
 }
 
