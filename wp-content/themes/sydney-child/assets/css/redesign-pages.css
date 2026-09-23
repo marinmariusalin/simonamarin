@@ -830,43 +830,11 @@ body:not(.home) .entry-content .sm-whatsapp-cta-link .sm-icon svg {
 	display: block;
 }
 
-/* Buton WhatsApp stil circular / hero (preluat de pe homepage, discret si delicat pentru sectiunile de servicii) */
-body:not(.home) .entry-content .servicii-container .sm-whatsapp-cta {
-	margin: var(--sm-space-2) 0 var(--sm-space-6);
-	text-align: left;
-}
-
-body:not(.home) .entry-content .sm-hero-whatsapp {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 44px;
-	height: 44px;
-	border-radius: var(--sm-radius-pill);
-	border: 1px solid var(--sm-teal);
-	color: var(--sm-teal);
-	background-color: var(--sm-teal-tint);
-	box-shadow: 0 2px 6px -2px rgba(61, 111, 101, 0.15);
-	text-decoration: none;
-	flex-shrink: 0;
-	transition: background-color 0.18s ease, color 0.18s ease,
-	            border-color 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
-}
-
-body:not(.home) .entry-content .sm-hero-whatsapp:hover,
-body:not(.home) .entry-content .sm-hero-whatsapp:focus-visible {
-	background-color: var(--sm-teal);
-	border-color: var(--sm-teal);
-	color: #fff;
-	transform: translateY(-1px);
-	box-shadow: 0 6px 16px -4px rgba(61, 111, 101, 0.35);
-}
-
-body:not(.home) .entry-content .sm-hero-whatsapp .sm-icon svg {
-	width: 20px;
-	height: 20px;
-	display: block;
-}
+/*
+ * Butoanele WhatsApp rotunde din interiorul paginii Servicii (.sm-hero-whatsapp)
+ * au fost scoase la cererea utilizatorului (23.09.2026): prea multe pe o pagina.
+ * Raman butonul din blocul de la final (inc/credentials.php) si cel plutitor.
+ */
 
 /* --- Campurile formularului ---------------------------------------------- */
 
