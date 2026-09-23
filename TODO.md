@@ -467,14 +467,22 @@ Faza 6 din `plan-redesign-lifecoach.md`.
   contact 1" (ID 182) nu e afișat nicăieri; conține un tag `[wpgdprc]` al unui
   plugin care nu mai e instalat.
 
-**Rămas — decizia utilizatorului:**
+- **Mesajele deja stocate — golite (23.09.2026, decizia utilizatorului):** 15
+  în `wpez_post_smtp_logs` (03.2024 – 10.2025) și 16 în formatul vechi
+  (`postman_sent_mail`, 2022–2023, inclusiv mesaje de test). Au rămas doar data
+  și starea livrării. Fără copie a conținutului: o copie ar fi păstrat exact
+  datele care trebuiau să dispară. Pe producție dispar la deploy, odată cu baza
+  de date.
 
-- **Mesajele deja stocate:** 17 mesaje din formular (03.2024 – 10.2025) în
-  `wpez_post_smtp_logs` și 22 în formatul vechi (`postman_sent_mail`,
-  2022–2023), cu tot conținutul. De golit sau de șters — nu s-a atins nimic.
-- **Informarea de lângă formular** (temei legal, ce se întâmplă cu datele):
-  lipsește. E text nou, deci formularea o dă Simona. Politica de
+**Rămas:**
+
+- **Informarea de lângă formular:** aprobată de utilizator; se implementează
+  cu textul dat de el/Simona (nu se redactează de noi). Politica de
   confidențialitate e din 2018 și nu pomenește formularul.
+- **Copiile bazei de date conțin încă mesajele integral:**
+  `E:\simonamarin\db-backup-20260921.sql` și
+  `E:\simonamarin\_backup-imagini-2026-09-22\local-db.sql`. Nu au fost
+  atinse — sunt copii de siguranță; ștergerea lor e decizia utilizatorului.
 - Temeiul legal pentru date de sănătate (art. 9) — decizie juridică, nu de cod.
 
 ### 8. PSY-04 — informații pentru situații de criză
@@ -511,7 +519,7 @@ scaner e mai util decât versiunea de WordPress.
 Nu le-am scos pentru că fiecare folosește alt hook și un `remove_action` pentru
 fiecare s-ar rupe tăcut la primul lor update.
 
-### 11. Poziția iconițelor de contact — decizie deschisă
+### 11. Poziția iconițelor de contact — decis 23.09.2026: rămân în dreapta
 
 Sunt acum la capătul meniului, în dreapta. În design-ul vechi stăteau lângă
 titlu, în stânga. Dacă poziția din stânga contează, singura variantă curată e
