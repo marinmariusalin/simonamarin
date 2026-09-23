@@ -581,6 +581,7 @@ loc); implementarea în sine e simplă odată aleasă formularea.
 | Regula `a, i { min-height: 24px !important }` restrânsă | `sydney-child/style.css` | antetul comparat pixel cu pixel înainte/după: identic |
 | Antet, subsol și butonul flotant (Faza 4) | `sydney-child/assets/css/redesign-chrome.css` | antet 86px, lipit de conținut fără gol; fără derulare orizontală la 390 / 768 / 1024 / 1440 |
 | Butoane WhatsApp la fiecare titlu pe Servicii (9 butoane) | `seo-scripts/6-servicii-butoane-whatsapp.php`, pagina 192 | 9 butoane verificate în browser (desktop 1440px și mobil 390px, 0 derulare orizontală, eveniment GA4 la clic) |
+| Dezindexare și 301 ateliere 2018 (paginile 794 și 989) | `seo-scripts/7-deindexare-ateliere-2018.php` | `noindex` confirmat, scoase din sitemap-ul XML, redirect 301 verificat spre `/ateliere/` |
 
 Toate cinci de mai sus au fost migrate din tema inactivă pe 21 septembrie 2026.
 Verificarea făcută efectiv a fost `php -l` pe fiecare fișier modificat — nu o
